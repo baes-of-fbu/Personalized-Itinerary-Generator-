@@ -28,6 +28,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Allows user to continue to be signed in across sessions
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         etUsername = (EditText) findViewById(R.id.etLoginUsername);
         etPassword = (EditText) findViewById(R.id.etLoginPassword);
         loginBtn = (Button) findViewById(R.id.loginBtn);

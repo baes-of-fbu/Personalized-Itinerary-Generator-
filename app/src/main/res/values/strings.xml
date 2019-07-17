@@ -56,4 +56,5 @@
         <item>WI</item>
         <item>WY</item>
     </string-array>
+    <string name="generate">Generate</string>
 </resources>
