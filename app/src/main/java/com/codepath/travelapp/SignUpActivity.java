@@ -1,5 +1,6 @@
 package com.codepath.travelapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,9 +27,9 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         setsignupbtn = findViewById(R.id.signup_btn);
-        setusername = findViewById(R.id.etusername);
-        setpassword = findViewById(R.id.evpassword);
-        setemail = findViewById(R.id.etemail);
+        setusername = findViewById(R.id.etSignUpUsername);
+        setpassword = findViewById(R.id.etSignUpPassword);
+        setemail = findViewById(R.id.etSignupEmail);
 
         setsignupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +59,9 @@ public class SignUpActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e == null) {
                     // Hooray! Let them use the app now.
+                    final Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     // Sign up didn't succeed. Look at the ParseException
                     // to figure out what went wrong
