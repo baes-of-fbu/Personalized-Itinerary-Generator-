@@ -27,12 +27,14 @@ dependencies {
     // Parse SDK
     implementation 'com.parse.bolts:bolts-android:1.4.0'
     implementation 'com.github.parse-community.Parse-SDK-Android:parse:1.20.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
-    // for logging API calls to LogCat
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'// for logging API calls to LogCat
 
     // Facebook SDk
     implementation 'com.facebook.android:facebook-android-sdk:5.1.0'
     implementation 'com.github.parse-community:ParseFacebookUtils-Android:1.14.0'
+
+    // Google Text Layout
+    implementation 'com.google.android.material:material:1.1.0-alpha06'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
