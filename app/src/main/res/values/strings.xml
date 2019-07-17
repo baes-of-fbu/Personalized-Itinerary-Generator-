@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TravelApp</string>
-    <string name="facebook_app_id">503104163765560</string>
-    <string name="fb_login_protocol_scheme">fb503104163765560</string>
+    <string name="facebook_app_id">1086289015092130</string>
+    <string name="fb_login_protocol_scheme">fb1086289015092130</string>
     <string name="select_state">Select your home state</string>
     <string-array name="state_abbreviations">
         <item>Select state</item>
