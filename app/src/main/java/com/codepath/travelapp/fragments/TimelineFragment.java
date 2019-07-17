@@ -10,11 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.TripAdapter;
 import com.codepath.travelapp.R;
+import com.codepath.travelapp.TripAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TimelineFragment extends Fragment {
@@ -22,7 +27,8 @@ public class TimelineFragment extends Fragment {
     private final String TAG = "TimelineFragment";
 
     private RecyclerView rvPosts;
-    // protected TimelineAdapter adapter;
+    protected TripAdapter adapter;
+    protected ArrayList<Trip> mTrips;
     private SwipeRefreshLayout swipeContainer;
 
     @Nullable
@@ -33,7 +39,15 @@ public class TimelineFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        rvPosts = view.findViewById(R.id.rvPosts);
+        rvPosts = view.findViewById(R.id.rvTrips);
+
+        //create the adapter
+        mTrips = new ArrayList<>();
+        //create the data source
+        adapter = new TripAdapter(mTrips);
+        // set the layout manager on the recycler view
+        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvPosts.setAdapter(adapter);
 
         // Swipe Container/ refresh code
         swipeContainer = view.findViewById(R.id.swipeContainer);
