@@ -9,14 +9,14 @@ import com.parse.ParseUser;
 public class Trip extends ParseObject {
 
     // Instance variables
-    public static final String KEY_NAME = "name";
-    public static final String KEY_OWNER = "owner";
-    public static final String KEY_IMAGE = "image";
-    public static final String KEY_BUDGET = "budget";
-    public static final String KEY_CITY = "city";
-    public static final String KEY_NUMDAYS = "numDays";
-    public static final String KEY_STARTDATE = "startDate";
-    public static final String KEY_ENDDATE = "endDate";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_OWNER = "owner";
+    private static final String KEY_IMAGE = "image";
+    private static final String KEY_BUDGET = "budget";
+    private static final String KEY_CITY = "city";
+    private static final String KEY_NUMDAYS = "numDays";
+    private static final String KEY_STARTDATE = "startDate";
+    private static final String KEY_ENDDATE = "endDate";
 
     // Getters and setters
     public String getName() {
@@ -43,7 +43,7 @@ public class Trip extends ParseObject {
         put(KEY_IMAGE, image);
     }
 
-    public Number getBudget() { // might need to be changed to an int
+    public Number getBudget() { // TODO might need to be changed to an int
         return getNumber(KEY_BUDGET);
     }
 
@@ -51,7 +51,7 @@ public class Trip extends ParseObject {
         put(KEY_BUDGET, budget);
     }
 
-    public ParseObject getCity() {
+    public ParseObject getCity() { // TODO might need to be changed to an city
         return getParseObject(KEY_CITY);
     }
 
@@ -59,7 +59,7 @@ public class Trip extends ParseObject {
         put(KEY_CITY, city);
     }
 
-    public Number getNumDays() {
+    public Number getNumDays() { // TODO might need to be changed to an int
         return getNumber(KEY_NUMDAYS);
     }
 
@@ -67,7 +67,7 @@ public class Trip extends ParseObject {
         put(KEY_NUMDAYS, numDays);
     }
 
-    public ParseObject getStartDate() {
+    public ParseObject getStartDate() { // TODO might need to be changed to an Date
         return getParseObject(KEY_STARTDATE);
     }
 
