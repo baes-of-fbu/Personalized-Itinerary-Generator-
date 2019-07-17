@@ -51,8 +51,8 @@ public class SignUpActivity extends AppCompatActivity {
         user.setPassword(password);
         user.setEmail(email);
         //TODO add a getter and setter for state
-
         // user.setState(state);
+
         // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
