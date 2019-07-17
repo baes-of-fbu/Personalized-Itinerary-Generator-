@@ -3,6 +3,7 @@ package com.codepath.travelapp;
 import android.app.Application;
 
 import com.parse.Parse;
+import com.parse.facebook.ParseFacebookUtils;
 
 public class ParseApp extends Application {
 
@@ -17,5 +18,7 @@ public class ParseApp extends Application {
                 .server("http://travel-app-fbu.herokuapp.com/parse")
                 .build();
         Parse.initialize(configuration);
+
+        ParseFacebookUtils.initialize(this);
     }
 }
