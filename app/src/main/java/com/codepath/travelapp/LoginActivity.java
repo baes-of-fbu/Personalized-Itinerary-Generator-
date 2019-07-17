@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,16 +17,27 @@ import com.parse.facebook.ParseFacebookUtils;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private EditText etUsername;
+    private EditText etPassword;
+    private Button loginBtn;
+    private Button signUpBtn;
     private Button facebookLoginBtn;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        etUsername = (EditText) findViewById(R.id.etLoginUsername);
+        etPassword = (EditText) findViewById(R.id.etLoginPassword);
+        loginBtn = (Button) findViewById(R.id.loginBtn);
+        signUpBtn = (Button) findViewById(R.id.signUpBtn);
+        facebookLoginBtn = (Button) findViewById(R.id.facebookLoginBtn);
 
-        facebookLoginBtn = (Button) findViewById(R.id.facebookLogin_btn);
+        addOnClickListeners();
+    }
+
+    private void addOnClickListeners() {
         facebookLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,6 +60,44 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String username = etUsername.getText().toString();
+                final String password = etPassword.getText().toString();
+                login(username, password);
+            }
+        });
+
+        signUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                intent.putExtra("username", etUsername.getText().toString());
+                intent.putExtra("password", etPassword.getText().toString());
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    private void login(String username, String password) {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) { // Returned when network request completed
+                if (e == null) {  // True if user login successfully
+                    Log.d("LoginActivity", "Login successful!");
+                    final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Log.d("LoginActivity", "Login failure.");
+                    Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_LONG).show(); // TODO cut down e.toString()
+                    e.printStackTrace();
+                }
             }
         });
     }

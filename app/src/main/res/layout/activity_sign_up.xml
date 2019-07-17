@@ -74,7 +74,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSignupEmail"
+            android:id="@+id/etSignUpEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
@@ -82,7 +82,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Spinner
-        android:id="@+id/spSignUpState"
+        android:id="@+id/spSelectState"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -97,7 +97,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
 
     <Button
-        android:id="@+id/signup_btn"
+        android:id="@+id/signUpBtn"
         android:layout_width="@dimen/login_btn_width"
         android:layout_height="@dimen/login_btn_height"
         android:layout_marginStart="8dp"
@@ -106,8 +106,19 @@
         android:background="@drawable/rounded_btn"
         android:text="Sign Up"
         android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spSignUpState" />
+        app:layout_constraintTop_toBottomOf="@+id/spSelectState" />
+
+    <ImageView
+        android:id="@+id/ivBackBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

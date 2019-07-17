@@ -15,7 +15,7 @@ public class ParseApp extends Application {
         final Parse.Configuration configuration = new Parse.Configuration.Builder(this)
                 .applicationId("travel-app-fbu-2019")
                 .clientKey("westlake-bestlake")
-                .server("http://travel-app-fbu.herokuapp.com/parse")
+                .server("https://travel-app-fbu.herokuapp.com/parse")
                 .build();
         Parse.initialize(configuration);
 
