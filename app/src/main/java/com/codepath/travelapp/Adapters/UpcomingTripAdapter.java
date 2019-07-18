@@ -1,6 +1,8 @@
 package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
+import com.codepath.travelapp.fragments.TripDetailsFragment;
 import com.parse.ParseFile;
 
 import java.util.ArrayList;
@@ -56,7 +61,7 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
         return trips.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTripBudget;
         private TextView tvTripDates;
         private ImageView ivTripImage;
@@ -69,8 +74,29 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
             tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
+
+            itemView.setOnClickListener((View.OnClickListener) this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.d("Adapter", "item clicked");
+            final Trip trip = trips.get(getAdapterPosition());
+            if (trip != null) {
+                Fragment fragment = new TripDetailsFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Trip", trip);
+                fragment.setArguments(bundle);
+
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     }
+
     public void clear(){
         trips.clear();
         notifyDataSetChanged();;
