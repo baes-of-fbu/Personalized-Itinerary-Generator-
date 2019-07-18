@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="@+id/ivProfileImage" />
 
     <TextView
-        android:id="@+id/tvHometown"
+        android:id="@+id/tvTravelDates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -55,7 +55,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/tvHometown" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
