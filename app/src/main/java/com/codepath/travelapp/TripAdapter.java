@@ -16,6 +16,7 @@ import com.codepath.travelapp.Models.Trip;
 import com.parse.ParseFile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     private Context context;
@@ -24,7 +25,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     public TripAdapter(ArrayList<Trip> trips) {
         this.trips = trips;
     }
-
 
     @NonNull
     @Override
@@ -36,12 +36,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Trip trip = trips.get(position);
+        Trip trip = (Trip) trips.get(position);
         holder.tvTripBudget.setText(trip.getBudget().toString());
         holder.tvTripDates.setText(trip.getStartDate().toString());
         holder.tvTripName.setText(trip.getName());
-        ParseFile image = trip.getImage();
-        if (image != null) {
+
+        if (trip.get("image") != null) {
+            ParseFile image = (ParseFile) trip.get("image");
             Glide.with(context)
                     .load(image.getUrl())
                     .into(holder.ivTripImage);
@@ -67,5 +68,15 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
         }
+    }
+    public void clear(){
+        trips.clear();
+        notifyDataSetChanged();;
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(List<Trip> list) {
+        trips.addAll(list);
+        notifyDataSetChanged();
     }
 }

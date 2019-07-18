@@ -1,6 +1,7 @@
 package com.codepath.travelapp.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.TripAdapter;
 import com.codepath.travelapp.R;
 import com.codepath.travelapp.TripAdapter;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,7 @@ public class TimelineFragment extends Fragment {
     private RecyclerView rvPosts;
     protected TripAdapter adapter;
     protected ArrayList<Trip> mTrips;
+    private int pagesize = 10;
     private SwipeRefreshLayout swipeContainer;
 
     @Nullable
@@ -48,7 +53,7 @@ public class TimelineFragment extends Fragment {
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         rvPosts.setAdapter(adapter);
-
+        queryPosts();
         // Swipe Container/ refresh code
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -68,5 +73,26 @@ public class TimelineFragment extends Fragment {
         rvPosts.addItemDecoration(divider);
 
         Toast.makeText(getContext(), "Welcome to Timeline",Toast.LENGTH_SHORT).show();
+    }
+    protected void queryPosts() {
+
+        adapter.clear();
+
+        ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
+
+        tripQuery.setLimit(pagesize);
+        tripQuery.include(Trip.KEY_OWNER);
+        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+        tripQuery.findInBackground(new FindCallback<Trip>() {
+            @Override
+            public void done(List<Trip> trips, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG,"Error");
+                    e.printStackTrace();
+                    return;
+                }
+                adapter.addAll(trips);
+            }
+        });
     }
 }
