@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +30,8 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 
 public class ProfileFragment extends Fragment {
 
@@ -58,7 +61,9 @@ public class ProfileFragment extends Fragment {
         //create the data source
         adapter = new UpcomingTripAdapter(mTrips);
         // set the layout manager on the recycler view
-        rvUpcoming.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linerarLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        rvUpcoming.setLayoutManager(linerarLayoutManager);
+
         rvUpcoming.setAdapter(adapter);
         queryPosts();
         // Swipe Container/ refresh code
