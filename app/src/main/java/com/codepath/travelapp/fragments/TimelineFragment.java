@@ -72,7 +72,7 @@ public class TimelineFragment extends Fragment {
         RecyclerView.ItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         rvPosts.addItemDecoration(divider);
 
-        Toast.makeText(getContext(), "Welcome to Timeline",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Welcome to Timeline",Toast.LENGTH_SHORT).show();
     }
     protected void queryPosts() {
 

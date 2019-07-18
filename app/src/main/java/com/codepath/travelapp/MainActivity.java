@@ -1,7 +1,9 @@
 package com.codepath.travelapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,15 +36,15 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new TimelineFragment();
-                        //Toast.makeText(HomeActivity.this, "Home!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Home!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_compose:
                         fragment = new ComposeFragment();
-                        //Toast.makeText(HomeActivity.this, "Compose!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Compose!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_profile:
                         fragment = new ProfileFragment();
-                        //Toast.makeText(HomeActivity.this, "Profile!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Profile!", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         fragment = new TimelineFragment();

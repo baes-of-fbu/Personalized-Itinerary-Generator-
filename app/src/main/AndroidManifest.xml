@@ -40,7 +40,8 @@
             android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled"
             android:value="false" />
 
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
