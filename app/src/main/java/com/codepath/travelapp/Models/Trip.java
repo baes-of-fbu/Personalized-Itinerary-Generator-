@@ -5,10 +5,11 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @ParseClassName("Trip") // Needs to be same name as class on Parse website
-public class Trip extends ParseObject {
+public class Trip extends ParseObject implements Serializable {
 
     // Instance variables
     private static final String KEY_NAME = "name";

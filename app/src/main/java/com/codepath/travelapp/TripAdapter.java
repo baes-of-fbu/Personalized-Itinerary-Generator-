@@ -2,18 +2,23 @@ package com.codepath.travelapp;
 
 import android.content.Context;
 import android.graphics.PostProcessor;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.fragments.TripDetailsFragment;
 import com.parse.ParseFile;
 
 import org.w3c.dom.Text;
@@ -67,7 +72,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         return trips.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView tvTripBudget;
         private TextView tvTripDates;
         private ImageView ivTripImage;
@@ -83,6 +88,27 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+
+            itemView.setOnClickListener((View.OnClickListener)this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.d("Adapter", "item clicked");
+            Toast.makeText(context, "Item Clicked", Toast.LENGTH_SHORT).show();
+            final Trip trip = trips.get(getAdapterPosition());
+            if (trip != null) {
+                Fragment fragment = new TripDetailsFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Trip", trip);
+                fragment.setArguments(bundle);
+
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     }
     public void clear(){
