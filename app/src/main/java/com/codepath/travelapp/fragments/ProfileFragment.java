@@ -1,6 +1,5 @@
 package com.codepath.travelapp.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,11 +38,7 @@ public class ProfileFragment extends Fragment {
     protected ArrayList<Trip> mTrips;
     private int pagesize = 10;
     private TextView tvUsername;
-    private TextView tvBio;
     private SwipeRefreshLayout swipeContainer;
-    private Context context;
-    private ArrayList<Trip> trips;
-
 
     @Nullable
     @Override
@@ -56,8 +51,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvUpcoming = view.findViewById(R.id.rvUpcoming);
         tvUsername = view.findViewById(R.id.tvUsername);
-        tvBio = view.findViewById(R.id.tvBio);
-        //tvUsername.setText(trip.getOwner().getUsername());
+
 
         //create the adapter
         mTrips = new ArrayList<>();
@@ -87,7 +81,6 @@ public class ProfileFragment extends Fragment {
 
         Toast.makeText(getContext(), "Welcome to Your Profile",Toast.LENGTH_SHORT).show();
     }
-
     protected void queryPosts() {
 
         adapter.clear();
