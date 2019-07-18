@@ -41,9 +41,6 @@ public class TripDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle bundle = getArguments();
-        trip = (Trip) bundle.getSerializable("Trip");
-
         ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         tvTripName = view.findViewById(R.id.tvTripName);
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
@@ -53,19 +50,24 @@ public class TripDetailsFragment extends Fragment {
         tvBudget = view.findViewById(R.id.tvBudget);
         rvSchedule = view.findViewById(R.id.rvSchedule);
 
-        tvTripName.setText(trip.getName());
-        tvUsername.setText(trip.getOwner().getUsername());
-        tvTravelDates.setText(trip.getStartDate() + " - " + trip.getEndDate());
-        tvDays.setText(trip.getNumDays().toString() + " Days");
-        tvBudget.setText("$" + trip.getBudget());
+        Bundle bundle = getArguments();
+        trip = (Trip) bundle.getSerializable("Trip");
 
-        Glide.with(getContext())
-                .load(trip.getImage().getUrl())
-                .into(ivCoverPhoto);
+        if (trip != null) {
+            tvTripName.setText(trip.getName());
+            tvUsername.setText(trip.getOwner().getUsername());
+            tvTravelDates.setText(trip.getStartDate() + " - " + trip.getEndDate());
+            tvDays.setText(trip.getNumDays().toString());
+            tvBudget.setText("$" + trip.getBudget());
 
-        ParseFile image = (ParseFile) trip.getOwner().get("profileImage") ;
-        Glide.with(getContext())
-                .load(image.getUrl())
-                .into(ivProfileImage);
+            Glide.with(getContext())
+                    .load(trip.getImage().getUrl())
+                    .into(ivCoverPhoto);
+
+            ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+            Glide.with(getContext())
+                    .load(image.getUrl())
+                    .into(ivProfileImage);
+        }
     }
 }

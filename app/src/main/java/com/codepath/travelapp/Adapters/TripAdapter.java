@@ -1,6 +1,8 @@
 package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,12 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
+import com.codepath.travelapp.fragments.TripDetailsFragment;
 import com.parse.ParseFile;
 
 import java.util.ArrayList;
@@ -31,7 +36,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     @Override
     public TripAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.item_post,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
         return new ViewHolder(view);
     }
 
@@ -45,7 +50,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
 
         if (trip.getOwner().get("profileImage") != null) {
-            ParseFile image = (ParseFile) trip.getOwner().get("profileImage") ;
+            ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
             Glide.with(context)
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
@@ -65,7 +70,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         return trips.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTripBudget;
         private TextView tvTripDates;
         private ImageView ivTripImage;
@@ -81,11 +86,33 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+
+            itemView.setOnClickListener((View.OnClickListener) this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.d("Adapter", "item clicked");
+            final Trip trip = trips.get(getAdapterPosition());
+            if (trip != null) {
+                Fragment fragment = new TripDetailsFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Trip", trip);
+                fragment.setArguments(bundle);
+
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     }
-    public void clear(){
+
+    public void clear() {
         trips.clear();
-        notifyDataSetChanged();;
+        notifyDataSetChanged();
+        ;
     }
 
     // Add a list of items -- change to type used
@@ -93,4 +120,5 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         trips.addAll(list);
         notifyDataSetChanged();
     }
+
 }
