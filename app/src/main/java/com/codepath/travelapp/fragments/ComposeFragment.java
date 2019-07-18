@@ -1,6 +1,7 @@
 package com.codepath.travelapp.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,18 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.codepath.travelapp.Adapters.TagGridAdapter;
 import com.codepath.travelapp.MainActivity;
+import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.R;
-import com.parse.ParseFile;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 public class ComposeFragment extends Fragment {
 
@@ -25,6 +34,8 @@ public class ComposeFragment extends Fragment {
     private EditText etBudget;
     private EditText etCity;
     private Button btnGenerate;
+
+    List<Tag> tags;
 
     @Nullable
     @Override
@@ -62,5 +73,32 @@ public class ComposeFragment extends Fragment {
                         .commit();
             }
         });
+
+        RecyclerView rvTags = (RecyclerView) view.findViewById(R.id.rvTags);
+
+        // Initialize contacts
+        ParseQuery<Tag> tagQuery = new ParseQuery<Tag>(Tag.class);
+        tagQuery.setLimit(20);
+        tagQuery.findInBackground(new FindCallback<Tag>() {
+            @Override
+            public void done(List<Tag> objects, ParseException e) {
+                if (e == null) {
+                    Log.d("DEBUG", "Successful query for tags");
+                    tags = objects;
+                } else {
+                    e.printStackTrace();
+                    Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+                }
+            }
+        });
+
+        // Create adapter passing in the sample user data
+        TagGridAdapter adapter = new TagGridAdapter(tags);
+        // Attach the adapter to the recyclerview to populate items
+        rvTags.setAdapter(adapter);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
+        gridLayoutManager.setSpanCount(3);
+        // Set layout manager to position the items
+        rvTags.setLayoutManager(gridLayoutManager);
     }
 }
