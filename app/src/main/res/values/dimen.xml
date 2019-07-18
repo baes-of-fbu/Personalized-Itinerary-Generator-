@@ -4,4 +4,9 @@
     <dimen name="login_btn_height">56dp</dimen>
     <dimen name="tag_btn_width">130dp</dimen>
     <dimen name="tag_btn_height">100dp</dimen>
+
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="grid_margin">4dp</dimen>
+    <dimen name="cell_margin">16dp</dimen>
 </resources>
