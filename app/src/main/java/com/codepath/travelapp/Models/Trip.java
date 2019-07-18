@@ -20,7 +20,7 @@ public class Trip extends ParseObject implements Serializable {
     private static final String KEY_NUMDAYS = "numDays";
     private static final String KEY_STARTDATE = "startDate";
     private static final String KEY_ENDDATE = "endDate";
-    private static final String KEY_ISUPCOMING = "isUpcoming";
+    public static final String KEY_ISUPCOMING = "isUpcoming";
     private static final String KEY_ISFAVORITED = "isFavorited";
 
     // Getters and setters

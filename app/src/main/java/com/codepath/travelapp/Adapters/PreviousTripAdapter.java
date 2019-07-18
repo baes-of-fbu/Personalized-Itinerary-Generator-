@@ -23,17 +23,17 @@ import com.parse.ParseFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapter.ViewHolder> {
+public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapter.ViewHolder>{
     private Context context;
     private ArrayList<Trip> trips;
 
-    public UpcomingTripAdapter(ArrayList<Trip> trips) {
+    public PreviousTripAdapter(ArrayList<Trip> trips) {
         this.trips = trips;
     }
 
     @NonNull
     @Override
-    public UpcomingTripAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PreviousTripAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_post_profile, parent, false);
 
@@ -41,7 +41,7 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UpcomingTripAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PreviousTripAdapter.ViewHolder holder, int position) {
         Trip trip = (Trip) trips.get(position);
         holder.tvTripBudget.setText(trip.getBudget().toString());
 //        holder.tvTripDates.setText(trip.getNumDays().toString());
@@ -97,7 +97,6 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
             }
         }
     }
-
     public void clear(){
         trips.clear();
         notifyDataSetChanged();;
