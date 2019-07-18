@@ -74,31 +74,31 @@ public class ComposeFragment extends Fragment {
             }
         });
 
-        RecyclerView rvTags = (RecyclerView) view.findViewById(R.id.rvTags);
+        final RecyclerView rvTags = (RecyclerView) view.findViewById(R.id.rvTags);
 
         // Initialize contacts
         ParseQuery<Tag> tagQuery = new ParseQuery<Tag>(Tag.class);
-        tagQuery.setLimit(20);
+        tagQuery.setLimit(10);
         tagQuery.findInBackground(new FindCallback<Tag>() {
             @Override
             public void done(List<Tag> objects, ParseException e) {
                 if (e == null) {
                     Log.d("DEBUG", "Successful query for tags");
                     tags = objects;
+
+                    // Create adapter passing in the sample user data
+                    TagGridAdapter adapter = new TagGridAdapter(tags);
+                    // Attach the adapter to the recyclerview to populate items
+                    rvTags.setAdapter(adapter);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
+                    gridLayoutManager.setSpanCount(3);
+                    // Set layout manager to position the items
+                    rvTags.setLayoutManager(gridLayoutManager);
                 } else {
                     e.printStackTrace();
                     Log.d("DEBUG", "Fetch timeline error: " + e.toString());
                 }
             }
         });
-
-        // Create adapter passing in the sample user data
-        TagGridAdapter adapter = new TagGridAdapter(tags);
-        // Attach the adapter to the recyclerview to populate items
-        rvTags.setAdapter(adapter);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
-        gridLayoutManager.setSpanCount(3);
-        // Set layout manager to position the items
-        rvTags.setLayoutManager(gridLayoutManager);
     }
 }

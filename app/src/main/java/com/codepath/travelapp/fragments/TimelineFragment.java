@@ -59,7 +59,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void onRefresh() {
                 swipeContainer.setRefreshing(true);
-                //fetchTimelineAsync(); TODO method
+                queryPosts();
             }
         });
         // Configure the refreshing colors
@@ -85,6 +85,7 @@ public class TimelineFragment extends Fragment {
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
+                swipeContainer.setRefreshing(false);
                 if (e != null) {
                     Log.e(TAG,"Error");
                     e.printStackTrace();
