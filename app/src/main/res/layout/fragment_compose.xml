@@ -34,12 +34,13 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:ems="8"
-                android:hint="Trip Name"
+                android:hint="@string/trip_name"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:importantForAutofill="no" />
 
             <EditText
                 android:id="@+id/etStartDate"
@@ -48,7 +49,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="8"
-                android:hint="Trip Start Date "
+                android:hint="@string/start_date"
+                android:importantForAutofill="no"
                 android:inputType="date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etTripName" />
@@ -61,7 +63,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="8"
-                android:hint="Trip End Date "
+                android:hint="@string/end_date"
                 android:inputType="date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/etStartDate"
@@ -74,7 +76,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="8"
-                android:hint="Budget"
+                android:hint="@string/budget"
                 android:inputType="numberDecimal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etStartDate" />
@@ -87,7 +89,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="8"
-                android:hint="City"
+                android:hint="@string/city"
                 android:inputType="textCapWords"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
