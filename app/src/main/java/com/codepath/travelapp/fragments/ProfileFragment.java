@@ -41,6 +41,7 @@ public class ProfileFragment extends Fragment {
     protected ArrayList<Trip> mTrips;
     private int pagesize = 10;
     private TextView tvUsername;
+    private TextView tvHometown;
     private SwipeRefreshLayout swipeContainer;
 
     @Nullable
@@ -54,7 +55,11 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvUpcoming = view.findViewById(R.id.rvUpcoming);
         tvUsername = view.findViewById(R.id.tvUsername);
+        tvHometown = view.findViewById(R.id.tvHometown);
 
+        //Populate views in Profile Fragment
+        tvUsername.setText(ParseUser.getCurrentUser().getUsername());
+        //tvHometown.setText((Integer) ParseUser.getCurrentUser().get("hometown"));
 
         //create the adapter
         mTrips = new ArrayList<>();
