@@ -96,73 +96,16 @@
                 app:layout_constraintStart_toEndOf="@id/etBudget"
                 app:layout_constraintTop_toBottomOf="@+id/etEndDate" />
 
-            <androidx.gridlayout.widget.GridLayout
-                android:id="@+id/glTagGrid"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTags"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:padding="5dp"
-                app:columnCount="3"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.454"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etBudget">
-
-                <Button
-                    android:id="@+id/btOutdoorTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Outdoor" />
-
-                <Button
-                    android:id="@+id/btActiveTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Active" />
-
-                <Button
-                    android:id="@+id/btLandmarkTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Landmark" />
-
-                <Button
-                    android:id="@+id/btShoppingTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Shopping" />
-
-                <Button
-                    android:id="@+id/btMuseumTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Museum" />
-
-                <Button
-                    android:id="@+id/btHistoricalTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Historical" />
-
-                <Button
-                    android:id="@+id/btTourTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Tour" />
-
-                <Button
-                    android:id="@+id/btFreeTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Free" />
-
-                <Button
-                    android:id="@+id/btNatureParkTag"
-                    android:layout_width="@dimen/tag_btn_width"
-                    android:layout_height="@dimen/tag_btn_height"
-                    android:text="Nature" />
-            </androidx.gridlayout.widget.GridLayout>
+                app:layout_constraintTop_toBottomOf="@+id/etCity" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
