@@ -5,12 +5,14 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.Date;
+
 @ParseClassName("Trip") // Needs to be same name as class on Parse website
 public class Trip extends ParseObject {
 
     // Instance variables
     private static final String KEY_NAME = "name";
-    private static final String KEY_OWNER = "owner";
+    public static final String KEY_OWNER = "owner";
     private static final String KEY_IMAGE = "image";
     private static final String KEY_BUDGET = "budget";
     private static final String KEY_CITY = "city";
@@ -67,16 +69,16 @@ public class Trip extends ParseObject {
         put(KEY_NUMDAYS, numDays);
     }
 
-    public ParseObject getStartDate() { // TODO might need to be changed to an Date
-        return getParseObject(KEY_STARTDATE);
+    public Date getStartDate() { // TODO might need to be changed to an Date
+        return getDate(KEY_STARTDATE);
     }
 
     public void setStartDate(ParseObject date) { // Might need to change to date
         put(KEY_STARTDATE, date);
     }
 
-    public ParseObject getEndDate() {
-        return getParseObject(KEY_ENDDATE);
+    public Date getEndDate() {
+        return getDate(KEY_ENDDATE);
     }
 
     public void setEndDate(ParseObject date) { // Might need to change to date
