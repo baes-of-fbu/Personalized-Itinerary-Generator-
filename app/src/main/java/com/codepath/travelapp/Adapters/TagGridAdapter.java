@@ -4,22 +4,27 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.R;
+import com.parse.ParseFile;
 
 import java.util.List;
 
 public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHolder> {
 
+    private Context context;
     private List<Tag> mTags; // Stores all of the tags
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public Button tagBtn;
+        public ImageView ivTagImage;
+        public TextView tvTagName;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -28,7 +33,8 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            tagBtn = (Button) itemView.findViewById(R.id.tagBtn);
+            ivTagImage = (ImageView) itemView.findViewById(R.id.ivTagImage);
+            tvTagName = (TextView) itemView.findViewById(R.id.tvTagName);
         }
     }
 
@@ -39,7 +45,7 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
 
     @Override
     public TagGridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
@@ -55,10 +61,12 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
     public void onBindViewHolder(TagGridAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
         Tag tag = mTags.get(position);
-
         // Set item views based on your views and data model
-        Button button = viewHolder.tagBtn;
-        button.setText(tag.getName());
+        viewHolder.tvTagName.setText(tag.getName());
+        ParseFile image = (ParseFile) tag.getImage();
+        Glide.with(context)
+                .load(image.getUrl())
+                .into(viewHolder.ivTagImage);
     }
 
     // Returns the total count of items in the list
