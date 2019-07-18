@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.codepath.travelapp.Adapters.FavoriteTripAdapter;
 import com.codepath.travelapp.Adapters.PreviousTripAdapter;
 import com.codepath.travelapp.Adapters.TripAdapter;
 import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
@@ -46,11 +47,14 @@ public class ProfileFragment extends Fragment {
     private final String TAG = "ProfileFragment";
     private RecyclerView rvUpcoming;
     private  RecyclerView rvPrevious;
+    private RecyclerView rvFavorite;
     protected UpcomingTripAdapter adapter;
     protected PreviousTripAdapter adapter2;
+    protected FavoriteTripAdapter adapter3;
 
     protected ArrayList<Trip> mTrips;
     protected ArrayList<Trip> nTrips;
+    protected ArrayList<Trip> oTrips;
     private int pagesize = 10;
     private TextView tvUsername;
     private TextView tvHometown;
@@ -72,6 +76,7 @@ public class ProfileFragment extends Fragment {
 
         rvUpcoming = view.findViewById(R.id.rvUpcoming);
         rvPrevious = view.findViewById(R.id.rvPrevious);
+        rvFavorite = view.findViewById(R.id.rvFavorite);
         tvUsername = view.findViewById(R.id.tvUsername);
         tvHometown = view.findViewById(R.id.tvHometown);
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
@@ -98,20 +103,26 @@ public class ProfileFragment extends Fragment {
         //create the adapter
         mTrips = new ArrayList<>();
         nTrips = new ArrayList<>();
+        oTrips = new ArrayList<>();
         //create the data source
         adapter = new UpcomingTripAdapter(mTrips);
         adapter2 = new PreviousTripAdapter(nTrips);
+        adapter3 = new FavoriteTripAdapter(oTrips);
         // set the layout manager on the recycler view
         LinearLayoutManager linerarLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext(),HORIZONTAL,false);
+        LinearLayoutManager linearLayoutManager3 = new LinearLayoutManager(getContext(),HORIZONTAL, false);
         rvUpcoming.setLayoutManager(linerarLayoutManager);
         rvPrevious.setLayoutManager(linearLayoutManager2);
+        rvFavorite.setLayoutManager(linearLayoutManager3);
 
 
         rvUpcoming.setAdapter(adapter);
         rvPrevious.setAdapter(adapter2);
+        rvFavorite.setAdapter(adapter3);
         queryUpcomingPosts();
         queryPreviousPosts();
+        queryFavoritePosts();
          //Swipe Container/ refresh code
 //        swipeContainer = view.findViewById(R.id.swipeContainer);
 //        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -176,6 +187,29 @@ public class ProfileFragment extends Fragment {
                     return;
                 }
                 adapter2.addAll(trips);
+            }
+        });
+    }
+    protected void queryFavoritePosts() {
+
+        adapter3.clear();
+
+        ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
+
+        tripQuery.setLimit(pagesize);
+        tripQuery.include(Trip.KEY_OWNER);
+        tripQuery.whereEqualTo(Trip.KEY_ISFAVORITED, true);
+        tripQuery.whereEqualTo(Trip.KEY_OWNER, getCurrentUser());
+        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+        tripQuery.findInBackground(new FindCallback<Trip>() {
+            @Override
+            public void done(List<Trip> trips, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG,"Error");
+                    e.printStackTrace();
+                    return;
+                }
+                adapter3.addAll(trips);
             }
         });
     }
