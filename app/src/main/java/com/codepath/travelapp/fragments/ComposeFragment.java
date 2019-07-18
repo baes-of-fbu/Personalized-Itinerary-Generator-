@@ -1,6 +1,5 @@
 package com.codepath.travelapp.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
