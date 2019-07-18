@@ -1,8 +1,11 @@
 package com.codepath.travelapp;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,12 +17,15 @@ import com.codepath.travelapp.fragments.ComposeFragment;
 import com.codepath.travelapp.fragments.ProfileFragment;
 import com.codepath.travelapp.fragments.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
     private BottomNavigationView bottomNavigationView;
     public static FragmentManager fragmentManager;
+
+    private Button logoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+        logoutBtn = (Button) findViewById(R.id.logoutBtn);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -55,6 +62,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                if (currentUser == null) {
+                    Log.d(TAG, "User successfully logged out!");
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Log.d(TAG, "Logout failure.");
+                }
+            }
+        });
 
     }
 }
