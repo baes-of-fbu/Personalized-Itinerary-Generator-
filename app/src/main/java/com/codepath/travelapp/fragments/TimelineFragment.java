@@ -16,9 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.codepath.travelapp.Models.Trip;
-import com.codepath.travelapp.TripAdapter;
+import com.codepath.travelapp.Adapters.TripAdapter;
 import com.codepath.travelapp.R;
-import com.codepath.travelapp.TripAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
