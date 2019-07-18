@@ -76,7 +76,7 @@ public class Trip extends ParseObject implements Serializable {
         return getDate(KEY_STARTDATE);
     }
 
-    public void setStartDate(ParseObject date) { // Might need to change to date
+    public void setStartDate(Date date) {
         put(KEY_STARTDATE, date);
     }
 
@@ -84,7 +84,7 @@ public class Trip extends ParseObject implements Serializable {
         return getDate(KEY_ENDDATE);
     }
 
-    public void setEndDate(ParseObject date) { // Might need to change to date
+    public void setEndDate(Date date) { // Might need to change to date
         put(KEY_ENDDATE, date);
     }
 

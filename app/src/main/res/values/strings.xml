@@ -65,7 +65,7 @@
     <string name="generate">Generate</string>
     <string name="trip_name">Trip Name</string>
     <string name="start_date">Start Date</string>
-    <string name="end_date">End State</string>
+    <string name="end_date">End Date</string>
     <string name="budget">Trip Budget</string>
     <string name="city">City</string>
 </resources>

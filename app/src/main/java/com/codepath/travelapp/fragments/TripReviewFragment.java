@@ -23,6 +23,7 @@ import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -82,16 +83,17 @@ public class TripReviewFragment extends Fragment {
         }
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 Trip trip = new Trip();
                 trip.setOwner(ParseUser.getCurrentUser());
                 trip.setName(tripName);
                 // trip.setCity();
-                // trip.setStartDate();
-                // trip.setEndDate(endDate);
+                trip.setStartDate(getParseDate(startDate));
+                trip.setEndDate(getParseDate(endDate));
                 // trip.setNumDays();
-                // trip.setBudget(budget);
+                trip.setBudget(Integer.parseInt(budget));
 
                 Fragment fragment = new TripDetailsFragment();
                 Bundle bundle = new Bundle();
@@ -122,33 +124,12 @@ public class TripReviewFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private Date getDateFromString(String string) {
-        DateFormat formatter = new DateFormat() {
-            @NonNull
-            @Override
-            public StringBuffer format(@NonNull Date date, @NonNull StringBuffer stringBuffer, @NonNull FieldPosition fieldPosition) {
-                return null;
-            }
-
-            @Nullable
-            @Override
-            public Date parse(@NonNull String s, @NonNull ParsePosition parsePosition) {
-                return null;
-            }
-        };
-
-        Date dateObject;
-
-        try{
-            dateObject = formatter.parse(string);
-            return dateObject;
-        }
-
-        catch (java.text.ParseException e)
-        {
+    public static Date getParseDate(String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (java.text.ParseException e) {
             e.printStackTrace();
-            Log.i("E11111111111", e.toString());
+            return null;
         }
-        return new Date();
     }
 }
