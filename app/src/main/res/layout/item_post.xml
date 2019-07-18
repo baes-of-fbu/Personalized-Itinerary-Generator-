@@ -2,6 +2,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cvRoot"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -10,62 +11,85 @@
     card_view:cardCornerRadius="@dimen/card_corner_radius"
     card_view:cardElevation="@dimen/card_elevation">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="411dp"
+        android:layout_height="202dp">
 
-    <ImageView
-        android:id="@+id/ivTripImage"
-        android:layout_width="151dp"
-        android:layout_height="159dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#9C27B0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/ivTripImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/tvTripName"
-        android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/transparent"
-        android:text="TripName"
-        app:layout_constraintEnd_toEndOf="@+id/ivTripImage"
-        app:layout_constraintStart_toStartOf="@+id/ivTripImage"
-        app:layout_constraintTop_toTopOf="@+id/ivTripImage" />
+        <TextView
+            android:id="@+id/tvTripName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="Trip Name"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/ivTripImage"
+            app:layout_constraintStart_toStartOf="@+id/ivTripImage"
+            app:layout_constraintTop_toTopOf="@+id/ivTripImage" />
 
-    <TextView
-        android:id="@+id/tvTripDates"
-        android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
-        android:text="Trip Dates"
-        app:layout_constraintBottom_toTopOf="@+id/tvTripBudget"
-        app:layout_constraintEnd_toEndOf="@+id/ivTripImage"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/ivTripImage"
-        app:layout_constraintTop_toBottomOf="@+id/tvTripName"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/tvTripDates"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:text="Trip Start Date"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/tvTripBudget"
+            app:layout_constraintEnd_toEndOf="@+id/ivTripImage"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/ivTripImage"
+            app:layout_constraintTop_toBottomOf="@+id/tvTripName"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/tvTripBudget"
-        android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
-        android:text="Trip Budget"
-        app:layout_constraintBottom_toBottomOf="@+id/ivTripImage"
-        app:layout_constraintEnd_toEndOf="@+id/tvTripDates"
-        app:layout_constraintStart_toStartOf="@+id/tvTripDates" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvTripBudget"
+            android:layout_width="209dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/transparent"
+            android:text="Trip Budget"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivTripImage"
+            app:layout_constraintEnd_toEndOf="@+id/tvTripDates"
+            app:layout_constraintStart_toStartOf="@+id/tvTripDates"
+            card_view:layout_constraintHorizontal_bias="0.354" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="66dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="20dp"
+            android:text="Budget:"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintEnd_toStartOf="@+id/tvTripBudget"
+            card_view:layout_constraintHorizontal_bias="0.0"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvTripDates"
+            card_view:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
