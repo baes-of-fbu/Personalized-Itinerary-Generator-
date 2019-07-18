@@ -5,10 +5,11 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @ParseClassName("Trip") // Needs to be same name as class on Parse website
-public class Trip extends ParseObject {
+public class Trip extends ParseObject implements Serializable {
 
     // Instance variables
     private static final String KEY_NAME = "name";
@@ -19,6 +20,8 @@ public class Trip extends ParseObject {
     private static final String KEY_NUMDAYS = "numDays";
     private static final String KEY_STARTDATE = "startDate";
     private static final String KEY_ENDDATE = "endDate";
+    private static final String KEY_ISUPCOMING = "isUpcoming";
+    private static final String KEY_ISFAVORITED = "isFavorited";
 
     // Getters and setters
     public String getName() {
@@ -83,6 +86,14 @@ public class Trip extends ParseObject {
 
     public void setEndDate(ParseObject date) { // Might need to change to date
         put(KEY_ENDDATE, date);
+    }
+
+    public Boolean isUpcoming() {
+        return getBoolean(KEY_ISUPCOMING);
+    }
+
+    public Boolean isFavorited() {
+        return getBoolean(KEY_ISFAVORITED);
     }
 
 }
