@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.R;
+import com.parse.ParseFile;
 
 public class ComposeFragment extends Fragment {
 
@@ -45,10 +46,14 @@ public class ComposeFragment extends Fragment {
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new TripDetailsFragment();
+                Fragment fragment = new TripReviewFragment();
 
                 Bundle bundle = new Bundle();
-                //bundle.putSerializable("Post", post);
+                bundle.putString("trip_name", etTripName.getText().toString());
+                bundle.putString("start_date", etStartDate.getText().toString());
+                bundle.putString("end_date", etEndDate.getText().toString());
+                bundle.putString("budget", etBudget.getText().toString());
+                bundle.putString("city", etCity.getText().toString());
                 fragment.setArguments(bundle);
 
                 MainActivity.fragmentManager.beginTransaction()
