@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.ParseFile;
@@ -67,6 +68,7 @@ public class TripDetailsFragment extends Fragment {
             ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
             Glide.with(getContext())
                     .load(image.getUrl())
+                    .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
     }
