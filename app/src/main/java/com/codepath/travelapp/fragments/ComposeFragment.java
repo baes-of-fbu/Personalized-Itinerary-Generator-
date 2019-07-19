@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.travelapp.Adapters.TagGridAdapter;
 import com.codepath.travelapp.MainActivity;
+import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
@@ -42,6 +44,13 @@ public class ComposeFragment extends Fragment {
     private Spinner spCity;
     private Button btnGenerate;
 
+    private String tripName;
+    private String startDate;
+    private String endDate;
+    private String budget;
+    private String cityName;
+    private City city;
+
     List<Tag> tags;
 
     @Nullable
@@ -62,30 +71,31 @@ public class ComposeFragment extends Fragment {
         btnGenerate = view.findViewById(R.id.btnGenerate);
 
         btnGenerate.setOnClickListener(new View.OnClickListener() {
+
             @TargetApi(Build.VERSION_CODES.O)
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                // TODO Add invalid input if/else statements
-                //  such as invalid city, trip name, or no date specified
 
-                Fragment fragment = new TripReviewFragment();
+                tripName = etTripName.getText().toString();
+                startDate = etStartDate.getText().toString();
+                endDate = etEndDate.getText().toString();
+                budget = etBudget.getText().toString();
+                cityName = spCity.getSelectedItem().toString();
 
-                ArrayList<Tag> tags = adapter.getSelectedTags();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("trip_name", etTripName.getText().toString());
-                bundle.putString("start_date", etStartDate.getText().toString());
-                bundle.putString("end_date", etEndDate.getText().toString());
-                bundle.putString("budget", etBudget.getText().toString());
-                bundle.putString("city", spCity.getSelectedItem().toString());
-                bundle.putParcelableArrayList("selected_tags", tags);
-                fragment.setArguments(bundle);
-
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                if (tripName.length() == 0) {
+                    Toast.makeText(getContext(), "Specify trip name", Toast.LENGTH_LONG).show();
+                } else if (startDate.length() == 0) {
+                    Toast.makeText(getContext(), "Specify start date", Toast.LENGTH_LONG).show();
+                } else if (endDate.length() == 0) {
+                    Toast.makeText(getContext(), "Specify end date", Toast.LENGTH_LONG).show();
+                } else if (budget.length() == 0) {
+                    Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
+                } else if (cityName == "Select city") {
+                    Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
+                } else {
+                    queryForCity(cityName);
+                }
             }
         });
 
@@ -100,7 +110,6 @@ public class ComposeFragment extends Fragment {
                 if (e == null) {
                     Log.d("DEBUG", "Successful query for tags");
                     tags = objects;
-
                     // Create adapter passing in the sample user data
                     adapter = new TagGridAdapter(tags);
                     // Attach the adapter to the recyclerview to populate items
@@ -115,5 +124,47 @@ public class ComposeFragment extends Fragment {
                 }
             }
         });
+    }
+
+    // Returns the parse city object associated with the string parameter
+    public void queryForCity(final String cityName) {
+        ParseQuery<City> cityQuery = new ParseQuery<City>(City.class);
+        cityQuery.whereEqualTo(City.KEY_NAME, cityName);
+        cityQuery.findInBackground(new FindCallback<City>() {
+            @Override
+            public void done(List<City> objects, ParseException e) {
+                if (e == null) {
+                    city = objects.get(0);
+                    // Assumes only one object associated with the name passed in
+                    Toast.makeText(getContext(), objects.get(0).toString(), Toast.LENGTH_LONG).show();
+                    sendToReviewFragment();
+                } else {
+                    e.printStackTrace();
+                    Log.d("ComposeFragment", "Failed to query city: " + e.toString());
+                    Toast.makeText(getContext(), "Failed to query city: " + cityName, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    // Sends bundle to Review Fragment
+    public void sendToReviewFragment() {
+        Fragment fragment = new TripReviewFragment();
+
+        ArrayList<Tag> tags = adapter.getSelectedTags();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("trip_name", etTripName.getText().toString());
+        bundle.putString("start_date", etStartDate.getText().toString());
+        bundle.putString("end_date", etEndDate.getText().toString());
+        bundle.putString("budget", etBudget.getText().toString());
+        bundle.putParcelableArrayList("selected_tags", tags);
+        bundle.putParcelable("city", city);
+        fragment.setArguments(bundle);
+
+        MainActivity.fragmentManager.beginTransaction()
+                .replace(R.id.flContainer, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

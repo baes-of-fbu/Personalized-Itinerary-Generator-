@@ -11,11 +11,11 @@ import com.parse.ParseObject;
 public class City extends ParseObject implements Parcelable {
 
     // Constants
-    private static String KEY_NAME = "name";
-    private static String KEY_STATE = "state";
-    private static String KEY_DESCRIPTION = "description";
-    private static String KEY_LOCATION = "location";
-    private static String KEY_IMAGE = "coverPhoto";
+    public static String KEY_NAME = "name";
+    public static String KEY_STATE = "state";
+    public static String KEY_DESCRIPTION = "description";
+    public static String KEY_LOCATION = "location";
+    public static String KEY_IMAGE = "coverPhoto";
 
     public City() {}
 
