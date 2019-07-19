@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,6 +42,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String email;
     private String state;
     private String bio;
+    private File image;
 
     private Button signUpBtn;
     private EditText etUsername;
@@ -53,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
     private ImageView ivProfileImage;
     public String photoFileName = "photo.jpg";
     private File photoFile;
-    public static final int PICK_IMAGE = 1;
+    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     private Context context;
 
     @Override
@@ -103,6 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
                 state = spState.getSelectedItem().toString();
                 bio = etBio.getText().toString();
 
+
                 // User can only sign up if all fields are complete
                 if (username.length() == 0) {
                     Log.e(APP_TAG, "No username");
@@ -131,75 +134,57 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
     public void onLaunchGallery(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        // create Intent to take a picture and return control to the calling application
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Create a File reference to access to future access
+        photoFile = getPhotoFileUri(photoFileName);
+        // wrap File object into a content provider
+        // required for API >= 24
+        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
+        Uri fileProvider = FileProvider.getUriForFile(this, "com.codepath.fileprovider.travelApp", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            // Start the image capture intent to take photo
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
     }
-    // Returns the File for a photo stored on disk given the fileName
-    public File getPhotoFileUri(String fileName) {
+    //TODO edit this to work for this app
+    private File getPhotoFileUri(String photoFileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+        File mediaStorageDir = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+
         // Create the storage director y if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d(APP_TAG, "failed to create directory");
         }
 
         // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
+        File file = new File(mediaStorageDir.getPath() + File.separator + photoFileName);
 
         return file;
     }
-
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_PHOTO_FOR_AVATAR && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                //Display an error
-                return;
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+//                // by this point we have the camera photo on disk
+//                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+//                // RESIZE BITMAP, see section below
+//                // Load the taken image into a preview
+//                ivProfileImage.setImageBitmap(takenImage);
+                if (data != null && data.getExtras() != null) {
+                    Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                   ivProfileImage.setImageBitmap(imageBitmap);
+                }
+            } else { // Result was a failure
+                Toast.makeText(context, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
-            try {
-                InputStream inputStream = context.getContentResolver().openInputStream(data.getData());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            //Now you can do whatever you want with your inpustream, save it as file, upload to a server, decode a bitmap...
-            String filePath = photoFile.getPath();
-            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-            ivProfileImage.setImageBitmap(bitmap);
         }
-    }
-    public Bitmap rotateBitmapOrientation(String photoFilePath) {
-        // Create and configure BitmapFactory
-        BitmapFactory.Options bounds = new BitmapFactory.Options();
-        bounds.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(photoFilePath, bounds);
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        Bitmap bm = BitmapFactory.decodeFile(photoFilePath, opts);
-        // Read EXIF Data
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(photoFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
-        int rotationAngle = 0;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
-        // Rotate Bitmap
-        Matrix matrix = new Matrix();
-        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
-        // Return result
-        return rotatedBitmap;
     }
 
     private void signUp() {
@@ -211,6 +196,7 @@ public class SignUpActivity extends AppCompatActivity {
         user.setEmail(email);
         user.put("bio", bio);
         user.put("homeState", state);
+        user.put("profileImage", image);
 
         // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
