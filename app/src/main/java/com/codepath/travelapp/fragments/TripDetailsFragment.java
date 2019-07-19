@@ -18,19 +18,9 @@ import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.ParseFile;
 
+import java.util.Objects;
+
 public class TripDetailsFragment extends Fragment {
-
-    private final String TAG = "TripDetailsFragment";
-
-    private ImageView ivCoverPhoto;
-    private TextView tvTripName;
-    private ImageView ivProfileImage;
-    private TextView tvUsername;
-    private TextView tvTravelDates;
-    private TextView tvDays;
-    private TextView tvBudget;
-    private RecyclerView rvSchedule;
-    private Trip trip;
 
     @Nullable
     @Override
@@ -42,17 +32,18 @@ public class TripDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
-        tvTripName = view.findViewById(R.id.tvTripName);
-        ivProfileImage = view.findViewById(R.id.ivProfileImage);
-        tvUsername = view.findViewById(R.id.tvUsername);
-        tvTravelDates = view.findViewById(R.id.tvTravelDates);
-        tvDays = view.findViewById(R.id.tvDays);
-        tvBudget = view.findViewById(R.id.tvBudget);
-        rvSchedule = view.findViewById(R.id.rvSchedule);
+        ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
+        ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
+        TextView tvTripName = view.findViewById(R.id.tvTripName);
+        TextView tvUsername = view.findViewById(R.id.tvUsername);
+        TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
+        TextView tvDays = view.findViewById(R.id.tvDays);
+        TextView tvBudget = view.findViewById(R.id.tvBudget);
+        RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
 
         Bundle bundle = getArguments();
-        trip = (Trip) bundle.getSerializable("Trip");
+        assert bundle != null;
+        Trip trip = (Trip) bundle.getSerializable("Trip");
 
         if (trip != null) {
             tvTripName.setText(trip.getName());
@@ -61,11 +52,12 @@ public class TripDetailsFragment extends Fragment {
             tvDays.setText(trip.getNumDays().toString());
             tvBudget.setText("$" + trip.getBudget());
 
-            Glide.with(getContext())
+            Glide.with(Objects.requireNonNull(getContext()))
                     .load(trip.getImage().getUrl())
                     .into(ivCoverPhoto);
 
             ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+            assert image != null;
             Glide.with(getContext())
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
