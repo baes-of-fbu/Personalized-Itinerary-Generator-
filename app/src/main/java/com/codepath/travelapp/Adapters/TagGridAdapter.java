@@ -41,6 +41,8 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
             ivTagImage = (ImageView) itemView.findViewById(R.id.ivTagImage);
             tvTagName = (TextView) itemView.findViewById(R.id.tvTagName);
 
+            ivTagImage.setColorFilter(Color.argb(200,200,200,200));
+            itemView.setTag("grayed");
             itemView.setOnClickListener((View.OnClickListener) this);
         }
 
@@ -51,11 +53,11 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
             if(view.getTag() != "grayed") {
                 ivTagImage.setColorFilter(Color.argb(200,200,200,200));
                 view.setTag("grayed");
-                selectedTags.add(tag);
+                selectedTags.remove(tag);
             } else {
                 ivTagImage.setColorFilter(null);
                 view.setTag("");
-                selectedTags.remove(tag);
+                selectedTags.add(tag);
             }
         }
     }

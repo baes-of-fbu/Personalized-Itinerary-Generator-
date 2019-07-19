@@ -17,12 +17,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.travelapp.MainActivity;
+import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.ParseUser;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -35,6 +38,7 @@ public class TripReviewFragment extends Fragment {
     private TextView tvTravelDates;
     private TextView tvDays;
     private TextView tvBudget;
+    private RecyclerView rvTags;
     private RecyclerView rvSchedule;
     private Button btnAccept;
     private Button btnDeny;
@@ -44,6 +48,7 @@ public class TripReviewFragment extends Fragment {
     private String startDate;
     private String endDate;
     private String budget;
+    private ArrayList<Tag> tags;
 
 
     @Nullable
@@ -52,6 +57,7 @@ public class TripReviewFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_trip_review,container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -61,6 +67,7 @@ public class TripReviewFragment extends Fragment {
         tvTravelDates = view.findViewById(R.id.tvTravelDates);
         tvDays = view.findViewById(R.id.tvDays);
         tvBudget = view.findViewById(R.id.tvBudget);
+        rvTags = view.findViewById(R.id.rvTags);
         rvSchedule = view.findViewById(R.id.rvSchedule);
         btnAccept = view.findViewById(R.id.btnAccept);
         btnDeny = view.findViewById(R.id.btnDeny);
@@ -73,7 +80,16 @@ public class TripReviewFragment extends Fragment {
             startDate = bundle.getString("start_date");
             endDate = bundle.getString("end_date");
             budget = bundle.getString("budget");
+            tags = bundle.getParcelableArrayList("selected_tags");
         }
+
+        final int numDays = (int) getDifferenceDays(getParseDate(startDate),getParseDate(endDate));
+
+        tvTripName.setText(tripName);
+        tvTravelDates.setText(startDate + " - " + endDate);
+        tvDays.setText("" + numDays);
+        tvBudget.setText(budget);
+        // rvTags populate
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.O)
@@ -86,7 +102,7 @@ public class TripReviewFragment extends Fragment {
                 // trip.setCity();
                 trip.setStartDate(getParseDate(startDate));
                 trip.setEndDate(getParseDate(endDate));
-                trip.setNumDays((int) getDifferenceDays(getParseDate(startDate),getParseDate(endDate)));
+                trip.setNumDays(numDays);
                 trip.setBudget(Integer.parseInt(budget));
 
                 Fragment fragment = new TripDetailsFragment();

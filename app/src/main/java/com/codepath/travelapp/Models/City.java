@@ -1,12 +1,14 @@
 package com.codepath.travelapp.Models;
 
+import android.os.Parcelable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
 @ParseClassName("City")
-public class City extends ParseObject {
+public class City extends ParseObject implements Parcelable {
 
     // Constants
     private static String KEY_NAME = "name";
@@ -14,6 +16,8 @@ public class City extends ParseObject {
     private static String KEY_DESCRIPTION = "description";
     private static String KEY_LOCATION = "location";
     private static String KEY_IMAGE = "coverPhoto";
+
+    public City() {}
 
     // Getters
     public String getName() {
