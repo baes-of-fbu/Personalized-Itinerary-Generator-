@@ -17,17 +17,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.codepath.travelapp.Adapters.FavoriteTripAdapter;
-import com.codepath.travelapp.Adapters.PreviousTripAdapter;
+import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Adapters.TagSelectedAdapter;
-import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
 import com.codepath.travelapp.MainActivity;
+import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.ParseUser;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -52,7 +50,7 @@ public class TripReviewFragment extends Fragment {
     private Button btnDeny;
 
     private String tripName;
-    private String city;
+    private City city;
     private String startDate;
     private String endDate;
     private String budget;
@@ -84,7 +82,7 @@ public class TripReviewFragment extends Fragment {
 
         if (bundle != null) {
             tripName = bundle.getString("trip_name");
-            city = bundle.getString("city");
+            city = bundle.getParcelable("city");
             startDate = bundle.getString("start_date");
             endDate = bundle.getString("end_date");
             budget = bundle.getString("budget");
@@ -102,6 +100,9 @@ public class TripReviewFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         rvTags.setLayoutManager(linearLayoutManager);
         rvTags.setAdapter(adapter);
+        Glide.with(getContext())
+                .load(city.getImage().getUrl())
+                .into(ivCoverPhoto);
 
 
         btnAccept.setOnClickListener(new View.OnClickListener() {

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -36,7 +35,6 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class ComposeFragment extends Fragment {
 
@@ -113,7 +111,7 @@ public class ComposeFragment extends Fragment {
                     Toast.makeText(getContext(), "Specify end date", Toast.LENGTH_LONG).show();
                 } else if (budget.length() == 0) {
                     Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
-                } else if (cityName == "Select city") {
+                } else if (cityName == "Select city" || cityName == null) {
                     Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
                 } else {
                     queryForCity(cityName);
