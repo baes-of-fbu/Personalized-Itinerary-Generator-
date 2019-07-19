@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,11 +32,12 @@ public class ComposeFragment extends Fragment {
 
     private final String TAG = "ComposeFragment";
 
+    private TagGridAdapter adapter;
     private EditText etTripName;
     private EditText etStartDate;
     private EditText etEndDate;
     private EditText etBudget;
-    private EditText etCity;
+    private Spinner spCity;
     private Button btnGenerate;
 
     List<Tag> tags;
@@ -54,7 +56,7 @@ public class ComposeFragment extends Fragment {
         etStartDate = view.findViewById(R.id.etStartDate);
         etEndDate = view.findViewById(R.id.etEndDate);
         etBudget = view.findViewById(R.id.etBudget);
-        etCity = view.findViewById(R.id.etCity);
+        spCity = view.findViewById(R.id.spCity);
         btnGenerate = view.findViewById(R.id.btnGenerate);
 
         btnGenerate.setOnClickListener(new View.OnClickListener() {
@@ -62,14 +64,18 @@ public class ComposeFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
+                // TODO Add invalid input if/else statements
+                //  such as invalid city, trip name, or no date specified
+
                 Fragment fragment = new TripReviewFragment();
+
 
                 Bundle bundle = new Bundle();
                 bundle.putString("trip_name", etTripName.getText().toString());
                 bundle.putString("start_date", etStartDate.getText().toString());
                 bundle.putString("end_date", etEndDate.getText().toString());
                 bundle.putString("budget", etBudget.getText().toString());
-                bundle.putString("city", etCity.getText().toString());
+                bundle.putString("city", spCity.getSelectedItem().toString());
                 fragment.setArguments(bundle);
 
                 MainActivity.fragmentManager.beginTransaction()
@@ -92,7 +98,7 @@ public class ComposeFragment extends Fragment {
                     tags = objects;
 
                     // Create adapter passing in the sample user data
-                    TagGridAdapter adapter = new TagGridAdapter(tags);
+                    adapter = new TagGridAdapter(tags);
                     // Attach the adapter to the recyclerview to populate items
                     rvTags.setAdapter(adapter);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);

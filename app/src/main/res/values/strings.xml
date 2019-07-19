@@ -61,6 +61,11 @@
         <item>WI</item>
         <item>WY</item>
     </string-array>
+    <string name="select_city">Select city</string>
+    <string-array name="cities">
+        <item>Select city</item>
+        <item>Seattle</item>
+    </string-array>
     <string name="back_btn_content_desc">Back Button</string>
     <string name="generate">Generate</string>
     <string name="trip_name">Trip Name</string>

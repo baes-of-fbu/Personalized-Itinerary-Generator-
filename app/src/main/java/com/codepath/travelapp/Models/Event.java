@@ -7,7 +7,7 @@ import com.parse.ParseObject;
 @ParseClassName("Event")
 public class Event extends ParseObject {
 
-    // Instance variables
+    // Constants
     private static final String KEY_NAME = "name";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_IMAGE = "eventImage";

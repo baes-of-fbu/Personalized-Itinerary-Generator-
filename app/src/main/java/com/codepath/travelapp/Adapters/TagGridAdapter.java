@@ -32,7 +32,6 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-
             ivTagImage = (ImageView) itemView.findViewById(R.id.ivTagImage);
             tvTagName = (TextView) itemView.findViewById(R.id.tvTagName);
         }
@@ -45,12 +44,10 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
 
     @Override
     public TagGridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-         context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
         // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.item_tag, parent, false);
-
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(contactView);
         return viewHolder;
