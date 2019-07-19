@@ -22,19 +22,17 @@ import com.parse.ParseUser;
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
-    private BottomNavigationView bottomNavigationView;
     public static FragmentManager fragmentManager;
-
-    private Button logoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_main);
         fragmentManager = getSupportFragmentManager();
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        logoutBtn = (Button) findViewById(R.id.logoutBtn);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        Button logoutBtn = findViewById(R.id.logoutBtn);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

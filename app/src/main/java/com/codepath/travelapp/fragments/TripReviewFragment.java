@@ -54,6 +54,7 @@ public class TripReviewFragment extends Fragment {
     private String startDate;
     private String endDate;
     private String budget;
+    private int numDays;
     private ArrayList<Tag> tags;
 
 
@@ -85,11 +86,10 @@ public class TripReviewFragment extends Fragment {
             city = bundle.getParcelable("city");
             startDate = bundle.getString("start_date");
             endDate = bundle.getString("end_date");
+            numDays = bundle.getInt("number_days");
             budget = bundle.getString("budget");
             tags = bundle.getParcelableArrayList("selected_tags");
         }
-
-        final int numDays = (int) getDifferenceDays(getParseDate(startDate),getParseDate(endDate));
 
         tvTripName.setText(tripName);
         tvTravelDates.setText(startDate + " - " + endDate);
@@ -149,14 +149,8 @@ public class TripReviewFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private static LocalDate getParseDate(String date) {
+    static LocalDate getParseDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         return LocalDate.parse(date, formatter);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private static long getDifferenceDays(LocalDate d1, LocalDate d2) {
-        long diff = DAYS.between(d1, d2);
-        return diff;
     }
 }

@@ -32,9 +32,12 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ComposeFragment extends Fragment {
 
@@ -52,6 +55,7 @@ public class ComposeFragment extends Fragment {
     private String tripName;
     private String startDate;
     private String endDate;
+    private int numDays;
     private String budget;
     private String cityName;
     private City city;
@@ -109,12 +113,17 @@ public class ComposeFragment extends Fragment {
                     Toast.makeText(getContext(), "Specify start date", Toast.LENGTH_LONG).show();
                 } else if (endDate.length() == 0) {
                     Toast.makeText(getContext(), "Specify end date", Toast.LENGTH_LONG).show();
-                } else if (budget.length() == 0) {
-                    Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
-                } else if (cityName.contains("Select city")) {
-                    Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
                 } else {
-                    queryForCity(cityName);
+                    numDays = (int) getDifferenceDays(TripReviewFragment.getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
+                    if (numDays < 1) {
+                        Toast.makeText(getContext(), "Invalid dates. Please fix your start and/or end date", Toast.LENGTH_LONG).show();
+                    } else if (budget.length() == 0) {
+                        Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
+                    } else if (cityName.contains("Select city")) {
+                        Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
+                    } else {
+                        queryForCity(cityName);
+                    }
                 }
             }
         });
@@ -151,6 +160,7 @@ public class ComposeFragment extends Fragment {
         ParseQuery<City> cityQuery = new ParseQuery<City>(City.class);
         cityQuery.whereEqualTo(City.KEY_NAME, cityName);
         cityQuery.findInBackground(new FindCallback<City>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void done(List<City> objects, ParseException e) {
                 if (e == null) {
@@ -168,6 +178,7 @@ public class ComposeFragment extends Fragment {
     }
 
     // Sends bundle to Review Fragment
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void sendToReviewFragment() {
         Fragment fragment = new TripReviewFragment();
 
@@ -177,6 +188,7 @@ public class ComposeFragment extends Fragment {
         bundle.putString("trip_name", etTripName.getText().toString());
         bundle.putString("start_date", etStartDate.getText().toString());
         bundle.putString("end_date", etEndDate.getText().toString());
+        bundle.putInt("number_days", numDays);
         bundle.putString("budget", etBudget.getText().toString());
         bundle.putParcelableArrayList("selected_tags", tags);
         bundle.putParcelable("city", city);
@@ -204,5 +216,11 @@ public class ComposeFragment extends Fragment {
 
         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    static long getDifferenceDays(LocalDate d1, LocalDate d2) {
+        long diff = DAYS.between(d1, d2);
+        return diff + 1;
     }
 }
