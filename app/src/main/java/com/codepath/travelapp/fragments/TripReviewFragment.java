@@ -29,25 +29,11 @@ import com.parse.ParseUser;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
-import static java.time.temporal.ChronoUnit.DAYS;
 
 public class TripReviewFragment extends Fragment {
-
-    private final String TAG = "TripReviewFragment";
-
-    private TagSelectedAdapter adapter;
-
-    private ImageView ivCoverPhoto;
-    private TextView tvTripName;
-    private TextView tvTravelDates;
-    private TextView tvDays;
-    private TextView tvBudget;
-    private RecyclerView rvTags;
-    private RecyclerView rvSchedule;
-    private Button btnAccept;
-    private Button btnDeny;
 
     private String tripName;
     private City city;
@@ -69,18 +55,7 @@ public class TripReviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
-        tvTripName = view.findViewById(R.id.tvTripName);
-        tvTravelDates = view.findViewById(R.id.tvTravelDates);
-        tvDays = view.findViewById(R.id.tvDays);
-        tvBudget = view.findViewById(R.id.tvBudget);
-        rvTags = view.findViewById(R.id.rvTags);
-        rvSchedule = view.findViewById(R.id.rvSchedule);
-        btnAccept = view.findViewById(R.id.btnAccept);
-        btnDeny = view.findViewById(R.id.btnDeny);
-
         Bundle bundle = getArguments();
-
         if (bundle != null) {
             tripName = bundle.getString("trip_name");
             city = bundle.getParcelable("city");
@@ -91,19 +66,28 @@ public class TripReviewFragment extends Fragment {
             tags = bundle.getParcelableArrayList("selected_tags");
         }
 
+        ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
+        TextView tvTripName = view.findViewById(R.id.tvTripName);
+        TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
+        TextView tvDays = view.findViewById(R.id.tvDays);
+        TextView tvBudget = view.findViewById(R.id.tvBudget);
+        RecyclerView rvTags = view.findViewById(R.id.rvTags);
+        RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
+        Button btnAccept = view.findViewById(R.id.btnAccept);
+        Button btnDeny = view.findViewById(R.id.btnDeny);
+
         tvTripName.setText(tripName);
         tvTravelDates.setText(startDate + " - " + endDate);
         tvDays.setText("" + numDays);
         tvBudget.setText(budget);
 
-        adapter = new TagSelectedAdapter(tags);
+        TagSelectedAdapter adapter = new TagSelectedAdapter(tags);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         rvTags.setLayoutManager(linearLayoutManager);
         rvTags.setAdapter(adapter);
-        Glide.with(getContext())
+        Glide.with(Objects.requireNonNull(getContext()))
                 .load(city.getImage().getUrl())
                 .into(ivCoverPhoto);
-
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.O)
@@ -113,7 +97,7 @@ public class TripReviewFragment extends Fragment {
                 Trip trip = new Trip();
                 trip.setOwner(ParseUser.getCurrentUser());
                 trip.setName(tripName);
-                // trip.setCity();
+                trip.setCity(city);
                 trip.setStartDate(getParseDate(startDate));
                 trip.setEndDate(getParseDate(endDate));
                 trip.setNumDays(numDays);

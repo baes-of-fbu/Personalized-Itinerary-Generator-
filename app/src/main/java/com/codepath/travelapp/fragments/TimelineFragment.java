@@ -24,15 +24,13 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TimelineFragment extends Fragment {
 
     private final String TAG = "TimelineFragment";
 
-    private RecyclerView rvPosts;
     protected TripAdapter adapter;
-    protected ArrayList<Trip> mTrips;
-    private int pagesize = 10;
     private SwipeRefreshLayout swipeContainer;
 
     @Nullable
@@ -43,16 +41,17 @@ public class TimelineFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        rvPosts = view.findViewById(R.id.rvTrips);
+        RecyclerView rvPosts = view.findViewById(R.id.rvTrips);
 
-        //create the adapter
-        mTrips = new ArrayList<>();
-        //create the data source
+        // create the adapter
+        ArrayList<Trip> mTrips = new ArrayList<>();
+        // create the data source
         adapter = new TripAdapter(mTrips);
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         rvPosts.setAdapter(adapter);
         queryPosts();
+
         // Swipe Container/ refresh code
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -62,24 +61,24 @@ public class TimelineFragment extends Fragment {
                 queryPosts();
             }
         });
+
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        RecyclerView.ItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        RecyclerView.ItemDecoration divider = new DividerItemDecoration(Objects.requireNonNull(getContext()), DividerItemDecoration.VERTICAL);
         rvPosts.addItemDecoration(divider);
 
         Toast.makeText(getContext(), "Welcome to Timeline",Toast.LENGTH_SHORT).show();
     }
-    protected void queryPosts() {
 
+    private void queryPosts() {
         adapter.clear();
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
-        ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
-
-        tripQuery.setLimit(pagesize);
+        tripQuery.setLimit(10);
         tripQuery.include(Trip.KEY_OWNER);
         tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
         tripQuery.findInBackground(new FindCallback<Trip>() {
