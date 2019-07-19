@@ -1,6 +1,8 @@
 package com.codepath.travelapp.fragments;
 
 import android.annotation.TargetApi;
+import android.app.DatePickerDialog;
+import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,8 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +34,9 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class ComposeFragment extends Fragment {
 
@@ -69,6 +76,21 @@ public class ComposeFragment extends Fragment {
         etBudget = view.findViewById(R.id.etBudget);
         spCity = view.findViewById(R.id.spCity);
         btnGenerate = view.findViewById(R.id.btnGenerate);
+
+        etStartDate.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                getCurrentDate(etStartDate);
+            }
+        });
+
+        etEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCurrentDate(etEndDate);
+            }
+        });
 
         btnGenerate.setOnClickListener(new View.OnClickListener() {
 
@@ -166,5 +188,23 @@ public class ComposeFragment extends Fragment {
                 .replace(R.id.flContainer, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    // Selecting a Date and displaying it in EditText
+    public void getCurrentDate(final TextView tvDate) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                tvDate.setText(simpleDateFormat.format(calendar.getTime()));
+            }
+
+        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 }
