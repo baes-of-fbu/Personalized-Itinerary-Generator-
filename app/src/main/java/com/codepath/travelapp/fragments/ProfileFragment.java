@@ -4,14 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -64,10 +68,12 @@ public class ProfileFragment extends Fragment {
     private TextView tvFollowersCount;
     private TextView tvFavoritesCOunt;
     private TextView tvBio;
+    private Toolbar toolbar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_profile,container, false);
     }
 
@@ -85,6 +91,7 @@ public class ProfileFragment extends Fragment {
         tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
         tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
         tvFavoritesCOunt = view.findViewById(R.id.tvFavoriteCcount);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
 
         //Populate views in Profile Fragment
@@ -215,5 +222,10 @@ public class ProfileFragment extends Fragment {
                 adapter3.addAll(trips);
             }
         });
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

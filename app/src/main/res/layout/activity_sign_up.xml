@@ -23,95 +23,164 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAppName"
-        app:passwordToggleEnabled="false">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSignUpUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="12"
-            android:hint="@string/username" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-        app:passwordToggleEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSignUpPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSignUpEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Spinner
-        android:id="@+id/spSelectState"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
-        android:entries="@array/state_abbreviations"
-        android:scrollbars="vertical"
-        android:spinnerMode="dropdown"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/tvAppName"
+        app:layout_constraintVertical_bias="1.0">
 
-    <Button
-        android:id="@+id/signUpBtn"
-        android:layout_width="@dimen/login_btn_width"
-        android:layout_height="@dimen/login_btn_height"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_btn"
-        android:text="@string/signup"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spSelectState" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAppName">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAppName"
+                app:passwordToggleEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSignUpUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="12"
+                    android:hint="@string/username" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSignUpPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSignUpEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="150">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSignUpBio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="150"
+                    android:enabled="true"
+                    android:hint="Write a short Bio"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/ivSignUpProfileImage"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@android:color/background_dark" />
+
+            <Button
+                android:id="@+id/signUpProfileImageBtn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_btn_height"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                android:background="@drawable/rounded_btn"
+                android:text="Set as Profile Image" />
+
+            <Spinner
+                android:id="@+id/spSelectState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                android:entries="@array/state_abbreviations"
+                android:scrollbars="vertical"
+                android:spinnerMode="dropdown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+
+            <Button
+                android:id="@+id/signUpBtn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_btn_height"
+                android:background="@drawable/rounded_btn"
+                android:text="@string/signup"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spSelectState" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <ImageView
         android:id="@+id/ivBackBtn"
