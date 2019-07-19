@@ -63,6 +63,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvFollowingCount;
     private TextView tvFollowersCount;
     private TextView tvFavoritesCOunt;
+    private TextView tvBio;
 
     @Nullable
     @Override
@@ -79,6 +80,7 @@ public class ProfileFragment extends Fragment {
         rvFavorite = view.findViewById(R.id.rvFavorite);
         tvUsername = view.findViewById(R.id.tvUsername);
         tvHometown = view.findViewById(R.id.tvHometown);
+        tvBio = view.findViewById(R.id.tvBio);
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
         tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
@@ -88,6 +90,7 @@ public class ProfileFragment extends Fragment {
         //Populate views in Profile Fragment
         tvUsername.setText(getCurrentUser().getUsername());
         tvHometown.setText((String) getCurrentUser().get("homeState"));
+        tvBio.setText((String)getCurrentUser().get("bio"));
         if (getCurrentUser().get("profileImage") != null) {
             ParseFile image = (ParseFile) getCurrentUser().get("profileImage");
             Glide.with(getContext())
