@@ -24,7 +24,7 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
 
     private Context context;
     private List<Tag> mTags; // Stores all of the tags
-    private List<Tag> selectedTags;
+    private ArrayList<Tag> selectedTags;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -99,7 +99,7 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
         return mTags.size();
     }
 
-    public List<Tag> getSelectedTags() {
+    public ArrayList<Tag> getSelectedTags() {
         return selectedTags;
     }
 }

@@ -26,6 +26,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComposeFragment extends Fragment {
@@ -70,7 +71,7 @@ public class ComposeFragment extends Fragment {
 
                 Fragment fragment = new TripReviewFragment();
 
-                List<Tag> tags = adapter.getSelectedTags(); 
+                ArrayList<Tag> tags = adapter.getSelectedTags();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("trip_name", etTripName.getText().toString());
@@ -78,6 +79,7 @@ public class ComposeFragment extends Fragment {
                 bundle.putString("end_date", etEndDate.getText().toString());
                 bundle.putString("budget", etBudget.getText().toString());
                 bundle.putString("city", spCity.getSelectedItem().toString());
+                bundle.putParcelableArrayList("selected_tags", tags);
                 fragment.setArguments(bundle);
 
                 MainActivity.fragmentManager.beginTransaction()
