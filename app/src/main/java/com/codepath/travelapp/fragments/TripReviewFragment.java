@@ -14,8 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.codepath.travelapp.Adapters.FavoriteTripAdapter;
+import com.codepath.travelapp.Adapters.PreviousTripAdapter;
+import com.codepath.travelapp.Adapters.TagSelectedAdapter;
+import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
 import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
@@ -27,11 +32,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class TripReviewFragment extends Fragment {
 
     private final String TAG = "TripReviewFragment";
+
+    private TagSelectedAdapter adapter;
 
     private ImageView ivCoverPhoto;
     private TextView tvTripName;
@@ -89,7 +97,12 @@ public class TripReviewFragment extends Fragment {
         tvTravelDates.setText(startDate + " - " + endDate);
         tvDays.setText("" + numDays);
         tvBudget.setText(budget);
-        // rvTags populate
+
+        adapter = new TagSelectedAdapter(tags);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        rvTags.setLayoutManager(linearLayoutManager);
+        rvTags.setAdapter(adapter);
+
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.O)
