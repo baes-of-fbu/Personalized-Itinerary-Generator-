@@ -119,13 +119,13 @@ public class TripReviewFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static LocalDate getParseDate(String date) {
+    private static LocalDate getParseDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         return LocalDate.parse(date, formatter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static long getDifferenceDays(LocalDate d1, LocalDate d2) {
+    private static long getDifferenceDays(LocalDate d1, LocalDate d2) {
         long diff = DAYS.between(d1, d2);
         return diff;
     }

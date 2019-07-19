@@ -33,6 +33,7 @@ public class ComposeFragment extends Fragment {
     private final String TAG = "ComposeFragment";
 
     private TagGridAdapter adapter;
+
     private EditText etTripName;
     private EditText etStartDate;
     private EditText etEndDate;
@@ -69,6 +70,7 @@ public class ComposeFragment extends Fragment {
 
                 Fragment fragment = new TripReviewFragment();
 
+                List<Tag> tags = adapter.getSelectedTags(); 
 
                 Bundle bundle = new Bundle();
                 bundle.putString("trip_name", etTripName.getText().toString());
