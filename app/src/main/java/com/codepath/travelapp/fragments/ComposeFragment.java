@@ -111,7 +111,7 @@ public class ComposeFragment extends Fragment {
                     Toast.makeText(getContext(), "Specify end date", Toast.LENGTH_LONG).show();
                 } else if (budget.length() == 0) {
                     Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
-                } else if (cityName == "Select city" || cityName == null) {
+                } else if (cityName.contains("Select city")) {
                     Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
                 } else {
                     queryForCity(cityName);
