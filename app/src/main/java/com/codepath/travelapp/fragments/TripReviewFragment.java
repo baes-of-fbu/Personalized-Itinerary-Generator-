@@ -1,9 +1,8 @@
 package com.codepath.travelapp.fragments;
 
-import android.icu.text.SimpleDateFormat;
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,24 +13,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
-import com.google.android.material.snackbar.Snackbar;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class TripReviewFragment extends Fragment {
 
@@ -83,6 +76,7 @@ public class TripReviewFragment extends Fragment {
         }
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.O)
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
@@ -92,7 +86,7 @@ public class TripReviewFragment extends Fragment {
                 // trip.setCity();
                 trip.setStartDate(getParseDate(startDate));
                 trip.setEndDate(getParseDate(endDate));
-                // trip.setNumDays();
+                trip.setNumDays((int) getDifferenceDays(getParseDate(startDate),getParseDate(endDate)));
                 trip.setBudget(Integer.parseInt(budget));
 
                 Fragment fragment = new TripDetailsFragment();
@@ -123,13 +117,16 @@ public class TripReviewFragment extends Fragment {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static Date getParseDate(String date) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static LocalDate getParseDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return LocalDate.parse(date, formatter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static long getDifferenceDays(LocalDate d1, LocalDate d2) {
+        long diff = DAYS.between(d1, d2);
+        return diff;
     }
 }
