@@ -1,10 +1,9 @@
-<androidx.cardview.widget.CardView
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cvRoot"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:clickable="true"
@@ -13,7 +12,7 @@
     card_view:cardElevation="@dimen/card_elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="202dp">
 
         <ImageView
@@ -50,9 +49,9 @@
         <TextView
             android:id="@+id/tvTripDates"
             android:layout_width="0dp"
-            android:layout_height="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:text="Trip Start Date"
             android:textColor="@color/white"
@@ -62,15 +61,15 @@
 
         <TextView
             android:id="@+id/tvTripBudget"
-            android:layout_width="326dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:text="Trip Budget"
             android:textColor="@color/white"
             android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="@+id/textView6"
             card_view:layout_constraintBottom_toBottomOf="@+id/textView6"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHorizontal_bias="0.0"
