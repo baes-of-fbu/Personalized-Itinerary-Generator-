@@ -36,21 +36,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ComposeFragment extends Fragment {
-
-    private final String TAG = "ComposeFragment";
-
-    private TagGridAdapter adapter;
 
     private EditText etTripName;
     private EditText etStartDate;
     private EditText etEndDate;
     private EditText etBudget;
     private Spinner spCity;
-    private Button btnGenerate;
 
     private String tripName;
     private String startDate;
@@ -60,7 +56,8 @@ public class ComposeFragment extends Fragment {
     private String cityName;
     private City city;
 
-    List<Tag> tags;
+    private TagGridAdapter adapter;
+    private List<Tag> tags;
 
     @Nullable
     @Override
@@ -77,7 +74,7 @@ public class ComposeFragment extends Fragment {
         etEndDate = view.findViewById(R.id.etEndDate);
         etBudget = view.findViewById(R.id.etBudget);
         spCity = view.findViewById(R.id.spCity);
-        btnGenerate = view.findViewById(R.id.btnGenerate);
+        Button btnGenerate = view.findViewById(R.id.btnGenerate);
 
         etStartDate.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -95,12 +92,10 @@ public class ComposeFragment extends Fragment {
         });
 
         btnGenerate.setOnClickListener(new View.OnClickListener() {
-
             @TargetApi(Build.VERSION_CODES.O)
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-
                 tripName = etTripName.getText().toString();
                 startDate = etStartDate.getText().toString();
                 endDate = etEndDate.getText().toString();
@@ -128,10 +123,10 @@ public class ComposeFragment extends Fragment {
             }
         });
 
-        final RecyclerView rvTags = (RecyclerView) view.findViewById(R.id.rvTags);
+        final RecyclerView rvTags = view.findViewById(R.id.rvTags);
 
         // Initialize contacts
-        ParseQuery<Tag> tagQuery = new ParseQuery<Tag>(Tag.class);
+        ParseQuery<Tag> tagQuery = new ParseQuery<>(Tag.class);
         tagQuery.setLimit(10);
         tagQuery.findInBackground(new FindCallback<Tag>() {
             @Override
@@ -139,12 +134,15 @@ public class ComposeFragment extends Fragment {
                 if (e == null) {
                     Log.d("DEBUG", "Successful query for tags");
                     tags = objects;
+
                     // Create adapter passing in the sample user data
                     adapter = new TagGridAdapter(tags);
-                    // Attach the adapter to the recyclerview to populate items
+
+                    // Attach the adapter to the recyclerView to populate items
                     rvTags.setAdapter(adapter);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
                     gridLayoutManager.setSpanCount(3);
+
                     // Set layout manager to position the items
                     rvTags.setLayoutManager(gridLayoutManager);
                 } else {
@@ -156,8 +154,8 @@ public class ComposeFragment extends Fragment {
     }
 
     // Returns the parse city object associated with the string parameter
-    public void queryForCity(final String cityName) {
-        ParseQuery<City> cityQuery = new ParseQuery<City>(City.class);
+    private void queryForCity(final String cityName) {
+        ParseQuery<City> cityQuery = new ParseQuery<>(City.class);
         cityQuery.whereEqualTo(City.KEY_NAME, cityName);
         cityQuery.findInBackground(new FindCallback<City>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -179,10 +177,9 @@ public class ComposeFragment extends Fragment {
 
     // Sends bundle to Review Fragment
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void sendToReviewFragment() {
-        Fragment fragment = new TripReviewFragment();
-
+    private void sendToReviewFragment() {
         ArrayList<Tag> tags = adapter.getSelectedTags();
+        Fragment fragment = new TripReviewFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString("trip_name", etTripName.getText().toString());
@@ -201,9 +198,8 @@ public class ComposeFragment extends Fragment {
     }
 
     // Selecting a Date and displaying it in EditText
-    public void getCurrentDate(final TextView tvDate) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-
+    private void getCurrentDate(final TextView tvDate) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), new DatePickerDialog.OnDateSetListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -219,7 +215,7 @@ public class ComposeFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    static long getDifferenceDays(LocalDate d1, LocalDate d2) {
+    private static long getDifferenceDays(LocalDate d1, LocalDate d2) {
         long diff = DAYS.between(d1, d2);
         return diff + 1;
     }
