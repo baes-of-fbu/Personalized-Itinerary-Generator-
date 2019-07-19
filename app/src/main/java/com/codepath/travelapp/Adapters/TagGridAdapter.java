@@ -102,6 +102,10 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
     }
 
     public ArrayList<Tag> getSelectedTags() {
+        // if NONE of the tags are selected, then all of the tags should be considered "selected"
+        if (selectedTags.size() < 1) {
+            selectedTags.addAll(mTags);
+        }
         return selectedTags;
     }
 }
