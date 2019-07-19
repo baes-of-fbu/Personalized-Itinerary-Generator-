@@ -1,6 +1,5 @@
 package com.codepath.travelapp.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +14,7 @@ import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -27,18 +23,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Adapters.FavoriteTripAdapter;
 import com.codepath.travelapp.Adapters.PreviousTripAdapter;
-import com.codepath.travelapp.Adapters.TripAdapter;
 import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
-import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +61,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvBio;
     private Toolbar toolbar;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,7 +83,7 @@ public class ProfileFragment extends Fragment {
         tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
         tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
         tvFavoritesCOunt = view.findViewById(R.id.tvFavoriteCcount);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarMain);
 
 
         //Populate views in Profile Fragment

@@ -42,7 +42,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Trip trip = (Trip) trips.get(position);
+        Trip trip = trips.get(position);
         holder.tvTripBudget.setText(trip.getBudget().toString());
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
@@ -51,6 +51,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
         if (trip.getOwner().get("profileImage") != null) {
             ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+            assert image != null;
             Glide.with(context)
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
@@ -58,11 +59,11 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         }
         if (trip.get("image") != null) {
             ParseFile image = (ParseFile) trip.get("image");
+            assert image != null;
             Glide.with(context)
                     .load(image.getUrl())
                     .into(holder.ivTripImage);
         }
-
     }
 
     @Override
@@ -78,7 +79,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         private TextView tvUsername;
         private ImageView ivProfileImage;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTripDates = itemView.findViewById(R.id.tvTripDates);
             tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
@@ -87,7 +88,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
 
-            itemView.setOnClickListener((View.OnClickListener) this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -112,7 +113,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     public void clear() {
         trips.clear();
         notifyDataSetChanged();
-        ;
     }
 
     // Add a list of items -- change to type used

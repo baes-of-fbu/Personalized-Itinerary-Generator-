@@ -36,13 +36,12 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
     public PreviousTripAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_post_profile, parent, false);
-
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PreviousTripAdapter.ViewHolder holder, int position) {
-        Trip trip = (Trip) trips.get(position);
+        Trip trip = trips.get(position);
         holder.tvTripBudget.setText(trip.getBudget().toString());
 //        holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
@@ -51,12 +50,13 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
 
         if (trip.get("image") != null) {
             ParseFile image = (ParseFile) trip.get("image");
+            assert image != null;
             Glide.with(context)
                     .load(image.getUrl())
                     .into(holder.ivTripImage);
         }
-
     }
+
     @Override
     public int getItemCount() {
         return trips.size();
@@ -64,19 +64,19 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTripBudget;
-        private TextView tvTripDates;
+//        private TextView tvTripDates;
         private ImageView ivTripImage;
         private TextView tvTripName;
 
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTripDates = itemView.findViewById(R.id.tvTripDates);
+//            tvTripDates = itemView.findViewById(R.id.tvTripDates);
             tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
 
-            itemView.setOnClickListener((View.OnClickListener) this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -97,12 +97,12 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
             }
         }
     }
+
     public void clear(){
         trips.clear();
-        notifyDataSetChanged();;
+        notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
     public void addAll(List<Trip> list) {
         trips.addAll(list);
         notifyDataSetChanged();

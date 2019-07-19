@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -22,19 +23,18 @@ import com.parse.ParseUser;
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
-    private BottomNavigationView bottomNavigationView;
     public static FragmentManager fragmentManager;
-
-    private Button logoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_main);
         fragmentManager = getSupportFragmentManager();
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        logoutBtn = (Button) findViewById(R.id.logoutBtn);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        final Button logoutBtn = findViewById(R.id.logoutBtn);
+        final Toolbar toolbar = findViewById(R.id.toolbarMain);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -43,14 +43,19 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new TimelineFragment();
+                        toolbar.setVisibility(View.VISIBLE);
+                        logoutBtn.setVisibility(View.INVISIBLE);
                         Toast.makeText(MainActivity.this, "Home!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_compose:
                         fragment = new ComposeFragment();
+                        toolbar.setVisibility(View.GONE);
                         Toast.makeText(MainActivity.this, "Compose!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_profile:
                         fragment = new ProfileFragment();
+                        toolbar.setVisibility(View.VISIBLE);
+                        logoutBtn.setVisibility(View.VISIBLE);
                         Toast.makeText(MainActivity.this, "Profile!", Toast.LENGTH_SHORT).show();
                         break;
                     default:
