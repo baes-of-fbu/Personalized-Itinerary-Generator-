@@ -159,6 +159,7 @@ public class ProfileFragment extends Fragment {
 
         tripQuery.setLimit(pagesize);
         tripQuery.include(Trip.KEY_OWNER);
+        // TODO query by time
         tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, false);
         tripQuery.whereEqualTo(Trip.KEY_OWNER, getCurrentUser());
         tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
@@ -182,6 +183,7 @@ public class ProfileFragment extends Fragment {
 
         tripQuery.setLimit(pagesize);
         tripQuery.include(Trip.KEY_OWNER);
+        // TODO query by time
         tripQuery.whereEqualTo(Trip.KEY_ISFAVORITED, true);
         tripQuery.whereEqualTo(Trip.KEY_OWNER, getCurrentUser());
         tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);

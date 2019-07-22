@@ -55,7 +55,7 @@ public class ComposeFragment extends Fragment {
     private String startDate;
     private String endDate;
     private int numDays;
-    private String budget;
+    private String budgetString;
     private String cityName;
     private City city;
 
@@ -102,7 +102,7 @@ public class ComposeFragment extends Fragment {
                 tripName = etTripName.getText().toString();
                 startDate = etStartDate.getText().toString();
                 endDate = etEndDate.getText().toString();
-                budget = etBudget.getText().toString();
+                budgetString = etBudget.getText().toString();
                 cityName = spCity.getSelectedItem().toString();
 
                 if (tripName.length() == 0) {
@@ -115,7 +115,7 @@ public class ComposeFragment extends Fragment {
                     numDays = (int) getDifferenceDays(TripReviewFragment.getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
                     if (numDays < 1) {
                         Toast.makeText(getContext(), "Invalid dates. Please fix your start and/or end date", Toast.LENGTH_LONG).show();
-                    } else if (budget.length() == 0) {
+                    } else if (budgetString.length() == 0) {
                         Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
                     } else if (cityName.contains("Select city")) {
                         Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
@@ -128,7 +128,7 @@ public class ComposeFragment extends Fragment {
 
         final RecyclerView rvTags = view.findViewById(R.id.rvTags);
 
-        // Initialize contacts
+        // Initialize tags
         ParseQuery<Tag> tagQuery = new ParseQuery<>(Tag.class);
         tagQuery.setLimit(10);
         tagQuery.findInBackground(new FindCallback<Tag>() {
@@ -166,7 +166,7 @@ public class ComposeFragment extends Fragment {
             public void done(List<City> objects, ParseException e) {
                 if (e == null) {
                     city = objects.get(0);
-                    // Assumes only one object associated with the name passed in
+                    // Assumes only one city is associated with the name
                     Toast.makeText(getContext(), objects.get(0).toString(), Toast.LENGTH_LONG).show();
                     sendToReviewFragment();
                 } else {
@@ -231,70 +231,104 @@ public class ComposeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public ArrayList<DayPlan> generateSchedule(City city, int numDays, int budget, List<Tag> tags) {
 
-        int runningBudget = budget;
         ArrayList<DayPlan> dayPlans = new ArrayList<>();
 
         // Get available events based off tags
-        List<Event> availableEvents = getAvailableEvents(city, tags);
-        List<Event> morningEvents = filterByTime(city, tags, Event.KEY_MORNING);
-        List<Event> afternoonEvents = filterByTime(city, tags, Event.KEY_AFTERNOON);
-        List<Event> eveningEvents = filterByTime(city, tags, Event.KEY_EVENING);
+        List<Event> allAvailableEvents = getAvailableEvents(city, tags);
+        List<Event> morningEvents = filterEventsByTime(city, tags, Event.KEY_MORNING);
+        List<Event> afternoonEvents = filterEventsByTime(city, tags, Event.KEY_AFTERNOON);
+        List<Event> eveningEvents = filterEventsByTime(city, tags, Event.KEY_EVENING);
+
+        int runningBudget = budget; // Stores budget for the entire trip
 
         // Loop through each day
         for (int day = 0; day < numDays; day++) {
 
             DayPlan tempDay = new DayPlan();
 
-            for (int i = 0; i < 3; i++) {
-
-                String timeSlot = getTimeSlot(i);
-
-                // Randomly pick event from a list using timeSlot
-                Event event;
-
-                event = getRandomElement()
-
-                    // (a) If it's in available and within budget,
-                    // select this event and add it to dayPlan
-
-                    // (b) Repeat step a if event not chosen
-
-                    // (c) Remove from available events, adjust budget
-
-                // TODO account for case where no event was found
-
-                // Add event to tempDay
+            // Picks morning event and updates budget
+            Event morningEvent = getEvent(allAvailableEvents, morningEvents, runningBudget);
+            if (morningEvent != null) {
+                runningBudget -= (int) morningEvent.getCost();
             }
+            tempDay.setMorningEvent(morningEvent);
 
-            // Add tempDay to dayPlans
+            // Picks afternoon event and updates budget
+            Event afternoonEvent = getEvent(allAvailableEvents, afternoonEvents, runningBudget);
+            if (afternoonEvent != null) {
+                runningBudget -= (int) afternoonEvent.getCost();
+            }
+            tempDay.setAfternoonEvent(afternoonEvent);
 
+            // Picks evening event and updates budget
+            Event eveningEvent = getEvent(allAvailableEvents, eveningEvents, runningBudget);
+            if (eveningEvent != null) {
+                runningBudget -= (int) eveningEvent.getCost();
+            }
+            tempDay.setEveningEvent(eveningEvent);
+
+            dayPlans.add(tempDay);
         }
 
+        // Returns list of days
         return dayPlans;
     }
 
     // Returns a list of available events via queries
     private List<Event> getAvailableEvents(City city, List<Tag> tags) {
-        // Query by city and tags
         return null;
     }
 
-    private List<Event> filterByTime(City city, List<Tag> tags, String timeSlot) {
+    private List<Event> filterEventsByTime(City city, List<Tag> tags, String timeSlot) {
         return null;
     }
 
-    private String getTimeSlot(int i) {
-        if (i == 0) {
-            return "morning";
-        } else if (i == 1) {
-            return "afternoon";
-        } else {
-            return "evening";
+    // Returns an event that has not been used in the schedule yet,
+    // or null if no event was selected
+    private Event getEvent(List<Event> allAvailableEvents, List<Event> filteredEvents, int budget) {
+
+        Event randomEvent = null;
+        // Searches for an event until event is found or there are no more to choose from
+        while (randomEvent == null) {
+
+            // Breaks loop if there are no events to pick from
+            if (filteredEvents.size() == 0) {
+                Toast.makeText(getContext(), "Could not find an event", Toast.LENGTH_LONG).show();
+
+                // TODO account for case where no event was found
+                randomEvent = null; // Returns empty event
+                break;
+            }
+
+            // Random event is picked from the filtered list of events
+            randomEvent = getRandomElement(filteredEvents);
+
+            // If the event is not used and is within the budget, it is removed from the available
+            // events list to prevent it from being selected again in other days
+            if (allAvailableEvents.contains(randomEvent) && isWithinBudget(randomEvent, budget)) {
+                allAvailableEvents.remove(randomEvent);
+                Toast.makeText(getContext(), "Found an event!", Toast.LENGTH_LONG).show();
+            } else {
+                filteredEvents.remove(randomEvent);
+                randomEvent = null; // Repeats search is no event found
+            }
         }
+        return randomEvent;
     }
 
-    public int getRandomElement(List<Integer> list) {
+    // Returns a random event from a list of events
+    public Event getRandomElement(List<Event> list) {
         Random rand = new Random();
         return list.get(rand.nextInt(list.size()));
+    }
+
+    // Checks if the cost of an event is within the budget
+    public Boolean isWithinBudget(Event event, int budget) {
+        int eventCost = (int) event.getCost();
+        if (eventCost > budget) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
