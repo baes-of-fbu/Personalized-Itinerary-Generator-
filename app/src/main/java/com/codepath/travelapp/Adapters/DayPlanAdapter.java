@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
@@ -22,10 +23,10 @@ import java.util.List;
 public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<Event> events;
+    private ArrayList<DayPlan> dayPlans;
 
-    public DayPlanAdapter(ArrayList<Event> events) {
-        this.events = events;
+    public DayPlanAdapter(ArrayList<DayPlan> dayPlans) {
+        this.dayPlans = dayPlans;
     }
 
     @NonNull
@@ -38,12 +39,12 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull DayPlanAdapter.ViewHolder holder, int position) {
-        Event event = events.get(position);
+        //Event event = dayPlans.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return dayPlans.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,12 +59,12 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
     }
 
     public void clear() {
-        events.clear();
+       dayPlans.clear();
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Event> list) {
-        events.addAll(list);
+    public void addAll(List<DayPlan> list) {
+        dayPlans.addAll(list);
         notifyDataSetChanged();
     }
 }
