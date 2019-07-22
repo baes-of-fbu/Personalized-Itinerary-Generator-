@@ -125,24 +125,6 @@ public class ProfileFragment extends Fragment {
         queryUpcomingPosts();
         queryPreviousPosts();
         queryFavoritePosts();
-         //Swipe Container/ refresh code
-//        swipeContainer = view.findViewById(R.id.swipeContainer);
-//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                swipeContainer.setRefreshing(true);
-//                //fetchTimelineAsync(); TODO method
-//            }
-//        });
-//         //Configure the refreshing colors
-//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light,
-//                android.R.color.holo_red_light);
-
-//        RecyclerView.ItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-//        rvUpcoming.addItemDecoration(divider);
-//        rvPrevious.addItemDecoration(divider);
 
         Toast.makeText(getContext(), "Welcome to Your Profile",Toast.LENGTH_SHORT).show();
     }

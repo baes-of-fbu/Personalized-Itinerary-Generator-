@@ -43,7 +43,6 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
     public void onBindViewHolder(@NonNull UpcomingTripAdapter.ViewHolder holder, int position) {
         Trip trip = trips.get(position);
         holder.tvTripBudget.setText(trip.getBudget().toString());
-//        holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvTripBudget.setText(trip.getBudget().toString());
 
@@ -63,14 +62,12 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTripBudget;
-//        private TextView tvTripDates;
         private ImageView ivTripImage;
         private TextView tvTripName;
 
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-//            tvTripDates = itemView.findViewById(R.id.tvTripDates);
             tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
