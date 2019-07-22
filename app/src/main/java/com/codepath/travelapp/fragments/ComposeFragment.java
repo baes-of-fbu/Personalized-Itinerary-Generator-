@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -249,6 +250,9 @@ public class ComposeFragment extends Fragment {
                 String timeSlot = getTimeSlot(i);
 
                 // Randomly pick event from a list using timeSlot
+                Event event;
+
+                event = getRandomElement()
 
                     // (a) If it's in available and within budget,
                     // select this event and add it to dayPlan
@@ -287,5 +291,10 @@ public class ComposeFragment extends Fragment {
         } else {
             return "evening";
         }
+    }
+
+    public int getRandomElement(List<Integer> list) {
+        Random rand = new Random();
+        return list.get(rand.nextInt(list.size()));
     }
 }
