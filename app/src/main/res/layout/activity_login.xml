@@ -90,7 +90,7 @@
         android:layout_height="@dimen/login_btn_height"
         android:layout_marginTop="50dp"
         android:background="@drawable/rounded_btn"
-        android:text="@string/signup"
+        android:text="@string/signUp"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

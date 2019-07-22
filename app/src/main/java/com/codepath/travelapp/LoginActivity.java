@@ -36,11 +36,11 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        etUsername = (EditText) findViewById(R.id.etLoginUsername);
-        etPassword = (EditText) findViewById(R.id.etLoginPassword);
-        loginBtn = (Button) findViewById(R.id.loginBtn);
-        signUpBtn = (Button) findViewById(R.id.signUpBtn);
-        facebookLoginBtn = (Button) findViewById(R.id.facebookLoginBtn);
+        etUsername = findViewById(R.id.etLoginUsername);
+        etPassword = findViewById(R.id.etLoginPassword);
+        loginBtn = findViewById(R.id.loginBtn);
+        signUpBtn = findViewById(R.id.signUpBtn);
+        facebookLoginBtn = findViewById(R.id.facebookLoginBtn);
 
         addOnClickListeners();
     }

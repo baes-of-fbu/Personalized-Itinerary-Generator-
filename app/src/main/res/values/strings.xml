@@ -4,7 +4,7 @@
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="login">Login</string>
-    <string name="signup">Sign Up</string>
+    <string name="signUp">Sign Up</string>
     <string name="facebook_app_id">1086289015092130</string>
     <string name="fb_login_protocol_scheme">fb1086289015092130</string>
     <string name="select_state">Select your home state</string>
