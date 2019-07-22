@@ -84,6 +84,7 @@ public class TripReviewFragment extends Fragment {
         tvDays.setText("" + numDays);
         tvBudget.setText(budget);
 
+        // Populate list of Tags
         TagSelectedAdapter adapter = new TagSelectedAdapter(tags);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         rvTags.setLayoutManager(linearLayoutManager);
@@ -91,6 +92,9 @@ public class TripReviewFragment extends Fragment {
         Glide.with(Objects.requireNonNull(getContext()))
                 .load(city.getImage().getUrl())
                 .into(ivCoverPhoto);
+
+        // Populate DayPlan card with events
+
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.O)
