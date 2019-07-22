@@ -28,7 +28,7 @@ public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        //Display Date
     }
 
     @Override
