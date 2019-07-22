@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.codepath.travelapp.Adapters.TagGridAdapter;
 import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.City;
+import com.codepath.travelapp.Models.DayPlan;
+import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
@@ -181,14 +183,18 @@ public class ComposeFragment extends Fragment {
         ArrayList<Tag> tags = adapter.getSelectedTags();
         Fragment fragment = new TripReviewFragment();
 
+        int budget = Integer.parseInt(etBudget.getText().toString());
+        ArrayList<DayPlan> dayPlans = generateSchedule(city, numDays, budget, tags);
+
         Bundle bundle = new Bundle();
         bundle.putString("trip_name", etTripName.getText().toString());
         bundle.putString("start_date", etStartDate.getText().toString());
         bundle.putString("end_date", etEndDate.getText().toString());
         bundle.putInt("number_days", numDays);
-        bundle.putString("budget", etBudget.getText().toString());
+        bundle.putInt("budget", budget);
         bundle.putParcelableArrayList("selected_tags", tags);
         bundle.putParcelable("city", city);
+        bundle.putParcelableArrayList("dayPlans", dayPlans);
         fragment.setArguments(bundle);
 
         MainActivity.fragmentManager.beginTransaction()
@@ -218,5 +224,68 @@ public class ComposeFragment extends Fragment {
     private static long getDifferenceDays(LocalDate d1, LocalDate d2) {
         long diff = DAYS.between(d1, d2);
         return diff + 1;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<DayPlan> generateSchedule(City city, int numDays, int budget, List<Tag> tags) {
+
+        int runningBudget = budget;
+        ArrayList<DayPlan> dayPlans = new ArrayList<>();
+
+        // Get available events based off tags
+        List<Event> availableEvents = getAvailableEvents(city, tags);
+        List<Event> morningEvents = filterByTime(city, tags, Event.KEY_MORNING);
+        List<Event> afternoonEvents = filterByTime(city, tags, Event.KEY_AFTERNOON);
+        List<Event> eveningEvents = filterByTime(city, tags, Event.KEY_EVENING);
+
+        // Loop through each day
+        for (int day = 0; day < numDays; day++) {
+
+            DayPlan tempDay = new DayPlan();
+
+            for (int i = 0; i < 3; i++) {
+
+                String timeSlot = getTimeSlot(i);
+
+                // Randomly pick event from a list using timeSlot
+
+                    // (a) If it's in available and within budget,
+                    // select this event and add it to dayPlan
+
+                    // (b) Repeat step a if event not chosen
+
+                    // (c) Remove from available events, adjust budget
+
+                // TODO account for case where no event was found
+
+                // Add event to tempDay
+            }
+
+            // Add tempDay to dayPlans
+
+        }
+
+        return dayPlans;
+    }
+
+    // Returns a list of available events via queries
+    private List<Event> getAvailableEvents(City city, List<Tag> tags) {
+        // Query by city and tags
+        return null;
+    }
+
+    private List<Event> filterByTime(City city, List<Tag> tags, String timeSlot) {
+        return null;
+    }
+
+    private String getTimeSlot(int i) {
+        if (i == 0) {
+            return "morning";
+        } else if (i == 1) {
+            return "afternoon";
+        } else {
+            return "evening";
+        }
     }
 }

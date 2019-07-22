@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Adapters.TagSelectedAdapter;
 import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.City;
+import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
@@ -39,9 +40,10 @@ public class TripReviewFragment extends Fragment {
     private City city;
     private String startDate;
     private String endDate;
-    private String budget;
+    private int budget;
     private int numDays;
     private ArrayList<Tag> tags;
+    private ArrayList<DayPlan> dayPlans;
 
 
     @Nullable
@@ -62,8 +64,9 @@ public class TripReviewFragment extends Fragment {
             startDate = bundle.getString("start_date");
             endDate = bundle.getString("end_date");
             numDays = bundle.getInt("number_days");
-            budget = bundle.getString("budget");
+            budget = bundle.getInt("budget");
             tags = bundle.getParcelableArrayList("selected_tags");
+            dayPlans = bundle.getParcelableArrayList("dayPlans");
         }
 
         ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
@@ -101,7 +104,7 @@ public class TripReviewFragment extends Fragment {
                 trip.setStartDate(getParseDate(startDate));
                 trip.setEndDate(getParseDate(endDate));
                 trip.setNumDays(numDays);
-                trip.setBudget(Integer.parseInt(budget));
+                trip.setBudget(budget);
 
                 Fragment fragment = new TripDetailsFragment();
                 Bundle bundle = new Bundle();

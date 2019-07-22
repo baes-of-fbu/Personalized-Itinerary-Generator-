@@ -1,17 +1,21 @@
 package com.codepath.travelapp.Models;
 
+import android.os.Parcelable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
 import java.util.Date;
 
 @ParseClassName("DayPlan")
-public class Dayplan extends ParseObject {
+public class DayPlan extends ParseObject implements Parcelable {
 
     private static String KEY_MORNING_EVENT = "morning_event";
     private static String KEY_AFTERNOON_EVENT = "afternoon_event";
     private static String KEY_EVENING_EVENT = "evening_event";
     private static String KEY_DATE = "date";
+
+    public DayPlan() {}
 
     public Event getMorningEvent() {
         return (Event) getParseObject(KEY_MORNING_EVENT);
