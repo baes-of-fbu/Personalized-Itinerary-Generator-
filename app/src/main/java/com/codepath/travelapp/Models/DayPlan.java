@@ -14,6 +14,7 @@ public class DayPlan extends ParseObject implements Parcelable {
     private static String KEY_AFTERNOON_EVENT = "afternoon_event";
     private static String KEY_EVENING_EVENT = "evening_event";
     private static String KEY_DATE = "date";
+    public static String KEY_TRIP = "trip";
 
     public DayPlan() {}
 

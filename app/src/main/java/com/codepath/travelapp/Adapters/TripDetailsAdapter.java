@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 
@@ -16,7 +17,11 @@ import java.util.List;
 
 public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.ViewHolder> {
     private Context context;
-    private ArrayList<Trip> dayPlans;
+    private ArrayList<DayPlan> dayPlans;
+
+    public TripDetailsAdapter(ArrayList<DayPlan> dayPlans) {
+        this.dayPlans = dayPlans;
+    }
 
     @NonNull
     @Override
@@ -28,15 +33,19 @@ public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //Display Date
+        DayPlanAdapter adapter = new DayPlanAdapter(dayPlans);
+        holder.rvSchedule.setAdapter(adapter);
     }
 
     @Override
     public int getItemCount() {return dayPlans.size();}
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private RecyclerView rvSchedule;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            rvSchedule = itemView.findViewById(R.id.rvSchedule);
         }
     }
     public void clear(){
@@ -44,7 +53,7 @@ public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Trip> list) {
+    public void addAll(List<DayPlan> list) {
         dayPlans.addAll(list);
         notifyDataSetChanged();
     }
