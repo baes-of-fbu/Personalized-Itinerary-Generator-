@@ -13,6 +13,7 @@ public class Tag extends ParseObject implements Parcelable {
     // Instance variables
     private static final String KEY_NAME = "name";
     private static final String KEY_IMAGE = "image";
+    public static final String KEY_EVENTS = "events";
 
     public Tag() {}
 
