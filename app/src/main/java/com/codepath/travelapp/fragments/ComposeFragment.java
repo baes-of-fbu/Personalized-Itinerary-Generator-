@@ -311,8 +311,50 @@ public class ComposeFragment extends Fragment {
             });
         }
 
-    private List<Event> filterEventsByTime(City city, List<Tag> tags, String timeSlot) {
-        return null;
+    private void filterEventsByTime(City city, List<Tag> tags, String timeSlot) {
+        final Tag tag = tags.get(0);
+        ParseQuery<Event> eventQuery = tag.getEventsRelation().getQuery();
+        eventQuery.whereEqualTo("city", city);
+        if (timeSlot == Event.KEY_MORNING) {
+            eventQuery.whereEqualTo("morning", timeSlot);
+            eventQuery.findInBackground(new FindCallback<Event>() {
+                @Override
+                public void done(List<Event> objects, ParseException e) {
+                    if (e != null) {
+                        Log.d("Compose Fragment", e.toString());
+                        Toast.makeText(getContext(), "Query unsuccessful", Toast.LENGTH_LONG).show();
+                    }
+                    Log.d("ComposeFragment", objects.toString());
+                    morningEvents.addAll(objects);
+                }
+            });
+        }else if (timeSlot == Event.KEY_AFTERNOON) {
+            eventQuery.whereEqualTo("afternoon", timeSlot);
+            eventQuery.findInBackground(new FindCallback<Event>() {
+                @Override
+                public void done(List<Event> objects, ParseException e) {
+                    if (e != null) {
+                        Log.d("Compose Fragment", e.toString());
+                        Toast.makeText(getContext(), "Query unsuccessful", Toast.LENGTH_LONG).show();
+                    }
+                    Log.d("ComposeFragment", objects.toString());
+                    afternoonEvents.addAll(objects);
+                }
+            });
+        }else if(timeSlot == Event.KEY_EVENING) {
+            eventQuery.whereEqualTo("evening", timeSlot);
+            eventQuery.findInBackground(new FindCallback<Event>() {
+                @Override
+                public void done(List<Event> objects, ParseException e) {
+                    if (e != null) {
+                        Log.d("Compose Fragment", e.toString());
+                        Toast.makeText(getContext(), "Query unsuccessful", Toast.LENGTH_LONG).show();
+                    }
+                    Log.d("ComposeFragment", objects.toString());
+                    eveningEvents.addAll(objects);
+                }
+            });
+        }
     }
 
     // Returns an event that has not been used in the schedule yet,
