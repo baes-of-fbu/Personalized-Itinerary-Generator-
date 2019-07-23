@@ -165,8 +165,7 @@ public class ComposeFragment extends Fragment {
             @Override
             public void done(List<City> objects, ParseException e) {
                 if (e == null) {
-                    city = objects.get(0);
-                    // Assumes only one city is associated with the name
+                    city = objects.get(0); // Assumes only one city is associated with the name
                     Toast.makeText(getContext(), objects.get(0).toString(), Toast.LENGTH_LONG).show();
                     sendToReviewFragment();
                 } else {
@@ -176,16 +175,22 @@ public class ComposeFragment extends Fragment {
                 }
             }
         });
+
     }
+
 
     // Sends bundle to Review Fragment
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendToReviewFragment() {
-        ArrayList<Tag> tags = adapter.getSelectedTags();
-        Fragment fragment = new TripReviewFragment();
 
         int budget = Integer.parseInt(etBudget.getText().toString());
-        ArrayList<DayPlan> dayPlans = generateSchedule(city, numDays, budget, tags);
+        generateSchedule(city, budget, tags);
+
+    }
+
+    private void sendBundle(int budget) {
+        ArrayList<Tag> tags = adapter.getSelectedTags();
+        Fragment fragment = new TripReviewFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString("trip_name", etTripName.getText().toString());
@@ -228,18 +233,29 @@ public class ComposeFragment extends Fragment {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public ArrayList<DayPlan> generateSchedule(City city, int numDays, int budget, List<Tag> tags) {
 
-        ArrayList<DayPlan> dayPlans = new ArrayList<>();
+
+    private ArrayList<Event> allAvailableEvents = new ArrayList<>();
+    private List<Event> morningEvents;
+    private List<Event> afternoonEvents;
+    private List<Event> eveningEvents;
+    private ArrayList<DayPlan> dayPlans;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void generateSchedule(City city, int budget, List<Tag> tags) {
 
         // Get available events based off tags
-        List<Event> allAvailableEvents = getAvailableEvents(city, tags);
-        List<Event> morningEvents = filterEventsByTime(city, tags, Event.KEY_MORNING);
-        List<Event> afternoonEvents = filterEventsByTime(city, tags, Event.KEY_AFTERNOON);
-        List<Event> eveningEvents = filterEventsByTime(city, tags, Event.KEY_EVENING);
+        getAvailableEvents(city, tags, budget);
+//        filterEventsByTime(city, tags, Event.KEY_MORNING);
+//        filterEventsByTime(city, tags, Event.KEY_AFTERNOON);
+//        filterEventsByTime(city, tags, Event.KEY_EVENING);
 
-        int runningBudget = budget; // Stores budget for the entire trip
+    }
+
+    private ArrayList<DayPlan> createDayPlans(List<Event> allAvailableEvents, List<Event> morningEvents,
+                                             List<Event> afternoonEvents, List<Event> eveningEvents,
+                                             int runningBudget) {
+        ArrayList<DayPlan> dayPlans = new ArrayList<>();
 
         // Loop through each day
         for (int day = 0; day < numDays; day++) {
@@ -275,9 +291,25 @@ public class ComposeFragment extends Fragment {
     }
 
     // Returns a list of available events via queries
-    private List<Event> getAvailableEvents(City city, List<Tag> tags) {
-        return null;
-    }
+    private void getAvailableEvents(City city, List<Tag> tags, final int budget) {
+
+            final Tag tag = tags.get(0);
+            ParseQuery<Event> eventQuery = tag.getEventsRelation().getQuery();
+            eventQuery.whereEqualTo("city", city);
+            eventQuery.findInBackground(new FindCallback<Event>() {
+                @Override
+                public void done(List<Event> objects, ParseException e) {
+                    if (e != null) {
+                        Log.d("Compose Fragment", e.toString());
+                        Toast.makeText(getContext(), "Query unsuccessful", Toast.LENGTH_LONG).show();
+                    }
+                    Log.d("ComposeFragment", objects.toString());
+                    allAvailableEvents.addAll(objects);
+                    createDayPlans(allAvailableEvents, morningEvents, afternoonEvents, eveningEvents, budget);
+                    sendBundle(budget);
+                }
+            });
+        }
 
     private List<Event> filterEventsByTime(City city, List<Tag> tags, String timeSlot) {
         return null;

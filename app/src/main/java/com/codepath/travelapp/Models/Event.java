@@ -59,4 +59,5 @@ public class Event extends ParseObject {
     public String getAddress() {
         return getString(KEY_ADDRESS);
     }
+
 }

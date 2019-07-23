@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseRelation;
 
 
 @ParseClassName("Tags")
@@ -23,5 +24,9 @@ public class Tag extends ParseObject implements Parcelable {
 
     public ParseFile getImage() {
         return getParseFile(KEY_IMAGE);
+    }
+
+    public ParseRelation<Event> getEventsRelation() {
+        return getRelation(KEY_EVENTS);
     }
 }
