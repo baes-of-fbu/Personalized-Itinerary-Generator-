@@ -3,6 +3,7 @@ package com.codepath.travelapp.fragments;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,11 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Adapters.TagSelectedAdapter;
+import com.codepath.travelapp.GravitySnapHelper;
 import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
@@ -78,6 +81,9 @@ public class TripReviewFragment extends Fragment {
         RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
         Button btnAccept = view.findViewById(R.id.btnAccept);
         Button btnDeny = view.findViewById(R.id.btnDeny);
+
+        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+        snapHelper.attachToRecyclerView(rvTags);
 
         tvTripName.setText(tripName);
         tvTravelDates.setText(startDate + " - " + endDate);

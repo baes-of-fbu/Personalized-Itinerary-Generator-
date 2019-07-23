@@ -114,10 +114,10 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager linerarLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext(),HORIZONTAL,false);
         LinearLayoutManager linearLayoutManager3 = new LinearLayoutManager(getContext(),HORIZONTAL, false);
+
         rvUpcoming.setLayoutManager(linerarLayoutManager);
         rvPrevious.setLayoutManager(linearLayoutManager2);
         rvFavorite.setLayoutManager(linearLayoutManager3);
-
 
         rvUpcoming.setAdapter(adapter);
         rvPrevious.setAdapter(adapter2);

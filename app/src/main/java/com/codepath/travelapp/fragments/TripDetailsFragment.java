@@ -6,19 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Adapters.DayPlanAdapter;
-import com.codepath.travelapp.Adapters.TripDetailsAdapter;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
@@ -31,8 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import me.relex.circleindicator.CircleIndicator2;
+
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
-import static com.parse.ParseUser.getCurrentUser;
 
 public class TripDetailsFragment extends Fragment {
 
@@ -90,7 +90,6 @@ public class TripDetailsFragment extends Fragment {
         // set the layout manager on the recycler view
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         rvSchedule.setLayoutManager(linearLayoutManager);
-
         rvSchedule.setAdapter(adapter);
 
         // TODO change this
@@ -111,5 +110,14 @@ public class TripDetailsFragment extends Fragment {
                 adapter.addAll(dayPlans);
             }
         });
+
+        // Circle Indicator
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(rvSchedule);
+
+        CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+        indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+
+        adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
     }
 }
