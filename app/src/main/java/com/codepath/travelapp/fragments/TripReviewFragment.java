@@ -93,7 +93,6 @@ public class TripReviewFragment extends Fragment {
                 .load(city.getImage().getUrl())
                 .into(ivCoverPhoto);
 
-        // Populate DayPlan card with events
 
 
         btnAccept.setOnClickListener(new View.OnClickListener() {

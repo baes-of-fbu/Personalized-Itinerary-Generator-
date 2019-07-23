@@ -252,7 +252,7 @@ public class ComposeFragment extends Fragment {
                 // Randomly pick event from a list using timeSlot
                 Event event;
 
-                event = getRandomElement()
+                //event = getRandomElement()
 
                     // (a) If it's in available and within budget,
                     // select this event and add it to dayPlan
