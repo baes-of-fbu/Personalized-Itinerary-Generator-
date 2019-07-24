@@ -12,8 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.R;
+
+import java.util.Objects;
 
 public class EventDetailsFragment extends Fragment {
 
@@ -27,7 +30,7 @@ public class EventDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView tvEventName = view.findViewById(R.id.tvEveningName);
+        TextView tvEventName = view.findViewById(R.id.tvEventName);
         ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         TextView tvCost = view.findViewById(R.id.tvCost);
         RatingBar rbRating = view.findViewById(R.id.rbRating);
@@ -36,16 +39,18 @@ public class EventDetailsFragment extends Fragment {
 
         Bundle bundle = getArguments();
         assert bundle != null;
-        Event event = (Event) bundle.getSerializable("Event");
+        Event event = (Event) bundle.getParcelable("event");
 
         if (event != null) {
             tvEventName.setText(event.getName());
             tvCost.setText(event.getCost().toString());
-            rbRating.setRating((float) event.getRating());
+            rbRating.setRating(event.getRating().floatValue());
             tvAddress.setText(event.getAddress());
             tvDescription.setText(event.getDescription());
 
-            // Glide for coverPhoto
+            Glide.with(Objects.requireNonNull(getContext()))
+                    .load(event.getImage().getUrl())
+                    .into(ivCoverPhoto);
         }
     }
 }
