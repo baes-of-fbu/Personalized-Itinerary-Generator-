@@ -1,11 +1,13 @@
 package com.codepath.travelapp.Models;
 
+import android.os.Parcelable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 @ParseClassName("Event")
-public class Event extends ParseObject {
+public class Event extends ParseObject implements Parcelable {
 
     // Constants
     private static final String KEY_NAME = "name";
