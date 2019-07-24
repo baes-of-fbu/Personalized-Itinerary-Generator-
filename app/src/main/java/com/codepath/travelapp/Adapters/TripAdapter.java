@@ -52,7 +52,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Trip trip = trips.get(position);
-        holder.tvTripBudget.setText(trip.getBudget().toString());
+        holder.tvTripBudget.setText("$" + trip.getBudget().toString());
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());
@@ -144,32 +144,5 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         trips.addAll(list);
         notifyDataSetChanged();
     }
-//    private void sendUserBundle(String username) {
-//        Fragment fragment = new ProfileFragment();
-//
-//        ParseQuery<ParseUser> userQuery = new ParseQuery<>(ParseUser.class);
-//        userQuery.whereEqualTo("username", username);
-//        userQuery.findInBackground(new FindCallback<ParseUser>() {
-//            @Override
-//            public void done(List<ParseUser> objects, ParseException e) {
-//                if (e != null) {
-//                    Log.e(APP_TAG, "Error");
-//                    e.printStackTrace();
-//                    return;
-//                }
-//                Log.d("ComposeFragment", objects.toString());
-//                user = (ParseUser) objects.get(0);
-//            }
-//        });
-//        Bundle userBundle = new Bundle();
-//        userBundle.putParcelable("user",  user);
-//        fragment.setArguments(userBundle);
-//
-//        MainActivity.fragmentManager.beginTransaction()
-//                .replace(R.id.flContainer, fragment)
-//                .addToBackStack(null)
-//                .commit();
-//
-//    }
 
 }

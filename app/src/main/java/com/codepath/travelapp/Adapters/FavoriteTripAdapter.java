@@ -43,8 +43,7 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
     @Override
     public void onBindViewHolder(@NonNull FavoriteTripAdapter.ViewHolder holder, int position) {
         Trip trip = trips.get(position);
-        holder.tvTripBudget.setText(trip.getBudget().toString());
-//        holder.tvTripDates.setText(trip.getNumDays().toString());
+        holder.tvTripBudget.setText("$" + trip.getBudget().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvTripBudget.setText(trip.getBudget().toString());
 
