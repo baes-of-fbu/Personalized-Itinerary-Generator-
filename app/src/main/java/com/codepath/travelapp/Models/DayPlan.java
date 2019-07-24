@@ -50,4 +50,11 @@ public class DayPlan extends ParseObject implements Parcelable {
         put(KEY_DATE, date);
     }
 
+    public Trip getTrip() {
+        return (Trip) getParseObject(KEY_TRIP);
+    }
+
+    public void setTrip(Trip trip) {
+        put(KEY_TRIP, trip);
+    }
 }

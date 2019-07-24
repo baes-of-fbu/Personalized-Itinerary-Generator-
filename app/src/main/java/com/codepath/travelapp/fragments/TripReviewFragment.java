@@ -126,6 +126,12 @@ public class TripReviewFragment extends Fragment {
 
                 trip.saveInBackground();
 
+                if (dayPlans != null) {
+                    for (int i = 0; i < dayPlans.size(); i++) {
+                        dayPlans.get(i).setTrip(trip);
+                    }
+                }
+
                 Fragment fragment = new TripDetailsFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Trip", trip);

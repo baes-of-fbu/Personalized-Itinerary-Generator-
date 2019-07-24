@@ -322,6 +322,7 @@ public class ComposeFragment extends Fragment {
                 tempDay.setEveningEvent(emptyEvent);
             }
 
+            tempDay.saveInBackground();
             dayPlans.add(tempDay);
         }
     }
