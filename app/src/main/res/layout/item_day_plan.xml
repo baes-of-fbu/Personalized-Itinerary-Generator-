@@ -53,7 +53,7 @@
                 android:id="@+id/ivMorningImage"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:srcCompat="@color/com_facebook_button_background_color_selected" />
+                android:background="#FFEB3B" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -92,7 +92,7 @@
                 android:id="@+id/ivAfternoonImage"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:srcCompat="@color/com_facebook_button_background_color_selected" />
+                android:background="#8BC34A" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -133,7 +133,7 @@
                 android:id="@+id/ivEveningImage"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:srcCompat="@color/com_facebook_button_background_color_selected" />
+                android:background="#00BCD4" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

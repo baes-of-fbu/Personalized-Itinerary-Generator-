@@ -102,7 +102,7 @@ public class TripReviewFragment extends Fragment {
 
         // Populate DayPlans
         DayPlanAdapter dayPlanAdapter = new DayPlanAdapter(dayPlans);
-        rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         rvSchedule.setAdapter(dayPlanAdapter);
 
 
