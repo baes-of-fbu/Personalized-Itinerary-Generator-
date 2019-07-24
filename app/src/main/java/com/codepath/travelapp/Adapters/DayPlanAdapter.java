@@ -49,9 +49,20 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
             Glide.with(context)
                     .load(dayPlan.getMorningEvent().getImage().getUrl())
                     .into(holder.ivMorningImage);
+
+            holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
+            Glide.with(context)
+                    .load(dayPlan.getAfternoonEvent().getImage().getUrl())
+                    .into(holder.ivAfternoonImage);
+
+            holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
+            Glide.with(context)
+                    .load(dayPlan.getEveningEvent().getImage().getUrl())
+                    .into(holder.ivEveningImage);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
         holder.cvMorning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,16 +78,35 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
             }
         });
 
-        try {
-            holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        try {
-            holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        holder.cvAfternoon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new EventDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("event", dayPlan.getAfternoonEvent());
+                fragment.setArguments(bundle);
+
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        holder.cvEvening.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new EventDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("event", dayPlan.getEveningEvent());
+                fragment.setArguments(bundle);
+
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     @Override
@@ -89,8 +119,10 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
         private CardView cvMorning;
         private TextView tvMorningName;
         private ImageView ivMorningImage;
+        private CardView cvAfternoon;
         private TextView tvAfternoonName;
         private ImageView ivAfternoonImage;
+        private CardView cvEvening;
         private TextView tvEveningName;
         private ImageView ivEveningImage;
 
@@ -98,6 +130,8 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
             super(itemView);
             tvDayTitle = itemView.findViewById(R.id.tvDayTitle);
             cvMorning = itemView.findViewById(R.id.cvMorning);
+            cvAfternoon = itemView.findViewById(R.id.cvAfternoon);
+            cvEvening = itemView.findViewById(R.id.cvEvening);
             tvMorningName = itemView.findViewById(R.id.tvMorningName);
             tvAfternoonName = itemView.findViewById(R.id.tvAfternoonName);
             tvEveningName = itemView.findViewById(R.id.tvEveningName);
