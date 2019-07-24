@@ -85,7 +85,7 @@ public class TripReviewFragment extends Fragment {
         Button btnAccept = view.findViewById(R.id.btnAccept);
         Button btnDeny = view.findViewById(R.id.btnDeny);
 
-        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+        SnapHelper snapHelper = new GravitySnapHelper(Gravity.END);
         snapHelper.attachToRecyclerView(rvTags);
 
         tvTripName.setText(tripName);
