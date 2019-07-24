@@ -20,6 +20,13 @@ import java.util.Objects;
 
 public class EventDetailsFragment extends Fragment {
 
+    private TextView tvEventName;
+    private ImageView ivCoverPhoto;
+    private TextView tvCost;
+    private RatingBar rbRating;
+    private TextView tvAddress;
+    private TextView tvDescription;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,12 +37,12 @@ public class EventDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView tvEventName = view.findViewById(R.id.tvEventName);
-        ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
-        TextView tvCost = view.findViewById(R.id.tvCost);
-        RatingBar rbRating = view.findViewById(R.id.rbRating);
-        TextView tvAddress = view.findViewById(R.id.tvAddress);
-        TextView tvDescription = view.findViewById(R.id.tvDescription);
+        tvEventName = view.findViewById(R.id.tvEventName);
+        ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
+        tvCost = view.findViewById(R.id.tvCost);
+        rbRating = view.findViewById(R.id.rbRating);
+        tvAddress = view.findViewById(R.id.tvAddress);
+        tvDescription = view.findViewById(R.id.tvDescription);
 
         Bundle bundle = getArguments();
         assert bundle != null;
@@ -51,6 +58,17 @@ public class EventDetailsFragment extends Fragment {
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(event.getImage().getUrl())
                     .into(ivCoverPhoto);
+
+            addOnClickListners();
         }
+    }
+
+    private void addOnClickListners() {
+        tvAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 }
