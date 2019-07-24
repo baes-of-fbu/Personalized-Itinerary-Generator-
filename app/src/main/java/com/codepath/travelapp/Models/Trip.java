@@ -6,7 +6,6 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 
 @ParseClassName("Trip") // Needs to be same name as class on Parse website
@@ -77,7 +76,7 @@ public class Trip extends ParseObject implements Serializable {
         return getDate(KEY_STARTDATE);
     }
 
-    public void setStartDate(LocalDate date) {
+    public void setStartDate(Date date) {
         put(KEY_STARTDATE, date);
     }
 
@@ -85,7 +84,7 @@ public class Trip extends ParseObject implements Serializable {
         return getDate(KEY_ENDDATE);
     }
 
-    public void setEndDate(LocalDate date) { // Might need to change to date
+    public void setEndDate(Date date) { // Might need to change to date
         put(KEY_ENDDATE, date);
     }
 
