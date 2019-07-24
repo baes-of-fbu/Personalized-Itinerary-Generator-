@@ -42,7 +42,7 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
     @Override
     public void onBindViewHolder(@NonNull UpcomingTripAdapter.ViewHolder holder, int position) {
         Trip trip = trips.get(position);
-        holder.tvTripBudget.setText(trip.getBudget().toString());
+        holder.tvTripBudget.setText("$" + trip.getBudget().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvTripBudget.setText(trip.getBudget().toString());
 
