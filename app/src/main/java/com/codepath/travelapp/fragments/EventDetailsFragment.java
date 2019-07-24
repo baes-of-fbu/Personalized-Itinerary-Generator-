@@ -1,5 +1,7 @@
 package com.codepath.travelapp.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +17,11 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.R;
+import com.parse.ParseGeoPoint;
 
 import java.util.Objects;
+
+
 
 public class EventDetailsFragment extends Fragment {
 
@@ -26,6 +31,8 @@ public class EventDetailsFragment extends Fragment {
     private RatingBar rbRating;
     private TextView tvAddress;
     private TextView tvDescription;
+    private String location;
+    private Event event;
 
     @Nullable
     @Override
@@ -44,9 +51,10 @@ public class EventDetailsFragment extends Fragment {
         tvAddress = view.findViewById(R.id.tvAddress);
         tvDescription = view.findViewById(R.id.tvDescription);
 
+
         Bundle bundle = getArguments();
         assert bundle != null;
-        Event event = (Event) bundle.getParcelable("event");
+        event = (Event) bundle.getParcelable("event");
 
         if (event != null) {
             tvEventName.setText(event.getName());
@@ -58,7 +66,7 @@ public class EventDetailsFragment extends Fragment {
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(event.getImage().getUrl())
                     .into(ivCoverPhoto);
-
+            location = geoPointToString(event.get("location").toString());
             addOnClickListners();
         }
     }
@@ -67,8 +75,18 @@ public class EventDetailsFragment extends Fragment {
         tvAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                String data = String.format("%s?q=%s", location, event.getName());
+                intent.setData(Uri.parse(data));
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                }
             }
         });
+    }
+    private String geoPointToString(String geopoint) {
+        String temp = geopoint.substring(geopoint.indexOf('[') + 1, geopoint.length() - 1);
+        return "geo:" + temp;
     }
 }
