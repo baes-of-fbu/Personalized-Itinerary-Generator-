@@ -72,9 +72,6 @@ public class ComposeFragment extends Fragment {
     private List<Tag> allTags;
     private ArrayList<Tag> selectedTags;
     private ArrayList<Event> allAvailableEvents;
-//    private ArrayList<Event> morningEvents = new ArrayList<>();
-//    private ArrayList<Event> afternoonEvents = new ArrayList<>();
-//    private ArrayList<Event> eveningEvents = new ArrayList<>();
     private ArrayList<DayPlan> dayPlans;
 
     @Nullable
@@ -277,90 +274,6 @@ public class ComposeFragment extends Fragment {
         });
     }
 
-//    // Sends network requests for all events in a city, based off the tags and time of day
-//    private void parseEventsByTime(String timeSlot, final int budget) {
-//
-//        List<ParseQuery<Event>> queries = new ArrayList<ParseQuery<Event>>();
-//        // Create queries for each tag
-//        if (timeSlot == Event.KEY_MORNING) {
-//            for (int i = 0; i < selectedTags.size(); i++) {
-//                Tag tag = selectedTags.get(i);
-//                ParseQuery<Event> eventQuery = tag.getEventsRelation().getQuery();
-//                eventQuery.whereEqualTo("city", city);
-//                eventQuery.whereEqualTo("morning", true);
-//                queries.add(eventQuery);
-//            }
-//
-//            // Send all queries in one main query
-//            ParseQuery<Event> mainQuery = ParseQuery.or(queries);
-//            mainQuery.findInBackground(new FindCallback<Event>() {
-//                @Override
-//                public void done(List<Event> objects, ParseException e) {
-//                    if (e == null) {
-//                        Log.d("ComposeFragment", "Morning events: " + objects.toString());
-//                        Toast.makeText(getContext(), "Morning query successful", Toast.LENGTH_LONG).show();
-//                        morningEvents.addAll(objects);
-//                        parseEventsByTime(Event.KEY_AFTERNOON, budget);
-//                    } else {
-//                        Log.d("Compose Fragment", e.toString());
-//                        Toast.makeText(getContext(), "Morning query unsuccessful", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            });
-//        } else if (timeSlot == Event.KEY_AFTERNOON) {
-//            for (int i = 0; i < selectedTags.size(); i++) {
-//                Tag tag = selectedTags.get(i);
-//                ParseQuery<Event> eventQuery = tag.getEventsRelation().getQuery();
-//                eventQuery.whereEqualTo("city", city);
-//                eventQuery.whereEqualTo("afternoon", true);
-//                queries.add(eventQuery);
-//            }
-//
-//            // Send all queries in one main query
-//            ParseQuery<Event> mainQuery = ParseQuery.or(queries);
-//            mainQuery.findInBackground(new FindCallback<Event>() {
-//                @Override
-//                public void done(List<Event> objects, ParseException e) {
-//                    if (e == null) {
-//                        Log.d("ComposeFragment", "Afternoon events: " + objects.toString());
-//                        Toast.makeText(getContext(), "Afternoon query successful", Toast.LENGTH_LONG).show();
-//                        afternoonEvents.addAll(objects);
-//                        parseEventsByTime(Event.KEY_EVENING, budget);
-//                    } else {
-//                        Log.d("Compose Fragment", e.toString());
-//                        Toast.makeText(getContext(), "Afternoon query unsuccessful", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            });
-//        } else if (timeSlot == Event.KEY_EVENING) {
-//            for (int i = 0; i < selectedTags.size(); i++) {
-//                Tag tag = selectedTags.get(i);
-//                ParseQuery<Event> eventQuery = tag.getEventsRelation().getQuery();
-//                eventQuery.whereEqualTo("city", city);
-//                eventQuery.whereEqualTo("evening", true);
-//                queries.add(eventQuery);
-//            }
-//
-//            // Send all queries in one main query
-//            ParseQuery<Event> mainQuery = ParseQuery.or(queries);
-//            mainQuery.findInBackground(new FindCallback<Event>() {
-//                @RequiresApi(api = Build.VERSION_CODES.N)
-//                @Override
-//                public void done(List<Event> objects, ParseException e) {
-//                    if (e == null) {
-//                        Log.d("ComposeFragment", "Evening events: " + objects.toString());
-//                        Toast.makeText(getContext(), "Evening query successful", Toast.LENGTH_LONG).show();
-//                        eveningEvents.addAll(objects);
-//                        createDayPlans(budget);
-//                        sendBundle(budget);
-//                    } else {
-//                        Log.d("Compose Fragment", e.toString());
-//                        Toast.makeText(getContext(), "Evening query unsuccessful", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            });
-//        }
-//    }
 
     // Adds events to day plans
     @TargetApi(Build.VERSION_CODES.O)
@@ -432,7 +345,6 @@ public class ComposeFragment extends Fragment {
                 return null;
             }
 
-
             if (!alreadyChecked.contains(randomEvent)) {
                 // True if we have not already selected this event
                 alreadyChecked.add(randomEvent);
@@ -449,42 +361,6 @@ public class ComposeFragment extends Fragment {
         }
         return randomEvent;
     }
-
-
-//    // Returns an event that has not been used in the schedule yet, or null if no event was selected
-//    private Event getEvent(List<Event> filteredEvents, int budget) {
-//
-//        Event randomEvent = null;
-//        // Searches for an event until event is found or there are no more to choose from
-//        while (randomEvent == null) {
-//
-//            // Breaks loop if there are no events to pick from
-//            if (filteredEvents.size() == 0) {
-//                Log.d("ComposeFragment", "Could not find an event");
-//                Toast.makeText(getContext(), "Could not find an event", Toast.LENGTH_LONG).show();
-//
-//                // TODO account for case where no event was found
-//                return null; // Returns empty event
-//            }
-//
-//            // Random event is picked from the filtered list of events
-//            randomEvent = getRandomElement(filteredEvents);
-//
-//            // If the event is not used and is within the budget, it is removed from the available
-//            // events list to prevent it from being selected again in other days
-//            if (eventIsWithinBudget(randomEvent, budget)) {
-//                Event eventSelected = isAvailable(randomEvent);
-//                if (eventSelected != null) {
-//                    Log.d("ComposeFragment", "Event selected: " + eventSelected.getName());
-//                    Toast.makeText(getContext(), "Found an event!", Toast.LENGTH_LONG).show();
-//                    return eventSelected;
-//                }
-//            }
-//            filteredEvents.remove(randomEvent);
-//            randomEvent = null; // Repeats search is no event found
-//        }
-//        return randomEvent;
-//    }
 
     // Returns a random event from a list of events
     public Event getRandomElement(List<Event> list) {
