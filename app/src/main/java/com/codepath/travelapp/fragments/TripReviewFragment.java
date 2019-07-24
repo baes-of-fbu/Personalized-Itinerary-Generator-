@@ -34,9 +34,11 @@ import com.parse.ParseUser;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class TripReviewFragment extends Fragment {
 
@@ -116,10 +118,13 @@ public class TripReviewFragment extends Fragment {
                 trip.setOwner(ParseUser.getCurrentUser());
                 trip.setName(tripName);
                 trip.setCity(city);
-                trip.setStartDate(getParseDate(startDate));
-                trip.setEndDate(getParseDate(endDate));
+                trip.setImage(city.getImage());
+                trip.setStartDate(addToDate(getParseDate(startDate), 0));
+                trip.setEndDate(addToDate(getParseDate(endDate),0));
                 trip.setNumDays(numDays);
                 trip.setBudget(budget);
+
+                trip.saveInBackground();
 
                 Fragment fragment = new TripDetailsFragment();
                 Bundle bundle = new Bundle();
@@ -154,5 +159,10 @@ public class TripReviewFragment extends Fragment {
     static LocalDate getParseDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         return LocalDate.parse(date, formatter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static Date addToDate(LocalDate d1, int numDays) {
+        return java.sql.Date.valueOf((DAYS.addTo(d1, numDays)).toString());
     }
 }

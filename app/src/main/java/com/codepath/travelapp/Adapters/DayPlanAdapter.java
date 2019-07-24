@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.R;
@@ -45,6 +46,9 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
         holder.tvDayTitle.setText(dayPlan.getDate().toString());
         try {
             holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
+            Glide.with(context)
+                    .load(dayPlan.getMorningEvent().getImage().getUrl())
+                    .into(holder.ivMorningImage);
         } catch (ParseException e) {
             e.printStackTrace();
         }
