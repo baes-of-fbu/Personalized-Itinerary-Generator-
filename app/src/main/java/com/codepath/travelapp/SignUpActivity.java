@@ -200,7 +200,7 @@ public class SignUpActivity extends AppCompatActivity {
                     // Hooray! Let them use the app now.
                     Log.d("SignUpActivity", "SignUp successful!");
                     ParseUser newUser = ParseUser.getCurrentUser();
-                    newUser.put("image", image);
+                    newUser.put("profileImage", image);
                     newUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {

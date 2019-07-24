@@ -200,9 +200,18 @@ public class ProfileFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
-//        tvFollowersCount.setText(user.get("followers").toString());
-//        tvFollowingCount.setText(user.get("following").toString());
-//        tvFavoritesCOunt.setText(user.get("favorites").toString());
+        if (user.get("followers") != null) {
+            tvFollowersCount.setText(user.get("followers").toString());
+        }
+
+        if (user.get("following") != null) {
+            tvFollowingCount.setText(user.get("following").toString());
+        }
+
+        if (user.get("favorites") != null) {
+            tvFavoritesCOunt.setText(user.get("favorites").toString());
+        }
+
 
         //create the adapter
         mTrips = new ArrayList<>();
