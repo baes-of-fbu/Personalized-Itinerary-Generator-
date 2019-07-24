@@ -1,6 +1,5 @@
 package com.codepath.travelapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,9 +20,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -33,9 +29,7 @@ import com.parse.SignUpCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -47,6 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String email;
     private String state;
     private String bio;
+    private ParseFile image;
 
     private Button signUpBtn;
     private EditText etUsername;
@@ -109,6 +104,7 @@ public class SignUpActivity extends AppCompatActivity {
                 email = etEmail.getText().toString();
                 state = spState.getSelectedItem().toString();
                 bio = etBio.getText().toString();
+                image = conversionBitmapParseFile(selectedImage);
 
 
                 // User can only sign up if all fields are complete
@@ -124,6 +120,9 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (state.length() > 2) {
                     Log.e(APP_TAG, "No state");
                     Toast.makeText(getApplicationContext(), "Please select your home state", Toast.LENGTH_LONG).show();
+                }else if (image == null) {
+                    Log.e(APP_TAG, "no profile picture");
+                    Toast.makeText(getApplicationContext(), "Please select a profile picture", Toast.LENGTH_SHORT).show();
                 } else {
                     signUp();
                 }
@@ -166,8 +165,6 @@ public class SignUpActivity extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 final Uri imageUri = data.getData();
-//                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-//                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 photoFile = new File(getRealPathFromURI(this, imageUri));
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(SignUpActivity.this.getContentResolver(), imageUri);
@@ -184,7 +181,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUp() {
         // Create the ParseUser
         ParseUser user = new ParseUser();
-        final ParseFile image = conversionBitmapParseFile(selectedImage);
+
         // Set core properties
         user.setUsername(username);
         user.setPassword(password);
@@ -200,7 +197,7 @@ public class SignUpActivity extends AppCompatActivity {
                     // Hooray! Let them use the app now.
                     Log.d("SignUpActivity", "SignUp successful!");
                     ParseUser newUser = ParseUser.getCurrentUser();
-                    newUser.put("image", image);
+                    newUser.put("profileImage", image);
                     newUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -236,6 +233,33 @@ public class SignUpActivity extends AppCompatActivity {
         byte[] imageByte = byteArrayOutputStream.toByteArray();
         ParseFile parseFile = new ParseFile("image_file.png",imageByte);
         return parseFile;
+    }
+    public Bitmap rotateBitmapOrientation(String photoFilePath) {
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoFilePath, bounds);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(photoFilePath, opts);
+        // Read EXIF Data
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(photoFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        // Return result
+        return rotatedBitmap;
     }
 }
 

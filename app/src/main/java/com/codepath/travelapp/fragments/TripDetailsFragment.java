@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Adapters.DayPlanAdapter;
+import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
@@ -54,7 +55,7 @@ public class TripDetailsFragment extends Fragment {
         ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
-        TextView tvUsername = view.findViewById(R.id.tvUsername);
+        final TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
@@ -119,5 +120,19 @@ public class TripDetailsFragment extends Fragment {
         indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
 
         adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+        tvUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = (String) tvUsername.getText();
+                Fragment fragment = new ProfileFragment();
+                Bundle userBundle = new Bundle();
+                userBundle.putString("username",  username);
+                fragment.setArguments(userBundle);
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 }

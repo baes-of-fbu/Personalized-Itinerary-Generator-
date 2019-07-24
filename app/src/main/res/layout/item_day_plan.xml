@@ -1,139 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:elevation="@dimen/cardview_default_elevation"
+    app:cardCornerRadius="@dimen/card_corner_radius">
 
-    <TextView
-        android:id="@+id/tvDayTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cvMorning"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_height="match_parent">
 
-        android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDayTitle"
-        card_view:cardCornerRadius="@dimen/card_corner_radius"
-        card_view:cardElevation="@dimen/card_elevation">
+        <TextView
+            android:id="@+id/tvDayTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvMorning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
 
-            <TextView
-                android:id="@+id/tvMorningName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:text="EventName" />
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDayTitle"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation">
 
-            <ImageView
-                android:id="@+id/ivMorningImage"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ConstraintLayout"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="#FFEB3B" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cvAfternoon"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cvMorning"
-        card_view:cardCornerRadius="@dimen/card_corner_radius"
-        card_view:cardElevation="@dimen/card_elevation">
+                <TextView
+                    android:id="@+id/tvMorningName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:padding="5dp"
+                    android:text="EventName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/ivMorningImage"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+                <ImageView
+                    android:id="@+id/ivMorningImage"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:background="#FFEB3B"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMorningName" />
+
+                <TextView
+                    android:id="@+id/tvMorningTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:padding="5dp"
+                    android:text="9am - 11am "
+                    app:layout_constraintBottom_toBottomOf="@+id/tvMorningName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/tvMorningName"
+                    app:layout_constraintTop_toTopOf="@+id/tvMorningName" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cvAfternoon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cvMorning"
+            card_view:cardCornerRadius="@dimen/card_corner_radius"
+            card_view:cardElevation="@dimen/card_elevation">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tvAfternoonName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
                 android:padding="5dp"
-                android:text="EventName" />
+                android:text="EventName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/ivAfternoonImage"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/ivAfternoonImage"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:background="#8BC34A" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cvEvening"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cvAfternoon"
-        card_view:cardCornerRadius="@dimen/card_corner_radius"
-        card_view:cardElevation="@dimen/card_elevation">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+                android:background="#FFEB3B"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAfternoonName" />
 
             <TextView
-                android:id="@+id/tvEveningName"
+                android:id="@+id/tvAfternoonTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:padding="5dp"
-                android:text="EventName" />
+                android:text="2pm - 4pm"
+                app:layout_constraintBottom_toBottomOf="@+id/tvAfternoonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/tvAfternoonName"
+                app:layout_constraintTop_toTopOf="@+id/tvAfternoonName" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/ivEveningImage"
+        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cvEvening"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cvAfternoon"
+            card_view:cardCornerRadius="@dimen/card_corner_radius"
+            card_view:cardElevation="@dimen/card_elevation">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="#00BCD4" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvEveningName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:padding="5dp"
+                    android:text="EventName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/ivEveningImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivEveningImage"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:background="#FFEB3B"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvEveningName" />
+
+                <TextView
+                    android:id="@+id/tvEveningTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:padding="5dp"
+                    android:text="6pm - 8pm"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvEveningName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/tvEveningName"
+                    app:layout_constraintTop_toTopOf="@+id/tvEveningName" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
