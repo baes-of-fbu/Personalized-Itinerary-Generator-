@@ -24,6 +24,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -87,8 +90,13 @@ public class SignUpActivity extends AppCompatActivity {
         // Username and password autofill from the login activity
         etUsername.setText(username);
         etPassword.setText(password);
-
+        if (selectedImage == null) {
+            ivProfileImage.setVisibility(View.GONE);
+        }else {
+            ivProfileImage.setVisibility(View.VISIBLE);
+        }
         addOnClickListeners();
+
     }
 
     private void addOnClickListeners() {
@@ -174,7 +182,17 @@ public class SignUpActivity extends AppCompatActivity {
                 photoFile = new File(getRealPathFromURI(this, imageUri));
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(SignUpActivity.this.getContentResolver(), imageUri);
-                    ivProfileImage.setImageBitmap(selectedImage);
+                    Glide.with(this)
+                            .load(selectedImage)
+                            //.apply(RequestOptions.override(100, Target.SIZE_ORIGINAL)
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(ivProfileImage);
+                    if (selectedImage == null) {
+                        ivProfileImage.setVisibility(View.GONE);
+                    }else {
+                        ivProfileImage.setVisibility(View.VISIBLE);
+                    }
+                    //ivProfileImage.setImageBitmap(selectedImage);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

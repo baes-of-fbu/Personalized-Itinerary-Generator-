@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new TimelineFragment();
-                        //toolbar.setVisibility(View.VISIBLE);
-                        //logoutBtn.setVisibility(View.INVISIBLE);
+                        toolbar.setVisibility(View.VISIBLE);
+                        logoutBtn.setVisibility(View.INVISIBLE);
                         Toast.makeText(MainActivity.this, "Home!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_compose:
