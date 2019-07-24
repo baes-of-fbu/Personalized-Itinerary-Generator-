@@ -10,13 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Models.DayPlan;
-import com.codepath.travelapp.Models.Event;
-import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 
 import java.util.ArrayList;
 import java.util.List;

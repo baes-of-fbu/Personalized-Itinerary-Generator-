@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.bumptech.glide.Glide;
+import com.codepath.travelapp.Adapters.DayPlanAdapter;
 import com.codepath.travelapp.Adapters.TagSelectedAdapter;
 import com.codepath.travelapp.GravitySnapHelper;
 import com.codepath.travelapp.MainActivity;
@@ -88,7 +89,7 @@ public class TripReviewFragment extends Fragment {
         tvTripName.setText(tripName);
         tvTravelDates.setText(startDate + " - " + endDate);
         tvDays.setText("" + numDays);
-        tvBudget.setText(budget);
+        tvBudget.setText(String.valueOf(budget));
 
         // Populate list of Tags
         TagSelectedAdapter adapter = new TagSelectedAdapter(tags);
@@ -98,6 +99,11 @@ public class TripReviewFragment extends Fragment {
         Glide.with(Objects.requireNonNull(getContext()))
                 .load(city.getImage().getUrl())
                 .into(ivCoverPhoto);
+
+        // Populate DayPlans
+        DayPlanAdapter dayPlanAdapter = new DayPlanAdapter(dayPlans);
+        rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        rvSchedule.setAdapter(dayPlanAdapter);
 
 
 
