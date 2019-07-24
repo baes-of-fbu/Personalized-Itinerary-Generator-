@@ -1,6 +1,7 @@
 package com.codepath.travelapp;
 
 import android.content.Intent;
+import android.media.MediaMetadataEditor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
     public static FragmentManager fragmentManager;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new TimelineFragment();
-                        toolbar.setVisibility(View.VISIBLE);
-                        logoutBtn.setVisibility(View.INVISIBLE);
+                        //toolbar.setVisibility(View.VISIBLE);
+                        //logoutBtn.setVisibility(View.INVISIBLE);
                         Toast.makeText(MainActivity.this, "Home!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_compose:
@@ -54,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_profile:
                         fragment = new ProfileFragment();
+                        Bundle userBundle = new Bundle();
+                        userBundle.putString("username",  ParseUser.getCurrentUser().getUsername());
+                        fragment.setArguments(userBundle);
+
+                        MainActivity.fragmentManager.beginTransaction()
+                                .replace(R.id.flContainer, fragment)
+                                .addToBackStack(null)
+                                .commit();
                         toolbar.setVisibility(View.VISIBLE);
                         logoutBtn.setVisibility(View.VISIBLE);
                         Toast.makeText(MainActivity.this, "Profile!", Toast.LENGTH_SHORT).show();

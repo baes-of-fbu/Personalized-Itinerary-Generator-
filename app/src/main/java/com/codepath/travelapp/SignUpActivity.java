@@ -3,6 +3,7 @@ package com.codepath.travelapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -23,10 +24,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,7 +47,6 @@ public class SignUpActivity extends AppCompatActivity {
     private String email;
     private String state;
     private String bio;
-    private File image;
 
     private Button signUpBtn;
     private EditText etUsername;
@@ -57,6 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
     private File photoFile;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     private Context context;
+    private Bitmap selectedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
         ivBackBtn = findViewById(R.id.ivBackBtn);
         etBio = findViewById(R.id.etSignUpBio);
         signUpProfileImageBtn = findViewById(R.id.signUpProfileImageBtn);
-        ivProfileImage = findViewById(R.id.ivProfileImage);
+        ivProfileImage = findViewById(R.id.ivSignUpProfileImage);
 
         // Retrieves intent from login activity
         Intent intent = getIntent();
@@ -134,10 +139,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
     public void onLaunchGallery(View view) {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-//        }
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if (photoPickerIntent.resolveActivity(this.getPackageManager()) != null) {
+            startActivityForResult(photoPickerIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
     }
     //TODO edit this to work for this app
     private File getPhotoFileUri(String photoFileName) {
@@ -160,17 +165,16 @@ public class SignUpActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                final Uri imageUri = data.getData();
+//                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+//                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                photoFile = new File(getRealPathFromURI(this, imageUri));
                 try {
-                    final Uri imageUri = data.getData();
-                    assert imageUri != null;
-                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    selectedImage = MediaStore.Images.Media.getBitmap(SignUpActivity.this.getContentResolver(), imageUri);
                     ivProfileImage.setImageBitmap(selectedImage);
-                } catch (FileNotFoundException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
-
             }else {
                 Toast.makeText(this, "You haven't picked Image",Toast.LENGTH_LONG).show();
             }
@@ -180,13 +184,14 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUp() {
         // Create the ParseUser
         ParseUser user = new ParseUser();
+        final ParseFile image = conversionBitmapParseFile(selectedImage);
         // Set core properties
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
         user.put("bio", bio);
         user.put("homeState", state);
-        user.put("profileImage", image);
+
 
         // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
@@ -194,9 +199,15 @@ public class SignUpActivity extends AppCompatActivity {
                 if (e == null) {
                     // Hooray! Let them use the app now.
                     Log.d("SignUpActivity", "SignUp successful!");
-                    final Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    ParseUser newUser = ParseUser.getCurrentUser();
+                    newUser.put("image", image);
+                    newUser.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            final Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    });
                 } else {
                     Log.d("SignUpActivity", "SignUp failure");
                     Toast.makeText(SignUpActivity.this, e.toString(), Toast.LENGTH_LONG).show(); // TODO cut down e.toString()
@@ -205,4 +216,26 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+    public static ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] imageByte = byteArrayOutputStream.toByteArray();
+        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
+        return parseFile;
+    }
 }
+

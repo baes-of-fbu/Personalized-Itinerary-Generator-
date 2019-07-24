@@ -2,6 +2,7 @@ package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,13 @@ import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.MainActivity;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
+import com.codepath.travelapp.fragments.ProfileFragment;
 import com.codepath.travelapp.fragments.TripDetailsFragment;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +33,9 @@ import java.util.List;
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Trip> trips;
+    private String username;
+    private String APP_TAG = "TripAdapter";
+
 
     public TripAdapter(ArrayList<Trip> trips) {
         this.trips = trips;
@@ -41,7 +50,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Trip trip = trips.get(position);
         holder.tvTripBudget.setText(trip.getBudget().toString());
         holder.tvTripDates.setText(trip.getNumDays().toString());
@@ -64,6 +73,21 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
                     .load(image.getUrl())
                     .into(holder.ivTripImage);
         }
+        holder.tvUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                username = (String) holder.tvUsername.getText();
+                Fragment fragment = new ProfileFragment();
+                Bundle userBundle = new Bundle();
+                userBundle.putString("username",  username);
+                fragment.setArguments(userBundle);
+
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     @Override
@@ -120,5 +144,32 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         trips.addAll(list);
         notifyDataSetChanged();
     }
+//    private void sendUserBundle(String username) {
+//        Fragment fragment = new ProfileFragment();
+//
+//        ParseQuery<ParseUser> userQuery = new ParseQuery<>(ParseUser.class);
+//        userQuery.whereEqualTo("username", username);
+//        userQuery.findInBackground(new FindCallback<ParseUser>() {
+//            @Override
+//            public void done(List<ParseUser> objects, ParseException e) {
+//                if (e != null) {
+//                    Log.e(APP_TAG, "Error");
+//                    e.printStackTrace();
+//                    return;
+//                }
+//                Log.d("ComposeFragment", objects.toString());
+//                user = (ParseUser) objects.get(0);
+//            }
+//        });
+//        Bundle userBundle = new Bundle();
+//        userBundle.putParcelable("user",  user);
+//        fragment.setArguments(userBundle);
+//
+//        MainActivity.fragmentManager.beginTransaction()
+//                .replace(R.id.flContainer, fragment)
+//                .addToBackStack(null)
+//                .commit();
+//
+//    }
 
 }
