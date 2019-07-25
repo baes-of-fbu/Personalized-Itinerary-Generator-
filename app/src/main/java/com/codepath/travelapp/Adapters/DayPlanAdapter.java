@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.R;
-import com.codepath.travelapp.fragments.EventDetailsFragment;
+import com.codepath.travelapp.Fragments.EventDetailsFragment;
 import com.parse.ParseException;
 
 import java.util.ArrayList;

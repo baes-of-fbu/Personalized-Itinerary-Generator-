@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
-import com.codepath.travelapp.fragments.TripDetailsFragment;
+import com.codepath.travelapp.Fragments.TripDetailsFragment;
 import com.parse.ParseFile;
 
 import java.util.ArrayList;

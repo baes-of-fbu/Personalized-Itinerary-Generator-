@@ -1,4 +1,4 @@
-package com.codepath.travelapp.fragments;
+package com.codepath.travelapp.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.codepath.travelapp.Adapters.TripAdapter;
+import com.codepath.travelapp.Adapters.TimelineAdapter;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
@@ -30,7 +30,7 @@ public class TimelineFragment extends Fragment {
 
     private final String TAG = "TimelineFragment";
 
-    protected TripAdapter adapter;
+    protected TimelineAdapter adapter;
     private SwipeRefreshLayout swipeContainer;
 
     @Nullable
@@ -46,7 +46,7 @@ public class TimelineFragment extends Fragment {
         // create the upcomingTripAdapter
         ArrayList<Trip> mTrips = new ArrayList<>();
         // create the data source
-        adapter = new TripAdapter(mTrips);
+        adapter = new TimelineAdapter(mTrips);
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         rvPosts.setAdapter(adapter);

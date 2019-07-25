@@ -5,7 +5,7 @@
     android:id="@+id/cvRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="6dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     card_view:cardCornerRadius="@dimen/card_corner_radius"
@@ -13,107 +13,42 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="202dp">
-
-        <ImageView
-            android:id="@+id/ivTripImage"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@android:color/transparent"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            card_view:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/tvTripName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@android:color/transparent"
-            android:text="Trip Name"
-            android:textAlignment="textStart"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/ivProfileImage"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvUsername" />
-
-        <TextView
-            android:id="@+id/tvTripDates"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"
-            android:text="Trip Start Date"
-            android:textColor="@color/white"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toEndOf="@+id/tvDays"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvTripBudget" />
-
-        <TextView
-            android:id="@+id/tvTripBudget"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/transparent"
-            android:text="Trip Budget"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintTop_toTopOf="@+id/textView6"
-            card_view:layout_constraintBottom_toBottomOf="@+id/textView6"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.0"
-            card_view:layout_constraintStart_toEndOf="@+id/textView6"
-            card_view:layout_constraintTop_toBottomOf="@+id/ivProfileImage"
-            card_view:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="66dp"
-            android:layout_height="26dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Budget:"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvTripName" />
-
-        <TextView
-            android:id="@+id/tvUsername"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:clickable="true"
-            android:text="@string/username"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.454"
-            card_view:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-            card_view:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/ivProfileImage"
-            android:layout_width="65dp"
-            android:layout_height="63dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            app:srcCompat="@android:color/background_light"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@drawable/ic_person_outline_24px" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/username"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
+            app:layout_constraintTop_toTopOf="@+id/ivProfileImage" />
+
+        <TextView
+            android:id="@+id/tvTripName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/trip_name"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivProfileImage" />
 
         <TextView
             android:id="@+id/tvDays"
@@ -121,11 +56,72 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Number of Days:"
-            android:textColor="@color/white"
+            android:text="Days"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintBottom_toBottomOf="@+id/tvTripDates"
-            card_view:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTripName" />
+
+        <TextView
+            android:id="@+id/tvTripDates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="3 "
+            android:textColor="#3A3A3A"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDays" />
+
+        <TextView
+            android:id="@+id/tvTripBudget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="50"
+            android:textColor="#3A3A3A"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/tvTripDates"
+            app:layout_constraintTop_toTopOf="@+id/tvTripDates" />
+
+        <TextView
+            android:id="@+id/tvBudget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Budget"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/tvTripBudget"
+            app:layout_constraintTop_toTopOf="@+id/tvDays" />
+
+        <TextView
+            android:id="@+id/tvTags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Tags List"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvBudget" />
+
+        <ImageView
+            android:id="@+id/ivTripImage"
+            android:layout_width="0dp"
+            android:layout_height="270dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTripBudget"
+            card_view:srcCompat="@color/LightSkyBlue" />
+
+        <TextView
+            android:id="@+id/Tags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="Tags"
+            app:layout_constraintEnd_toStartOf="@+id/tvTags"
+            app:layout_constraintTop_toTopOf="@+id/tvTags" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

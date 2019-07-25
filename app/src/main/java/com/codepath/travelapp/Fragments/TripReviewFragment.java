@@ -1,4 +1,4 @@
-package com.codepath.travelapp.fragments;
+package com.codepath.travelapp.Fragments;
 
 import android.annotation.TargetApi;
 import android.os.Build;

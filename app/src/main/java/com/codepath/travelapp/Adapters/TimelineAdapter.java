@@ -16,28 +16,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Models.DayPlan;
+import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
-import com.codepath.travelapp.fragments.ProfileFragment;
-import com.codepath.travelapp.fragments.TripDetailsFragment;
+import com.codepath.travelapp.Fragments.ProfileFragment;
+import com.codepath.travelapp.Fragments.TripDetailsFragment;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
+public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Trip> trips;
     private String username;
 
-    public TripAdapter(ArrayList<Trip> trips) {
+    public TimelineAdapter(ArrayList<Trip> trips) {
         this.trips = trips;
     }
 
     @NonNull
     @Override
-    public TripAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TimelineAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
         return new ViewHolder(view);
@@ -55,6 +59,15 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         holder.tvTripName.setText(trip.getName());
 
         holder.tvUsername.setText(trip.getOwner().getUsername());
+
+        ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<>(DayPlan.class);
+        dayPlanQuery.whereEqualTo("event", trip);
+        Query.findInBackground(new FindCallback<Tag>() {
+            @Override
+            public void done(List<Tag> objects, ParseException e) {
+
+            }
+        });
 
         if (trip.getOwner().get("profileImage") != null) {
             ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
@@ -103,6 +116,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         private TextView tvTripName;
         private TextView tvUsername;
         private ImageView ivProfileImage;
+        private TextView tvTags;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,6 +127,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            tvTags = itemView.findViewById(R.id.tvTags);
 
             itemView.setOnClickListener(this);
         }

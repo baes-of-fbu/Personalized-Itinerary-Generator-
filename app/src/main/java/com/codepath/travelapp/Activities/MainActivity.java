@@ -14,9 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.codepath.travelapp.R;
-import com.codepath.travelapp.fragments.ComposeFragment;
-import com.codepath.travelapp.fragments.ProfileFragment;
-import com.codepath.travelapp.fragments.TimelineFragment;
+import com.codepath.travelapp.Fragments.ComposeFragment;
+import com.codepath.travelapp.Fragments.ProfileFragment;
+import com.codepath.travelapp.Fragments.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
 

@@ -1,4 +1,4 @@
-package com.codepath.travelapp.fragments;
+package com.codepath.travelapp.Fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;

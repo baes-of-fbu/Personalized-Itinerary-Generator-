@@ -1,4 +1,4 @@
-package com.codepath.travelapp.fragments;
+package com.codepath.travelapp.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
