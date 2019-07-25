@@ -91,9 +91,10 @@ public class ComposeFragment extends Fragment {
         spCity = view.findViewById(R.id.spCity);
         btnGenerate = view.findViewById(R.id.btnGenerate);
 
-        // Adds tags in grid recycler view
+        // Queries for all Tags in Parse database and populates the GridView
         populateGridView(view);
 
+        // Adds onClickListeners for etStartDate, etEndDate, and btnGenerate
         addOnClickListeners();
     }
 
@@ -110,7 +111,6 @@ public class ComposeFragment extends Fragment {
 
                     // Create TagGridAdapter, passing in the sample user data
                     adapter = new TagGridAdapter(allTags);
-
                     // Attach the TagGridAdapter to the recyclerView to populate items
                     rvTags.setAdapter(adapter);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
@@ -159,18 +159,17 @@ public class ComposeFragment extends Fragment {
                 } else if (endDate.length() == 0) {
                     Toast.makeText(getContext(), "Specify end date", Toast.LENGTH_LONG).show();
                 } else {
-                    numDays = (int) getDifferenceDays(TripReviewFragment.getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
+                    numDays = (int) getDifferenceBetweenDays(TripReviewFragment.getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
                     if (numDays < 1) {
                         Toast.makeText(getContext(), "Invalid dates. Please fix your start and/or end date", Toast.LENGTH_LONG).show();
                     } else if (budgetString.length() == 0) {
                         Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
                     } else if (Integer.parseInt(budgetString) < 0) {
-                        Toast.makeText(getContext(), "Minimum budget is $0.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Minimum budget is $0.", Toast.LENGTH_LONG).show(); //TODO should we change to an int value instead of String
                     } else if (cityName.contains("Select city")) {
                         Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
                     } else {
                         selectedTags = adapter.getSelectedTags();
-                        // Generates schedule and opens review fragment
                         generateSchedule(cityName, Integer.parseInt(budgetString));
                     }
                 }
@@ -197,11 +196,12 @@ public class ComposeFragment extends Fragment {
 
     // Returns number of days between two dates
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static long getDifferenceDays(LocalDate d1, LocalDate d2) {
+    private static long getDifferenceBetweenDays(LocalDate d1, LocalDate d2) {
         long diff = DAYS.between(d1, d2);
         return diff + 1;
     }
 
+    // Generates schedule and opens review fragment
     private void generateSchedule(final String cityName, final int budget) {
         // Sends network request for city name
         ParseQuery<City> cityQuery = new ParseQuery<>(City.class);
