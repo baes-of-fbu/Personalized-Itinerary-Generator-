@@ -91,13 +91,11 @@ public class ComposeFragment extends Fragment {
         spCity = view.findViewById(R.id.spCity);
         btnGenerate = view.findViewById(R.id.btnGenerate);
 
-        // Queries for all Tags in Parse database and populates the GridView
         populateGridView(view);
-
-        // Adds onClickListeners for etStartDate, etEndDate, and btnGenerate
         addOnClickListeners();
     }
 
+    // Queries for all Tags in Parse database and populates the GridView
     private void populateGridView(View view) {
         final RecyclerView rvTags = view.findViewById(R.id.rvTags);
         ParseQuery<Tag> tagQuery = new ParseQuery<>(Tag.class);
@@ -124,6 +122,7 @@ public class ComposeFragment extends Fragment {
         });
     }
 
+    // Adds onClickListeners for etStartDate, etEndDate, and btnGenerate
     private void addOnClickListeners(){
         etStartDate.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -151,7 +150,7 @@ public class ComposeFragment extends Fragment {
                 budgetString = etBudget.getText().toString();
                 cityName = spCity.getSelectedItem().toString();
 
-                // Checks prevent incorrect user input
+                // Checks to prevent incorrect user input
                 if (tripName.length() == 0) {
                     Toast.makeText(getContext(), "Specify trip name", Toast.LENGTH_LONG).show();
                 } else if (startDate.length() == 0) {
@@ -177,30 +176,6 @@ public class ComposeFragment extends Fragment {
         });
     }
 
-    // Opens a calendar and fills textView with selected date
-    private void getCurrentDate(final TextView tvDate) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), new DatePickerDialog.OnDateSetListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, monthOfYear);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-                tvDate.setText(simpleDateFormat.format(calendar.getTime()));
-            }
-
-        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
-    }
-
-    // Returns number of days between two dates
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private static long getDifferenceBetweenDays(LocalDate d1, LocalDate d2) {
-        long diff = DAYS.between(d1, d2);
-        return diff + 1;
-    }
-
     // Generates schedule and opens review fragment
     private void generateSchedule(final String cityName, final int budget) {
         // Sends network request for city name
@@ -211,7 +186,7 @@ public class ComposeFragment extends Fragment {
             public void done(List<City> cityList, ParseException e) {
                 if (e == null) {
                     city = cityList.get(0); // Assumes only one city is associated with the name TODO make more generic
-                    parseEmptyCity(budget);
+                    parseCity(budget);
                 } else {
                     Log.d("ComposeFragment", "Failed to query city: " + e.toString());
                     e.printStackTrace();
@@ -222,15 +197,16 @@ public class ComposeFragment extends Fragment {
     }
 
     // Sends network request for the empty event, unique to each city
-    private void parseEmptyCity(final int budget) {
+    private void parseCity(final int budget) {
         ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
         eventQuery.whereEqualTo(Event.KEY_NAME, "Empty Event");
         eventQuery.findInBackground(new FindCallback<Event>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void done(List<Event> eventList, ParseException e) {
                 if (e == null) {
                     emptyEvent = eventList.get(0);
-                    parseAllAvailableEvents(budget);
+                    parseEvents(budget);
                 } else {
                     Log.d("Compose Fragment", "Failed to query empty city");
                     e.printStackTrace();
@@ -241,7 +217,7 @@ public class ComposeFragment extends Fragment {
     }
 
     // Sends network requests for all events in a city, based off the tags
-    private void parseAllAvailableEvents(final int budget) {
+    private void parseEvents(final int budget) {
         allAvailableEvents = new ArrayList<>();
         List<ParseQuery<Event>> queries = new ArrayList<>();
 
@@ -323,12 +299,6 @@ public class ComposeFragment extends Fragment {
         }
     }
 
-    // Reformat a LocalDate object to a Date object
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private static Date changeToDate(LocalDate d1, int numDays) {
-        return java.sql.Date.valueOf((DAYS.addTo(d1, numDays)).toString());
-    }
-
     private Event getEvent(String timeOfDay, int runningBudget) {
         Event randomEvent = null;
         ArrayList<Event> alreadyChecked = new ArrayList<>();
@@ -342,15 +312,15 @@ public class ComposeFragment extends Fragment {
             } else if (!alreadyChecked.contains(randomEvent)) {
                 alreadyChecked.add(randomEvent);
                 // Returns the event if it's available and within our budget
-                if (eventIsAvailable(randomEvent, timeOfDay)) {
-                    if (eventIsWithinBudget(randomEvent, runningBudget)) {
+                if (isEventAvailable(randomEvent, timeOfDay)) {
+                    if (isEventWithinBudget(randomEvent, runningBudget)) {
                         isFinished = true;
                     }
                 }
             }
         }
         return randomEvent;
-    } //TODO test functionality to make sure changes work 
+    }
 
     // Returns a random event from a list of events
     private Event getRandomElement(List<Event> list) {
@@ -362,7 +332,7 @@ public class ComposeFragment extends Fragment {
     }
 
     // Returns if the event is available during a given time of day
-    private Boolean eventIsAvailable(Event event, String timeOfDay) { //TODO can we make this more generic?
+    private Boolean isEventAvailable(Event event, String timeOfDay) { //TODO can we make this more generic?
         if (timeOfDay.contentEquals(KEY_MORNING)) {
             return event.isAvailableMorning();
         } else if (timeOfDay.contentEquals(KEY_AFTERNOON)) {
@@ -373,13 +343,9 @@ public class ComposeFragment extends Fragment {
     }
 
     // Checks if the cost of an event is within the budget
-    private Boolean eventIsWithinBudget(Event event, int budget) {
+    private Boolean isEventWithinBudget(Event event, int budget) {
         int eventCost = (int) event.getCost();
-        if (eventCost > budget) {
-            return false;
-        } else {
-            return true;
-        }
+        return eventCost < budget;
     }
 
     // Sends information to review fragment
@@ -401,5 +367,35 @@ public class ComposeFragment extends Fragment {
                 .replace(R.id.flContainer, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    // Opens a calendar and fills textView with selected date
+    private void getCurrentDate(final TextView tvDate) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), new DatePickerDialog.OnDateSetListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                tvDate.setText(simpleDateFormat.format(calendar.getTime()));
+            }
+
+        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    // Returns number of days between two dates
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static long getDifferenceBetweenDays(LocalDate d1, LocalDate d2) {
+        long diff = DAYS.between(d1, d2);
+        return diff + 1;
+    }
+
+    // Reformat a LocalDate object to a Date object
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static Date changeToDate(LocalDate d1, int numDays) {
+        return java.sql.Date.valueOf((DAYS.addTo(d1, numDays)).toString());
     }
 }
