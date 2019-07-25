@@ -42,7 +42,10 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull DayPlanAdapter.ViewHolder holder, int position) {
+        // Get the current day
         final DayPlan dayPlan = dayPlans.get(position);
+
+        //Set the views
         holder.tvDayTitle.setText(dayPlan.getDate().toString());
         try {
             holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
@@ -109,12 +112,13 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
         });
     }
 
+    // Returns the total count of dayPlans
     @Override
     public int getItemCount() {
         return dayPlans.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvDayTitle;
         private CardView cvMorning;
         private TextView tvMorningName;
@@ -143,7 +147,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
 
     public void clear() {
        dayPlans.clear();
-        notifyDataSetChanged();
+       notifyDataSetChanged();
     }
 
     public void addAll(List<DayPlan> list) {

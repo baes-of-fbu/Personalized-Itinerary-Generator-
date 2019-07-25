@@ -24,13 +24,12 @@ public class TagSelectedAdapter extends RecyclerView.Adapter<TagSelectedAdapter.
     private ArrayList<Tag> selectedTags;
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
         private ImageView ivTagImage;
         private TextView tvTagName;
 
         ViewHolder(View itemView) {
             super(itemView);
-
+            // Finds views that will be populated
             ivTagImage = itemView.findViewById(R.id.ivTagImage);
             tvTagName = itemView.findViewById(R.id.tvTagName);
         }
@@ -45,7 +44,6 @@ public class TagSelectedAdapter extends RecyclerView.Adapter<TagSelectedAdapter.
     public TagSelectedAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_tag, parent, false);
-
         return new ViewHolder(view);
     }
 

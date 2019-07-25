@@ -36,27 +36,30 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
     public FavoriteTripAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_post_profile, parent, false);
-
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FavoriteTripAdapter.ViewHolder holder, int position) {
-        Trip trip = trips.get(position);
+        // Get a trip
+        final Trip trip = trips.get(position);
+
+        // Set the views for the trip
         holder.tvTripBudget.setText("$" + trip.getBudget().toString());
+
         holder.tvTripName.setText(trip.getName());
+
         holder.tvTripBudget.setText(trip.getBudget().toString());
 
-
-        if (trip.get("image") != null) {
-            ParseFile image = (ParseFile) trip.get("image");
+        if (trip.getImage() != null) {
+            ParseFile image = trip.getImage();
             assert image != null;
             Glide.with(context)
                     .load(image.getUrl())
                     .into(holder.ivTripImage);
         }
     }
-
+    // return the total count of trips
     @Override
     public int getItemCount() {
         return trips.size();
@@ -64,14 +67,13 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTripBudget;
-//        private TextView tvTripDates;
         private ImageView ivTripImage;
         private TextView tvTripName;
 
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-//            tvTripDates = itemView.findViewById(R.id.tvTripDates);
+            // Find views that will be populated
             tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
@@ -81,6 +83,7 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
 
         @Override
         public void onClick(View v) {
+            //Sends trip info to TripDetailsFragment when trip card is clicked
             Log.d("Adapter", "item clicked");
             final Trip trip = trips.get(getAdapterPosition());
             if (trip != null) {

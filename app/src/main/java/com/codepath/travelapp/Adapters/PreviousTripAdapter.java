@@ -41,10 +41,14 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
 
     @Override
     public void onBindViewHolder(@NonNull PreviousTripAdapter.ViewHolder holder, int position) {
+        //Get a trip
         Trip trip = trips.get(position);
+
+        // Set the views for that trip
         holder.tvTripBudget.setText("$" + trip.getBudget().toString());
-//        holder.tvTripDates.setText(trip.getNumDays().toString());
+
         holder.tvTripName.setText(trip.getName());
+
         holder.tvTripBudget.setText(trip.getBudget().toString());
 
 
@@ -64,14 +68,13 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTripBudget;
-//        private TextView tvTripDates;
         private ImageView ivTripImage;
         private TextView tvTripName;
 
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-//            tvTripDates = itemView.findViewById(R.id.tvTripDates);
+            // Find the views that will be populated
             tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
@@ -81,6 +84,7 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
 
         @Override
         public void onClick(View v) {
+            //Sends trip info to TripDetailsFragment onClick of trip card
             Log.d("Adapter", "item clicked");
             final Trip trip = trips.get(getAdapterPosition());
             if (trip != null) {
