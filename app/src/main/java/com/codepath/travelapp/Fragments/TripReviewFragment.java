@@ -15,16 +15,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.bumptech.glide.Glide;
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Adapters.DayPlanAdapter;
 import com.codepath.travelapp.Adapters.TagSelectedAdapter;
 import com.codepath.travelapp.GravitySnapHelper;
-import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Tag;
@@ -166,10 +167,14 @@ public class TripReviewFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 fragment.setArguments(bundle);
 
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .addToBackStack(null)
-                        .commit();
+//                MainActivity.fragmentManager.beginTransaction()
+//                        .replace(R.id.flContainer, fragment)
+//                        .addToBackStack(null)
+//                        .commit();
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                EditTripDialogFragment editTripDialogFragment = EditTripDialogFragment.newInstance();
+                editTripDialogFragment.show(fragmentManager, "fragment_edit_trip");
+
             }
         });
 

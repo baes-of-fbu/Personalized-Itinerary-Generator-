@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.codepath.travelapp.Adapters.TimelineAdapter;
+import com.codepath.travelapp.EndlessRecyclerViewScrollListener;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
@@ -33,6 +33,9 @@ public class TimelineFragment extends Fragment {
     protected TimelineAdapter adapter;
     private SwipeRefreshLayout swipeContainer;
 
+    private Integer skip = 0;
+    private boolean loadMore = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,15 +44,26 @@ public class TimelineFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        RecyclerView rvPosts = view.findViewById(R.id.rvTrips);
+        RecyclerView rvTrips = view.findViewById(R.id.rvTrips);
 
         // create the upcomingTripAdapter
         ArrayList<Trip> mTrips = new ArrayList<>();
         // create the data source
         adapter = new TimelineAdapter(mTrips);
         // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvPosts.setAdapter(adapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvTrips.setLayoutManager(linearLayoutManager);
+        rvTrips.setAdapter(adapter);
+
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+               loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvTrips.addOnScrollListener(scrollListener);
+
         queryPosts();
         // Swipe Container/ refresh code
         swipeContainer = view.findViewById(R.id.swipeContainer);
@@ -68,10 +82,7 @@ public class TimelineFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         RecyclerView.ItemDecoration divider = new DividerItemDecoration(Objects.requireNonNull(getContext()), DividerItemDecoration.VERTICAL);
-        rvPosts.addItemDecoration(divider);
-
-        Toast.makeText(getContext(), "Welcome to Timeline",Toast.LENGTH_SHORT).show();
-
+        rvTrips.addItemDecoration(divider);
     }
 
     private void queryPosts() {
@@ -95,4 +106,33 @@ public class TimelineFragment extends Fragment {
         });
     }
 
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    private void loadNextDataFromApi(int offset) {
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
+        tripQuery.include(Trip.KEY_OWNER);
+        if(loadMore) { // True when there are potentially more posts to load
+            tripQuery.setSkip(offset*10);
+        }
+        tripQuery.setLimit(10);
+        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+        tripQuery.findInBackground(new FindCallback<Trip>() {
+            @Override
+            public void done(List<Trip> objects, ParseException e) {
+                if (e == null) {
+                    Log.d("DEBUG", "Adding more posts to timeline");
+                    skip = skip + objects.size();
+                    if(objects.size() == 0) {
+                        loadMore = false;
+                    } else {
+                        loadMore = true;
+                        adapter.addAll(objects);
+                    }
+                } else {
+                    e.printStackTrace();
+                    Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+                }
+            }
+        });
+    }
 }

@@ -16,16 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
-import com.codepath.travelapp.Models.DayPlan;
-import com.codepath.travelapp.Models.Tag;
-import com.codepath.travelapp.Models.Trip;
-import com.codepath.travelapp.R;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TripDetailsFragment;
-import com.parse.FindCallback;
-import com.parse.ParseException;
+import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.R;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,15 +44,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        // Get a trip
+
         Trip trip = trips.get(position);
-        // Set views for this trip
-        holder.tvTripBudget.setText("$" + trip.getBudget().toString());
 
+        String budgetString = "$" + trip.getBudget().toString();
+        holder.tvTripBudget.setText(budgetString);
         holder.tvTripDates.setText(trip.getNumDays().toString());
-
         holder.tvTripName.setText(trip.getName());
-
         holder.tvUsername.setText(trip.getOwner().getUsername());
 
         if (trip.getOwner().get("profileImage") != null) {
