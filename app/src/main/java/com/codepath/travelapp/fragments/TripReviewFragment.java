@@ -129,6 +129,7 @@ public class TripReviewFragment extends Fragment {
                 if (dayPlans != null) {
                     for (int i = 0; i < dayPlans.size(); i++) {
                         dayPlans.get(i).setTrip(trip);
+                        dayPlans.get(i).saveInBackground();
                     }
                 }
 

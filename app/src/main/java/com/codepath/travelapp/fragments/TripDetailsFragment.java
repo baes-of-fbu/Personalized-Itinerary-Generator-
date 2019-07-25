@@ -49,7 +49,7 @@ public class TripDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
@@ -59,11 +59,45 @@ public class TripDetailsFragment extends Fragment {
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
-        RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
+        final RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
 
         Bundle bundle = getArguments();
         assert bundle != null;
         Trip trip = (Trip) bundle.getSerializable("Trip");
+
+        //create the adapter
+        mDayPlan = new ArrayList<>();
+        //create the data source
+        adapter = new DayPlanAdapter(mDayPlan);
+        // set the layout manager on the recycler view
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        rvSchedule.setLayoutManager(linearLayoutManager);
+        rvSchedule.setAdapter(adapter);
+
+        ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
+
+        dayPlanQuery.include(DayPlan.KEY_TRIP);
+        dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
+        dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
+            @Override
+            public void done(List<DayPlan> dayPlans, ParseException e) {
+                if (e != null) {
+                    Log.e("DayPlan","Error");
+                    e.printStackTrace();
+                    return;
+                }
+                mDayPlan.addAll(dayPlans);
+                // Circle Indicator
+                PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+                pagerSnapHelper.attachToRecyclerView(rvSchedule);
+
+                CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+                indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+
+                adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+            }
+        });
+
 
         if (trip != null) {
             tvTripName.setText(trip.getName());
@@ -84,43 +118,6 @@ public class TripDetailsFragment extends Fragment {
                     .into(ivProfileImage);
         }
 
-        //create the adapter
-        mDayPlan = new ArrayList<>();
-        //create the data source
-        adapter = new DayPlanAdapter(mDayPlan);
-        // set the layout manager on the recycler view
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        rvSchedule.setLayoutManager(linearLayoutManager);
-        rvSchedule.setAdapter(adapter);
-
-        // TODO change this
-        adapter.clear();
-
-        ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
-
-        dayPlanQuery.setLimit(10);
-        dayPlanQuery.include(DayPlan.KEY_TRIP);
-        dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
-        dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
-            @Override
-            public void done(List<DayPlan> dayPlans, ParseException e) {
-                if (e != null) {
-                    Log.e("DayPlan","Error");
-                    e.printStackTrace();
-                    return;
-                }
-                adapter.addAll(dayPlans);
-            }
-        });
-
-        // Circle Indicator
-        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
-        pagerSnapHelper.attachToRecyclerView(rvSchedule);
-
-        CircleIndicator2 indicator = view.findViewById(R.id.indicator);
-        indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
-
-        adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
         tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
