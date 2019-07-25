@@ -47,7 +47,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class ComposeFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 3;
-    private static final int NUM_TAGS = 20; //TODO change to something more generic?
+    private static final int NUM_TAGS = 20;
     private static final String KEY_MORNING = "morning";
     private static final String KEY_AFTERNOON = "afternoon";
     private static final String KEY_EVENING = "evening";
@@ -63,8 +63,9 @@ public class ComposeFragment extends Fragment {
     private String tripName;
     private String startDate;
     private String endDate;
-    private String budgetString; //TODO check relevance
-    private String cityName; //TODO check relevance
+    private int budget;
+    private String cityName;
+
     private City city;
     private Event emptyEvent;
 
@@ -147,7 +148,7 @@ public class ComposeFragment extends Fragment {
                 tripName = etTripName.getText().toString();
                 startDate = etStartDate.getText().toString();
                 endDate = etEndDate.getText().toString();
-                budgetString = etBudget.getText().toString();
+                budget = Integer.parseInt(etBudget.getText().toString());
                 cityName = spCity.getSelectedItem().toString();
 
                 // Checks to prevent incorrect user input
@@ -161,15 +162,15 @@ public class ComposeFragment extends Fragment {
                     numDays = (int) getDifferenceBetweenDays(TripReviewFragment.getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
                     if (numDays < 1) {
                         Toast.makeText(getContext(), "Invalid dates. Please fix your start and/or end date", Toast.LENGTH_LONG).show();
-                    } else if (budgetString.length() == 0) {
+                    } else if (etBudget.getText().toString().length() == 0) {
                         Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
-                    } else if (Integer.parseInt(budgetString) < 0) {
-                        Toast.makeText(getContext(), "Minimum budget is $0.", Toast.LENGTH_LONG).show(); //TODO should we change to an int value instead of String
+                    } else if (budget <= 0) {
+                        Toast.makeText(getContext(), "Minimum budget is $0.", Toast.LENGTH_LONG).show();
                     } else if (cityName.contains("Select city")) {
                         Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
                     } else {
                         selectedTags = adapter.getSelectedTags();
-                        generateSchedule(cityName, Integer.parseInt(budgetString));
+                        generateSchedule(cityName, budget);
                     }
                 }
             }
