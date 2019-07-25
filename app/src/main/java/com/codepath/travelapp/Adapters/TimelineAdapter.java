@@ -16,16 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
-import com.codepath.travelapp.Models.DayPlan;
-import com.codepath.travelapp.Models.Tag;
-import com.codepath.travelapp.Models.Trip;
-import com.codepath.travelapp.R;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TripDetailsFragment;
-import com.parse.FindCallback;
-import com.parse.ParseException;
+import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.R;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,15 +54,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.tvTripName.setText(trip.getName());
 
         holder.tvUsername.setText(trip.getOwner().getUsername());
-
-        ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<>(DayPlan.class);
-        dayPlanQuery.whereEqualTo("event", trip);
-        Query.findInBackground(new FindCallback<Tag>() {
-            @Override
-            public void done(List<Tag> objects, ParseException e) {
-
-            }
-        });
 
         if (trip.getOwner().get("profileImage") != null) {
             ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
