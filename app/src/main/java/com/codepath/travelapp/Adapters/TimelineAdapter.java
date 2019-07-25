@@ -60,15 +60,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
         holder.tvUsername.setText(trip.getOwner().getUsername());
 
-        ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<>(DayPlan.class);
-        dayPlanQuery.whereEqualTo("event", trip);
-        Query.findInBackground(new FindCallback<Tag>() {
-            @Override
-            public void done(List<Tag> objects, ParseException e) {
-
-            }
-        });
-
         if (trip.getOwner().get("profileImage") != null) {
             ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
             assert image != null;

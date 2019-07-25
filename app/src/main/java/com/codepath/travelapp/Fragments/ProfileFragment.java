@@ -13,17 +13,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Adapters.FavoriteTripAdapter;
 import com.codepath.travelapp.Adapters.PreviousTripAdapter;
 import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
+import com.codepath.travelapp.OnSwipeTouchListener;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -42,9 +45,10 @@ public class ProfileFragment extends Fragment {
     private UpcomingTripAdapter upcomingTripAdapter;
     private PreviousTripAdapter previousTripAdapter;
     private FavoriteTripAdapter favoriteTripAdapter;
-
     private int pagesize = 10;
     private User user;
+    private ConstraintLayout clProfile;
+    private Fragment sidebarFragment;
 
 
     @Nullable
@@ -77,9 +81,25 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
+        clProfile = view.findViewById(R.id.clProfile);
 
+        clProfile.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+                Toast.makeText(getContext(), "Left", Toast.LENGTH_SHORT).show();
+                SidebarFragment fragment = new SidebarFragment();
 
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
 
+            @Override
+            public void onSwipeRight() {
+                Toast.makeText(getContext(), "Right", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void queryUpcomingPosts(ParseUser user) {
 
