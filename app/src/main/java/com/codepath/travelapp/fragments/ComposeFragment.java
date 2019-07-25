@@ -47,7 +47,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class ComposeFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 3;
-    private static final int NUM_TAGS = 20;
+    private static final int NUM_TAGS = 20; //TODO change to something more generic?
     private static final String KEY_MORNING = "morning";
     private static final String KEY_AFTERNOON = "afternoon";
     private static final String KEY_EVENING = "evening";
@@ -63,8 +63,8 @@ public class ComposeFragment extends Fragment {
     private String tripName;
     private String startDate;
     private String endDate;
-    private String budgetString;
-    private String cityName;
+    private String budgetString; //TODO check relevance
+    private String cityName; //TODO check relevance
     private City city;
     private Event emptyEvent;
 
@@ -103,17 +103,18 @@ public class ComposeFragment extends Fragment {
         tagQuery.setLimit(NUM_TAGS);
         tagQuery.findInBackground(new FindCallback<Tag>() {
             @Override
-            public void done(List<Tag> objects, ParseException e) {
+            public void done(List<Tag> tagList, ParseException e) {
                 if (e == null) {
                     Log.d("DEBUG", "Successful query for tags");
-                    allTags = objects;
-                    // Create upcomingTripAdapter passing in the sample user data
+                    allTags = tagList;
+
+                    // Create TagGridAdapter, passing in the sample user data
                     adapter = new TagGridAdapter(allTags);
-                    // Attach the upcomingTripAdapter to the recyclerView to populate items
+
+                    // Attach the TagGridAdapter to the recyclerView to populate items
                     rvTags.setAdapter(adapter);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
                     gridLayoutManager.setSpanCount(NUM_COLUMNS);
-                    // Set layout manager to position the items
                     rvTags.setLayoutManager(gridLayoutManager);
                 } else {
                     e.printStackTrace();
