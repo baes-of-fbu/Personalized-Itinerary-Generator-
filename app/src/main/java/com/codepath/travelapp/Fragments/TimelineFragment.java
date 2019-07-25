@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,9 +68,6 @@ public class TimelineFragment extends Fragment {
 
         RecyclerView.ItemDecoration divider = new DividerItemDecoration(Objects.requireNonNull(getContext()), DividerItemDecoration.VERTICAL);
         rvPosts.addItemDecoration(divider);
-
-        Toast.makeText(getContext(), "Welcome to Timeline",Toast.LENGTH_SHORT).show();
-
     }
 
     private void queryPosts() {
@@ -94,5 +90,4 @@ public class TimelineFragment extends Fragment {
             }
         });
     }
-
 }
