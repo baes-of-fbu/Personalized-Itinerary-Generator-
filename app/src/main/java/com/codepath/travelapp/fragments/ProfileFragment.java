@@ -55,12 +55,10 @@ public class ProfileFragment extends Fragment {
     private TextView tvUsername;
     private TextView tvHometown;
     private ImageView ivProfileImage;
-    private SwipeRefreshLayout swipeContainer;
     private TextView tvFollowingCount;
     private TextView tvFollowersCount;
     private TextView tvFavoritesCOunt;
     private TextView tvBio;
-    private Toolbar toolbar;
     private String username;
     private User user;
 
@@ -79,18 +77,18 @@ public class ProfileFragment extends Fragment {
         Bundle userBundle = getArguments();
         if (userBundle != null) {
             username = userBundle.getString("username");
-            ParseQuery<ParseUser> userQuery = new ParseQuery<>(ParseUser.class);
+            ParseQuery<User> userQuery = new ParseQuery<User>(User.class);
             userQuery.whereEqualTo("username", username);
-            userQuery.findInBackground(new FindCallback<ParseUser>() {
+            userQuery.findInBackground(new FindCallback<User>() {
                 @Override
-                public void done(List<ParseUser> objects, ParseException e) {
+                public void done(List<User> objects, ParseException e) {
                     if (e != null) {
                         Log.e("ProfileFragment", "Error");
                         e.printStackTrace();
                         return;
                     }
-                    Log.d("ComposeFragment", objects.toString());
-                    user = (User) objects.get(0);
+                    Log.d("ProfileFragment", objects.toString());
+                    user = objects.get(0);
                     FillInLayout(view);
                 }
             });
@@ -186,15 +184,14 @@ public class ProfileFragment extends Fragment {
         tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
         tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
         tvFavoritesCOunt = view.findViewById(R.id.tvFavoriteCcount);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarMain);
 
 
         //Populate views in Profile Fragment
         tvUsername.setText(user.getUsername());
         tvHometown.setText((String) user.getHomeState());
         tvBio.setText(user.getBio());
-        if (user.get("profileImage") != null) {
-            ParseFile image = (ParseFile) user.get("profileImage");
+        if (user.getProfileImage() != null) {
+            ParseFile image = (ParseFile) user.getProfileImage();
             Glide.with(getContext())
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
