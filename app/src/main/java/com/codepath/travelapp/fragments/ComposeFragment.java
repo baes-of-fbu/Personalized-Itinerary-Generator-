@@ -124,7 +124,7 @@ public class ComposeFragment extends Fragment {
         });
     }
 
-    public void addOnClickListeners(){
+    private void addOnClickListeners(){
         etStartDate.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -262,7 +262,7 @@ public class ComposeFragment extends Fragment {
                 if (e == null) {
                     Log.d("ComposeFragment", "All events" + eventList.toString());
                     allAvailableEvents.addAll(eventList);
-                    createDayPlans(budget); 
+                    createDayPlans(budget);
                     sendBundle(budget);
                 } else {
                     Log.d("Compose Fragment", e.toString());
@@ -272,7 +272,6 @@ public class ComposeFragment extends Fragment {
         });
     }
 
-
     // Adds events to day plans
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -281,10 +280,9 @@ public class ComposeFragment extends Fragment {
 
         // Loop through each day
         for (int day = 0; day < numDays; day++) {
-
+            // Create a DayPlan for each day in the Trip and assign it the appropriate calendar Date
             DayPlan tempDay = new DayPlan();
-
-            Date date = addToDate(TripReviewFragment.getParseDate(startDate), day);
+            Date date = changeToDate(TripReviewFragment.getParseDate(startDate), day);
             tempDay.setDate(date);
 
             // Picks morning event and updates budget
@@ -325,44 +323,37 @@ public class ComposeFragment extends Fragment {
         }
     }
 
+    // Reformat a LocalDate object to a Date object
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static Date addToDate(LocalDate d1, int numDays) {
+    private static Date changeToDate(LocalDate d1, int numDays) {
         return java.sql.Date.valueOf((DAYS.addTo(d1, numDays)).toString());
     }
 
-
     private Event getEvent(String timeOfDay, int runningBudget) {
-
         Event randomEvent = null;
         ArrayList<Event> alreadyChecked = new ArrayList<>();
+        boolean isFinished = false;
 
-        while (randomEvent == null) {
+        while (!isFinished) {
             randomEvent = getRandomElement(allAvailableEvents);
 
-            if (alreadyChecked.size() == allAvailableEvents.size()) {
-                // Returns null if we have searched all available event
-                return null;
-            }
-
-            if (!alreadyChecked.contains(randomEvent)) {
-                // True if we have not already selected this event
+            if (alreadyChecked.size() == allAvailableEvents.size() || randomEvent == null) {
+                isFinished = true;
+            } else if (!alreadyChecked.contains(randomEvent)) {
                 alreadyChecked.add(randomEvent);
+                // Returns the event if it's available and within our budget
                 if (eventIsAvailable(randomEvent, timeOfDay)) {
-                    // True if the event fits the time slot
                     if (eventIsWithinBudget(randomEvent, runningBudget)) {
-                        // Returns the event if it's within our budget
-                        return randomEvent;
+                        isFinished = true;
                     }
                 }
             }
-            // Function reiterates the search
-            randomEvent = null;
         }
         return randomEvent;
-    }
+    } //TODO test functionality to make sure changes work 
 
     // Returns a random event from a list of events
-    public Event getRandomElement(List<Event> list) {
+    private Event getRandomElement(List<Event> list) {
         Random rand = new Random();
         if (list.size() == 0) {
             return null;
@@ -370,7 +361,8 @@ public class ComposeFragment extends Fragment {
         return list.get(rand.nextInt(list.size()));
     }
 
-    public Boolean eventIsAvailable(Event event, String timeOfDay) {
+    // Returns if the event is available during a given time of day
+    private Boolean eventIsAvailable(Event event, String timeOfDay) { //TODO can we make this more generic?
         if (timeOfDay.contentEquals(KEY_MORNING)) {
             return event.isAvailableMorning();
         } else if (timeOfDay.contentEquals(KEY_AFTERNOON)) {
@@ -381,7 +373,7 @@ public class ComposeFragment extends Fragment {
     }
 
     // Checks if the cost of an event is within the budget
-    public Boolean eventIsWithinBudget(Event event, int budget) {
+    private Boolean eventIsWithinBudget(Event event, int budget) {
         int eventCost = (int) event.getCost();
         if (eventCost > budget) {
             return false;
