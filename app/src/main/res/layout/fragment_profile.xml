@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
-            android:text="Hometown"
+            android:text="@string/place_holder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
@@ -59,7 +59,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Bio Description "
+            android:text="@string/place_holder"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
             app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Followers"
+                android:text="@string/followers"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvFollowersCount"
                 app:layout_constraintTop_toTopOf="parent"
@@ -110,11 +110,11 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/tvFollowing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Following"
+                android:text="@string/following"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvFollowingCount"
                 app:layout_constraintTop_toTopOf="parent"
@@ -127,7 +127,7 @@
                 android:layout_marginStart="20dp"
                 android:text="0"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView11"
+                app:layout_constraintStart_toEndOf="@+id/tvFollowing"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
@@ -136,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Favorites"
+                android:text="@string/favorites"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.053"
@@ -170,7 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="Previous Trips"
+                android:text="@string/previous_trips"
                 android:textAlignment="textStart"
                 android:textSize="18sp" />
 
@@ -193,7 +193,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="Upcoming Trips"
+                android:text="@string/upcoming_trips"
                 android:textAlignment="textStart"
                 android:textSize="18sp" />
 
@@ -215,7 +215,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Favorite Trips"
+                android:text="@string/favorite_trips"
                 android:textAlignment="textStart"
                 android:textSize="18sp" />
 
