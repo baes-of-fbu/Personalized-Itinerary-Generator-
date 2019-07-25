@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:ems="150"
                     android:enabled="true"
-                    android:hint="Write a short Bio" />
+                    android:hint="@string/bio_prompt" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
@@ -162,7 +162,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="40dp"
                 android:background="@drawable/rounded_btn"
-                android:text="Set Profile Image" />
+                android:text="@string/profile_image_prompt" />
 
             <Button
                 android:id="@+id/signUpBtn"

@@ -75,7 +75,13 @@
     <string name="city">City</string>
     <string name="days">Days: </string>
     <string name="budget_bold">Budget: </string>
+    <string name="cost">Cost: </string>
+    <string name="rating">Rating: </string>
+    <string name="address">Address: </string>
+    <string name="description">Description: </string>
     <string name="schedule">Schedule</string>
     <string name="dollar_sign">$</string>
     <string name="place_holder">…</string>
+    <string name="profile_image_prompt">Set Profile Image</string>
+    <string name="bio_prompt">Write a short bio</string>
 </resources>
