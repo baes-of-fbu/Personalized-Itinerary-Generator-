@@ -59,11 +59,7 @@ public class TimelineFragment extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
-
-
-                loadNextDataFromApi(page);
+               loadNextDataFromApi(page);
             }
         };
         // Adds the scroll listener to RecyclerView
@@ -114,11 +110,6 @@ public class TimelineFragment extends Fragment {
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
     public void loadNextDataFromApi(int offset) {
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
         ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
         tripQuery.include(Trip.KEY_OWNER);
         if(loadMore == true) { // True when there are potentially more posts to load

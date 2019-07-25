@@ -90,6 +90,7 @@ public class TripDetailsFragment extends Fragment {
             dayPlanQuery.setLimit(10);
             dayPlanQuery.include(DayPlan.KEY_TRIP);
             dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
+            dayPlanQuery.addAscendingOrder(DayPlan.KEY_DATE);
             dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
                 @Override
                 public void done(List<DayPlan> dayPlans, ParseException e) {
