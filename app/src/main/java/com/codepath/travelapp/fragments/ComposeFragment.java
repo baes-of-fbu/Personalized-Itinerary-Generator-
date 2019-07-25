@@ -208,9 +208,9 @@ public class ComposeFragment extends Fragment {
         cityQuery.whereEqualTo(City.KEY_NAME, cityName);
         cityQuery.findInBackground(new FindCallback<City>() {
             @Override
-            public void done(List<City> objects, ParseException e) {
+            public void done(List<City> cityList, ParseException e) {
                 if (e == null) {
-                    city = objects.get(0); // Assumes only one city is associated with the name
+                    city = cityList.get(0); // Assumes only one city is associated with the name TODO make more generic
                     parseEmptyCity(budget);
                 } else {
                     Log.d("ComposeFragment", "Failed to query city: " + e.toString());
@@ -223,13 +223,13 @@ public class ComposeFragment extends Fragment {
 
     // Sends network request for the empty event, unique to each city
     private void parseEmptyCity(final int budget) {
-        ParseQuery<Event> eventQuery = new ParseQuery<Event>(Event.class);
+        ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
         eventQuery.whereEqualTo(Event.KEY_NAME, "Empty Event");
         eventQuery.findInBackground(new FindCallback<Event>() {
             @Override
-            public void done(List<Event> objects, ParseException e) {
+            public void done(List<Event> eventList, ParseException e) {
                 if (e == null) {
-                    emptyEvent = objects.get(0);
+                    emptyEvent = eventList.get(0);
                     parseAllAvailableEvents(budget);
                 } else {
                     Log.d("Compose Fragment", "Failed to query empty city");
@@ -242,9 +242,8 @@ public class ComposeFragment extends Fragment {
 
     // Sends network requests for all events in a city, based off the tags
     private void parseAllAvailableEvents(final int budget) {
-
         allAvailableEvents = new ArrayList<>();
-        List<ParseQuery<Event>> queries = new ArrayList<ParseQuery<Event>>();
+        List<ParseQuery<Event>> queries = new ArrayList<>();
 
         // Create queries for each tag
         for (int i = 0; i < selectedTags.size(); i++) {
@@ -254,18 +253,16 @@ public class ComposeFragment extends Fragment {
             queries.add(eventQuery);
         }
 
-        // Send all queries in one main query
+        // Send all tag queries in one main query
         ParseQuery<Event> mainQuery = ParseQuery.or(queries);
         mainQuery.findInBackground(new FindCallback<Event>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
-            public void done(List<Event> objects, ParseException e) {
+            public void done(List<Event> eventList, ParseException e) {
                 if (e == null) {
-                    Log.d("ComposeFragment", "All events" + objects.toString());
-                    Toast.makeText(getContext(), "Query for available events successful", Toast.LENGTH_LONG).show();
-                    allAvailableEvents.addAll(objects);
-                    //parseEventsByTime(Event.KEY_MORNING, budget);
-                    createDayPlans(budget);
+                    Log.d("ComposeFragment", "All events" + eventList.toString());
+                    allAvailableEvents.addAll(eventList);
+                    createDayPlans(budget); 
                     sendBundle(budget);
                 } else {
                     Log.d("Compose Fragment", e.toString());
