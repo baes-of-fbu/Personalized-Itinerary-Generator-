@@ -73,4 +73,9 @@
     <string name="end_date">End Date</string>
     <string name="budget">Trip Budget</string>
     <string name="city">City</string>
+    <string name="days">Days: </string>
+    <string name="budget_bold">Budget: </string>
+    <string name="schedule">Schedule</string>
+    <string name="dollar_sign">$</string>
+    <string name="place_holder">…</string>
 </resources>

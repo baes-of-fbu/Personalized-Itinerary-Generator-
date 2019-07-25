@@ -33,7 +33,6 @@ public class TimelineFragment extends Fragment {
     protected TimelineAdapter adapter;
     private SwipeRefreshLayout swipeContainer;
 
-    private EndlessRecyclerViewScrollListener scrollListener;
     private Integer skip = 0;
     private boolean loadMore = false;
 
@@ -56,7 +55,7 @@ public class TimelineFragment extends Fragment {
         rvTrips.setLayoutManager(linearLayoutManager);
         rvTrips.setAdapter(adapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                loadNextDataFromApi(page);
@@ -109,10 +108,10 @@ public class TimelineFragment extends Fragment {
 
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
-    public void loadNextDataFromApi(int offset) {
-        ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
+    private void loadNextDataFromApi(int offset) {
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
         tripQuery.include(Trip.KEY_OWNER);
-        if(loadMore == true) { // True when there are potentially more posts to load
+        if(loadMore) { // True when there are potentially more posts to load
             tripQuery.setSkip(offset*10);
         }
         tripQuery.setLimit(10);

@@ -89,7 +89,7 @@ public class TripDetailsFragment extends Fragment {
                 Toast.makeText(getContext(), "There are no current schedules", Toast.LENGTH_LONG).show();
             }
         } else {
-            ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
+            ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<>(DayPlan.class);
             dayPlanQuery.setLimit(10);
             dayPlanQuery.include(DayPlan.KEY_TRIP);
             dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
@@ -115,9 +115,13 @@ public class TripDetailsFragment extends Fragment {
         if (trip != null) {
             tvTripName.setText(trip.getName());
             tvUsername.setText(trip.getOwner().getUsername());
-            tvTravelDates.setText(trip.getStartDate() + " - " + trip.getEndDate());
+
+            String travelWindow = trip.getStartDate() + " - " + trip.getEndDate();
+            tvTravelDates.setText(travelWindow);
             tvDays.setText(trip.getNumDays().toString());
-            tvBudget.setText("$" + trip.getBudget());
+
+            String budgetString = "$" + trip.getBudget();
+            tvBudget.setText(budgetString);
 
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(trip.getImage().getUrl())

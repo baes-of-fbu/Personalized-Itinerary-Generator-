@@ -47,7 +47,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
         Trip trip = trips.get(position);
 
-        holder.tvTripBudget.setText("$" + trip.getBudget().toString());
+        String budgetString = "$" + trip.getBudget().toString();
+        holder.tvTripBudget.setText(budgetString);
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());

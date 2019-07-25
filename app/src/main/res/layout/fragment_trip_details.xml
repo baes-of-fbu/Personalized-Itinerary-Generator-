@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="Travel Dates "
+                android:text="@string/place_holder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Num Days "
+                android:text="@string/place_holder"
                 app:layout_constraintStart_toEndOf="@+id/tvStringDays"
                 app:layout_constraintTop_toBottomOf="@+id/ivProfileImage" />
 
@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="$$$$"
+                android:text="@string/dollar_sign"
                 app:layout_constraintStart_toEndOf="@+id/tvStringBudget"
                 app:layout_constraintTop_toBottomOf="@+id/ivProfileImage" />
 
@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="8dp"
-                android:text="Budget: "
+                android:text="@string/budget_bold"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/tvDays"
@@ -136,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Days: "
+                android:text="@string/days"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
@@ -156,7 +156,7 @@
                 android:id="@+id/tvSchedule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Schedule"
+                android:text="@string/schedule"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
