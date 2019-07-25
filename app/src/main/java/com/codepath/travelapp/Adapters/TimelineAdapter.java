@@ -44,15 +44,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        // Get a trip
+
         Trip trip = trips.get(position);
-        // Set views for this trip
+
         holder.tvTripBudget.setText("$" + trip.getBudget().toString());
-
         holder.tvTripDates.setText(trip.getNumDays().toString());
-
         holder.tvTripName.setText(trip.getName());
-
         holder.tvUsername.setText(trip.getOwner().getUsername());
 
         if (trip.getOwner().get("profileImage") != null) {

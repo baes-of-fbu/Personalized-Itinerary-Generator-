@@ -48,4 +48,7 @@ dependencies {
 
     // Snap into place with dot indicator
     implementation 'me.relex:circleindicator:2.1.2'
+
+    // Endless scroll
+    implementation "android.arch.paging:runtime:1.0.1"
 }

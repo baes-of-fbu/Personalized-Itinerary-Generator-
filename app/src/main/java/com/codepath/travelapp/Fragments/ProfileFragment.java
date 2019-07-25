@@ -43,9 +43,8 @@ public class ProfileFragment extends Fragment {
     private PreviousTripAdapter previousTripAdapter;
     private FavoriteTripAdapter favoriteTripAdapter;
 
-    private int pagesize = 10;
+    private int pageSize = 10;
     private User user;
-
 
     @Nullable
     @Override
@@ -77,17 +76,14 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
-
-
-
     }
-    private void queryUpcomingPosts(ParseUser user) {
 
+    private void queryUpcomingPosts(ParseUser user) {
         upcomingTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
-        tripQuery.setLimit(pagesize);
+        tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
         tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, true);
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
@@ -104,13 +100,13 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    private void queryPreviousPosts(ParseUser user) {
 
+    private void queryPreviousPosts(ParseUser user) {
         previousTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
-        tripQuery.setLimit(pagesize);
+        tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
         // TODO query by time
         tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, false);
@@ -128,13 +124,13 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    private void queryFavoritePosts(ParseUser user) {
 
+    private void queryFavoritePosts(ParseUser user) {
         favoriteTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
-        tripQuery.setLimit(pagesize);
+        tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
         // TODO query by time
         tripQuery.whereEqualTo(Trip.KEY_ISFAVORITED, true);
@@ -152,11 +148,13 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
     private void FillInLayout(View view) {
         RecyclerView rvUpcoming = view.findViewById(R.id.rvUpcoming);
         RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);

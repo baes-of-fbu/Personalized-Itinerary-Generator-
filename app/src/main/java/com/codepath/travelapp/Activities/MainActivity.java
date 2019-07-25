@@ -69,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(APP_TAG, "Opening profile fragment");
 
 //                        TODO remove is unnecessary
-//                        MainActivity.fragmentManager.beginTransaction()
-//                                .replace(R.id.flContainer, fragment)
-//                                .addToBackStack(null)
-//                                .commit();
+                        MainActivity.fragmentManager.beginTransaction()
+                                .replace(R.id.flContainer, fragment)
+                                .addToBackStack(null)
+                                .commit();
                         break;
                     default:
                         fragment = new TimelineFragment();
