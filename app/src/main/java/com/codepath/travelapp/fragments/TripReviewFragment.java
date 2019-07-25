@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
@@ -29,7 +30,9 @@ import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,8 +40,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
+import me.relex.circleindicator.CircleIndicator2;
+
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
-import static java.time.temporal.ChronoUnit.DAYS;
 
 public class TripReviewFragment extends Fragment {
 
@@ -107,6 +111,12 @@ public class TripReviewFragment extends Fragment {
         rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         rvSchedule.setAdapter(dayPlanAdapter);
 
+        // Circle Indicator
+        final PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(rvSchedule);
+        CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+        indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+        dayPlanAdapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
 
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
@@ -114,24 +124,27 @@ public class TripReviewFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                Trip trip = new Trip();
+                final Trip trip = new Trip();
                 trip.setOwner(ParseUser.getCurrentUser());
                 trip.setName(tripName);
                 trip.setCity(city);
                 trip.setImage(city.getImage());
-                trip.setStartDate(addToDate(getParseDate(startDate), 0));
-                trip.setEndDate(addToDate(getParseDate(endDate),0));
+                trip.setStartDate(convertToDate(getParseDate(startDate)));
+                trip.setEndDate(convertToDate(getParseDate(endDate)));
                 trip.setNumDays(numDays);
                 trip.setBudget(budget);
 
-                trip.saveInBackground();
-
-                if (dayPlans != null) {
-                    for (int i = 0; i < dayPlans.size(); i++) {
-                        dayPlans.get(i).setTrip(trip);
-                        dayPlans.get(i).saveInBackground();
+                trip.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (dayPlans != null) {
+                            for (int i = 0; i < dayPlans.size(); i++) {
+                                dayPlans.get(i).setTrip(trip);
+                                dayPlans.get(i).saveInBackground();
+                            }
+                        }
                     }
-                }
+                });
 
                 Fragment fragment = new TripDetailsFragment();
                 Bundle bundle = new Bundle();
@@ -149,7 +162,7 @@ public class TripReviewFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new TimelineFragment();
-
+                // TODO Remove this bundle if unnecessary
                 Bundle bundle = new Bundle();
                 fragment.setArguments(bundle);
 
@@ -170,7 +183,7 @@ public class TripReviewFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static Date addToDate(LocalDate d1, int numDays) {
-        return java.sql.Date.valueOf((DAYS.addTo(d1, numDays)).toString());
+    private static Date convertToDate(LocalDate d1) {
+        return java.sql.Date.valueOf(d1.toString());
     }
 }

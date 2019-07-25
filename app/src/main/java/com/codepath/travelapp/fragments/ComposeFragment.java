@@ -366,6 +366,9 @@ public class ComposeFragment extends Fragment {
     // Returns a random event from a list of events
     public Event getRandomElement(List<Event> list) {
         Random rand = new Random();
+        if (list.size() == 0) {
+            return null;
+        }
         return list.get(rand.nextInt(list.size()));
     }
 

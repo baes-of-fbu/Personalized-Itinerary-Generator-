@@ -52,7 +52,8 @@ public class TripDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
         ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
@@ -73,13 +74,18 @@ public class TripDetailsFragment extends Fragment {
         rvSchedule.setLayoutManager(linearLayoutManager);
         rvSchedule.setAdapter(adapter);
 
+        // Circle Indicator
+        final PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(rvSchedule);
+
 
         if (bundle.containsKey("DayPlans")) {
             ArrayList<DayPlan> temp = bundle.getParcelableArrayList("DayPlans");
             mDayPlan.addAll(temp);
+            CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+            indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+            adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
         } else {
-            progressDialog = new ProgressDialog(getContext());
-            progressDialog.show();
             ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
             dayPlanQuery.setLimit(10);
             dayPlanQuery.include(DayPlan.KEY_TRIP);
@@ -87,15 +93,20 @@ public class TripDetailsFragment extends Fragment {
             dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
                 @Override
                 public void done(List<DayPlan> dayPlans, ParseException e) {
-                    progressDialog.hide();
                     if (e != null) {
                         Log.e("DayPlan", "Error");
                         e.printStackTrace();
                         return;
                     }
+                    adapter.clear();
                     mDayPlan.addAll(dayPlans);
+
+                    CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+                    indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+                    adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
                 }
             });
+
         }
 
         if (trip != null) {
@@ -117,14 +128,9 @@ public class TripDetailsFragment extends Fragment {
                     .into(ivProfileImage);
         }
 
-        // Circle Indicator
-        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
-        pagerSnapHelper.attachToRecyclerView(rvSchedule);
 
-        CircleIndicator2 indicator = view.findViewById(R.id.indicator);
-        indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
 
-        adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+        progressDialog.hide();
 
         tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
