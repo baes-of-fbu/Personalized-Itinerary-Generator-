@@ -33,17 +33,17 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            ivTagImage = (ImageView) itemView.findViewById(R.id.ivTagImage);
-            tvTagName = (TextView) itemView.findViewById(R.id.tvTagName);
+            ivTagImage = itemView.findViewById(R.id.ivTagImage);
+            tvTagName = itemView.findViewById(R.id.tvTagName);
 
             ivTagImage.setColorFilter(Color.argb(200,200,200,200));
             itemView.setTag("grayed");
-            itemView.setOnClickListener((View.OnClickListener) this);
+            itemView.setOnClickListener(this);
         }
 
         @Override

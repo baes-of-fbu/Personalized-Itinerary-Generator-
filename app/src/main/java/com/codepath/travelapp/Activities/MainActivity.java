@@ -1,4 +1,4 @@
-package com.codepath.travelapp;
+package com.codepath.travelapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.codepath.travelapp.R;
 import com.codepath.travelapp.fragments.ComposeFragment;
 import com.codepath.travelapp.fragments.ProfileFragment;
 import com.codepath.travelapp.fragments.TimelineFragment;

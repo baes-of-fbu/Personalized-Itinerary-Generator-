@@ -51,9 +51,9 @@
             android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled"
             android:value="false" />
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".LoginActivity"
+        <activity android:name=".Activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,7 +61,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity"
+        <activity android:name=".Activities.SignUpActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

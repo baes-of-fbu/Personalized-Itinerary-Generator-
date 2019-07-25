@@ -23,16 +23,16 @@ public class TagSelectedAdapter extends RecyclerView.Adapter<TagSelectedAdapter.
     private Context context;
     private ArrayList<Tag> selectedTags;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivTagImage;
         private TextView tvTagName;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
-            ivTagImage = (ImageView) itemView.findViewById(R.id.ivTagImage);
-            tvTagName = (TextView) itemView.findViewById(R.id.tvTagName);
+            ivTagImage = itemView.findViewById(R.id.ivTagImage);
+            tvTagName = itemView.findViewById(R.id.tvTagName);
         }
     }
 
@@ -56,7 +56,7 @@ public class TagSelectedAdapter extends RecyclerView.Adapter<TagSelectedAdapter.
         Tag tag = selectedTags.get(position);
         // Set item views based on your views and data model
         viewHolder.tvTagName.setText(tag.getName());
-        ParseFile image = (ParseFile) tag.getImage();
+        ParseFile image = tag.getImage();
         Glide.with(context)
                 .load(image.getUrl())
                 .into(viewHolder.ivTagImage);

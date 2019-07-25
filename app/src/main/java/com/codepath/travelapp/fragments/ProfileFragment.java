@@ -10,14 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -41,26 +39,11 @@ import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 public class ProfileFragment extends Fragment {
 
     private final String TAG = "ProfileFragment";
-    private RecyclerView rvUpcoming;
-    private  RecyclerView rvPrevious;
-    private RecyclerView rvFavorite;
-    protected UpcomingTripAdapter upcomingTripAdapter;
-    protected PreviousTripAdapter previousTripAdapter;
-    protected FavoriteTripAdapter favoriteTripAdapter;
+    private UpcomingTripAdapter upcomingTripAdapter;
+    private PreviousTripAdapter previousTripAdapter;
+    private FavoriteTripAdapter favoriteTripAdapter;
 
-    protected ArrayList<Trip> upcomingTrips;
-    protected ArrayList<Trip> previousTrips;
-    protected ArrayList<Trip> favoriteTrips;
     private int pagesize = 10;
-    private TextView tvUsername;
-    private TextView tvHometown;
-    private ImageView ivProfileImage;
-    private SwipeRefreshLayout swipeContainer;
-    private TextView tvFollowingCount;
-    private TextView tvFollowersCount;
-    private TextView tvFavoritesCOunt;
-    private TextView tvBio;
-    private String username;
     private User user;
 
 
@@ -77,7 +60,7 @@ public class ProfileFragment extends Fragment {
 
         Bundle userBundle = getArguments();
         if (userBundle != null) {
-            username = userBundle.getString("username");
+            String username = userBundle.getString("username");
             ParseQuery<ParseUser> userQuery = new ParseQuery<>(ParseUser.class);
             userQuery.whereEqualTo("username", username);
             userQuery.findInBackground(new FindCallback<ParseUser>() {
@@ -98,11 +81,11 @@ public class ProfileFragment extends Fragment {
 
 
     }
-    protected void queryUpcomingPosts(ParseUser user) {
+    private void queryUpcomingPosts(ParseUser user) {
 
         upcomingTripAdapter.clear();
 
-        ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
         tripQuery.setLimit(pagesize);
         tripQuery.include(Trip.KEY_OWNER);
@@ -121,11 +104,11 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    protected void queryPreviousPosts(ParseUser user) {
+    private void queryPreviousPosts(ParseUser user) {
 
         previousTripAdapter.clear();
 
-        ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
         tripQuery.setLimit(pagesize);
         tripQuery.include(Trip.KEY_OWNER);
@@ -145,11 +128,11 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    protected void queryFavoritePosts(ParseUser user) {
+    private void queryFavoritePosts(ParseUser user) {
 
         favoriteTripAdapter.clear();
 
-        ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
         tripQuery.setLimit(pagesize);
         tripQuery.include(Trip.KEY_OWNER);
@@ -174,17 +157,17 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.menu_profile, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-    public void FillInLayout(View view) {
-        rvUpcoming = view.findViewById(R.id.rvUpcoming);
-        rvPrevious = view.findViewById(R.id.rvPrevious);
-        rvFavorite = view.findViewById(R.id.rvFavorite);
-        tvUsername = view.findViewById(R.id.tvUsername);
-        tvHometown = view.findViewById(R.id.tvHometown);
-        tvBio = view.findViewById(R.id.tvBio);
-        ivProfileImage = view.findViewById(R.id.ivProfileImage);
-        tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
-        tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
-        tvFavoritesCOunt = view.findViewById(R.id.tvFavoriteCcount);
+    private void FillInLayout(View view) {
+        RecyclerView rvUpcoming = view.findViewById(R.id.rvUpcoming);
+        RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);
+        RecyclerView rvFavorite = view.findViewById(R.id.rvFavorite);
+        TextView tvUsername = view.findViewById(R.id.tvUsername);
+        TextView tvHometown = view.findViewById(R.id.tvHometown);
+        TextView tvBio = view.findViewById(R.id.tvBio);
+        ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
+        TextView tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
+        TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
+        TextView tvFavoritesCOunt = view.findViewById(R.id.tvFavoriteCcount);
 
 
         //Populate views in Profile Fragment
@@ -198,22 +181,15 @@ public class ProfileFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
-        if (user.getFollowers() != null) {
-            tvFollowersCount.setText(user.getFollowers().toString());
-        }
+        tvFollowersCount.setText(user.getFollowers().toString());
+        tvFollowingCount.setText(user.getFollowing().toString());
+        tvFavoritesCOunt.setText(user.getFavorites().toString());
 
-        if (user.getFollowing() != null) {
-            tvFollowingCount.setText(user.getFollowing().toString());
-        }
-
-        if (user.getFavorites() != null) {
-            tvFavoritesCOunt.setText(user.getFavorites().toString());
-        }
 
         //create the upcomingTripAdapter
-        upcomingTrips = new ArrayList<>();
-        previousTrips = new ArrayList<>();
-        favoriteTrips = new ArrayList<>();
+        ArrayList<Trip> upcomingTrips = new ArrayList<>();
+        ArrayList<Trip> previousTrips = new ArrayList<>();
+        ArrayList<Trip> favoriteTrips = new ArrayList<>();
         //create the data source
         upcomingTripAdapter = new UpcomingTripAdapter(upcomingTrips);
         previousTripAdapter = new PreviousTripAdapter(previousTrips);

@@ -24,7 +24,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Adapters.DayPlanAdapter;
 import com.codepath.travelapp.Adapters.TagSelectedAdapter;
 import com.codepath.travelapp.GravitySnapHelper;
-import com.codepath.travelapp.MainActivity;
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Tag;

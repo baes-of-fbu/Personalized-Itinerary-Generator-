@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Adapters.DayPlanAdapter;
-import com.codepath.travelapp.MainActivity;
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;

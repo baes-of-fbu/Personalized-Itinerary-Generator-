@@ -1,6 +1,5 @@
-package com.codepath.travelapp;
+package com.codepath.travelapp.Activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,30 +20,23 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.codepath.travelapp.Models.User;
-import com.parse.Parse;
+import com.codepath.travelapp.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private static final int PICK_PHOTO_FOR_AVATAR = 2;
     public final String APP_TAG = "SignUpActivity";
-
     private String username;
     private String password;
     private String email;
@@ -63,7 +54,6 @@ public class SignUpActivity extends AppCompatActivity {
     private Button signUpProfileImageBtn;
     private ImageView ivProfileImage;
     public String photoFileName = "photo.jpg";
-    private File photoFile;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     private Context context;
     private Bitmap selectedImage;
@@ -183,7 +173,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 final Uri imageUri = data.getData();
-                photoFile = new File(getRealPathFromURI(this, imageUri));
+                File photoFile = new File(getRealPathFromURI(this, imageUri));
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(SignUpActivity.this.getContentResolver(), imageUri);
                     Glide.with(this)

@@ -2,7 +2,6 @@ package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.codepath.travelapp.MainActivity;
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.codepath.travelapp.fragments.ProfileFragment;
 import com.codepath.travelapp.fragments.TripDetailsFragment;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.travelapp.Adapters.TagGridAdapter;
-import com.codepath.travelapp.MainActivity;
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Event;
