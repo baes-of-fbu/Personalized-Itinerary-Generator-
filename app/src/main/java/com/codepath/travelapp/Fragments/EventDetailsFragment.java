@@ -3,6 +3,8 @@ package com.codepath.travelapp.Fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +61,10 @@ public class EventDetailsFragment extends Fragment {
             tvEventName.setText(event.getName());
             tvCost.setText(event.getCost().toString());
             rbRating.setRating(event.getRating().floatValue());
-            // TODO add SpannableString for address to do .setSpan(new UnderlineSpan(), , , ); then set text
-            tvAddress.setText(event.getAddress());
+
+            SpannableString address = new SpannableString(event.getAddress());
+            address.setSpan(new UnderlineSpan(), 0, address.length(), 0);
+            tvAddress.setText(address);
             tvDescription.setText(event.getDescription());
 
             Glide.with(Objects.requireNonNull(getContext()))
