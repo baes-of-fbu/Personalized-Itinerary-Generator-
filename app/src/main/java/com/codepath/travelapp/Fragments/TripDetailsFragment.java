@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,8 +41,6 @@ public class TripDetailsFragment extends Fragment {
 
     private DayPlanAdapter adapter;
     private ArrayList<DayPlan> mDayPlan;
-    private ProgressDialog progressDialog;
-
 
     @Nullable
     @Override
@@ -52,7 +51,7 @@ public class TripDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        progressDialog = new ProgressDialog(getContext());
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.show();
         ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
@@ -81,10 +80,14 @@ public class TripDetailsFragment extends Fragment {
 
         if (bundle.containsKey("DayPlans")) {
             ArrayList<DayPlan> temp = bundle.getParcelableArrayList("DayPlans");
-            mDayPlan.addAll(temp);
-            CircleIndicator2 indicator = view.findViewById(R.id.indicator);
-            indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
-            adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+            if (temp != null) {
+                mDayPlan.addAll(temp);
+                CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+                indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+                adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+            } else {
+                Toast.makeText(getContext(), "There are no current schedules", Toast.LENGTH_LONG).show();
+            }
         } else {
             ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
             dayPlanQuery.setLimit(10);
@@ -107,7 +110,6 @@ public class TripDetailsFragment extends Fragment {
                     adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
                 }
             });
-
         }
 
         if (trip != null) {
@@ -128,8 +130,6 @@ public class TripDetailsFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
-
-
 
         progressDialog.hide();
 
