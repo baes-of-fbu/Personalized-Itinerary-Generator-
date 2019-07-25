@@ -65,29 +65,23 @@ public class TripDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         assert bundle != null;
         Trip trip = (Trip) bundle.getSerializable("Trip");
+        mDayPlan = new ArrayList<>();
+        //create the data source
+        adapter = new DayPlanAdapter(mDayPlan);
+        // set the layout manager on the recycler view
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        rvSchedule.setLayoutManager(linearLayoutManager);
+        rvSchedule.setAdapter(adapter);
+
 
         if (bundle.containsKey("DayPlans")) {
-            mDayPlan.addAll(bundle.<DayPlan>getParcelableArrayList("DayPlans"));
-
-            // TODO refactor this
-            adapter = new DayPlanAdapter(mDayPlan);
-            // set the layout manager on the recycler view
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-            rvSchedule.setLayoutManager(linearLayoutManager);
-            rvSchedule.setAdapter(adapter);
+            ArrayList<DayPlan> temp = bundle.getParcelableArrayList("DayPlans");
+            mDayPlan.addAll(temp);
         } else {
-            mDayPlan = new ArrayList<>();
-            //create the data source
-            adapter = new DayPlanAdapter(mDayPlan);
-            // set the layout manager on the recycler view
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-            rvSchedule.setLayoutManager(linearLayoutManager);
-            rvSchedule.setAdapter(adapter);
-
             progressDialog = new ProgressDialog(getContext());
             progressDialog.show();
             ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
-
+            dayPlanQuery.setLimit(10);
             dayPlanQuery.include(DayPlan.KEY_TRIP);
             dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
             dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
