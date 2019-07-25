@@ -1,5 +1,6 @@
 package com.codepath.travelapp.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,7 +40,7 @@ public class TripDetailsFragment extends Fragment {
 
     private DayPlanAdapter adapter;
     private ArrayList<DayPlan> mDayPlan;
-
+    private ProgressDialog progressDialog;
 
 
     @Nullable
@@ -64,8 +65,6 @@ public class TripDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         assert bundle != null;
         Trip trip = (Trip) bundle.getSerializable("Trip");
-
-        //create the adapter
         mDayPlan = new ArrayList<>();
         //create the data source
         adapter = new DayPlanAdapter(mDayPlan);
@@ -74,30 +73,30 @@ public class TripDetailsFragment extends Fragment {
         rvSchedule.setLayoutManager(linearLayoutManager);
         rvSchedule.setAdapter(adapter);
 
-        ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
 
-        dayPlanQuery.include(DayPlan.KEY_TRIP);
-        dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
-        dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
-            @Override
-            public void done(List<DayPlan> dayPlans, ParseException e) {
-                if (e != null) {
-                    Log.e("DayPlan","Error");
-                    e.printStackTrace();
-                    return;
+        if (bundle.containsKey("DayPlans")) {
+            ArrayList<DayPlan> temp = bundle.getParcelableArrayList("DayPlans");
+            mDayPlan.addAll(temp);
+        } else {
+            progressDialog = new ProgressDialog(getContext());
+            progressDialog.show();
+            ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
+            dayPlanQuery.setLimit(10);
+            dayPlanQuery.include(DayPlan.KEY_TRIP);
+            dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
+            dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
+                @Override
+                public void done(List<DayPlan> dayPlans, ParseException e) {
+                    progressDialog.hide();
+                    if (e != null) {
+                        Log.e("DayPlan", "Error");
+                        e.printStackTrace();
+                        return;
+                    }
+                    mDayPlan.addAll(dayPlans);
                 }
-                mDayPlan.addAll(dayPlans);
-                // Circle Indicator
-                PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
-                pagerSnapHelper.attachToRecyclerView(rvSchedule);
-
-                CircleIndicator2 indicator = view.findViewById(R.id.indicator);
-                indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
-
-                adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
-            }
-        });
-
+            });
+        }
 
         if (trip != null) {
             tvTripName.setText(trip.getName());
@@ -117,6 +116,15 @@ public class TripDetailsFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
+
+        // Circle Indicator
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(rvSchedule);
+
+        CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+        indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+
+        adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
 
         tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override

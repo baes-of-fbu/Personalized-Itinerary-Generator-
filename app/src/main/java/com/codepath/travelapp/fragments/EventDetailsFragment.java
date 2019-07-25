@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.R;
-import com.parse.ParseGeoPoint;
 
 import java.util.Objects;
 
@@ -60,6 +59,7 @@ public class EventDetailsFragment extends Fragment {
             tvEventName.setText(event.getName());
             tvCost.setText(event.getCost().toString());
             rbRating.setRating(event.getRating().floatValue());
+            // TODO add SpannableString for address to do .setSpan(new UnderlineSpan(), , , ); then set text
             tvAddress.setText(event.getAddress());
             tvDescription.setText(event.getDescription());
 
