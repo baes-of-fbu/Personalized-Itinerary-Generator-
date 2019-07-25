@@ -6,7 +6,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
-@ParseClassName("User")
+@ParseClassName("_User")
 public class User extends ParseUser implements Parcelable {
 
     // Instance Variables
@@ -44,10 +44,10 @@ public class User extends ParseUser implements Parcelable {
     public void setFollowers(Number followers) {
         put(KEY_FOLLOWERS, followers);
     }
-    public void getFavorites(Number favorites) {
+    public void setFavorites(Number favorites) {
         put(KEY_FAVORITES, favorites);
     }
-    public void ssetBio(String bio) {
+    public void setBio(String bio) {
         put(KEY_BIO, bio);
     }
     public void setProfileImage(ParseFile image) {

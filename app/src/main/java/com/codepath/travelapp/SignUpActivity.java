@@ -27,6 +27,7 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.codepath.travelapp.Models.User;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -137,7 +138,10 @@ public class SignUpActivity extends AppCompatActivity {
                 }else if (image == null) {
                     Log.e(APP_TAG, "no profile picture");
                     Toast.makeText(getApplicationContext(), "Please select a profile picture", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if (bio.length() == 0) {
+                   Log.e(APP_TAG, "No bio");
+                    Toast.makeText(getApplicationContext(), "Please enter a bio", Toast.LENGTH_SHORT).show();
+                }  else{
                     signUp();
                 }
             }
@@ -157,7 +161,7 @@ public class SignUpActivity extends AppCompatActivity {
             startActivityForResult(photoPickerIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
-    //TODO edit this to work for this app
+
     private File getPhotoFileUri(String photoFileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
@@ -184,7 +188,6 @@ public class SignUpActivity extends AppCompatActivity {
                     selectedImage = MediaStore.Images.Media.getBitmap(SignUpActivity.this.getContentResolver(), imageUri);
                     Glide.with(this)
                             .load(selectedImage)
-                            //.apply(RequestOptions.override(100, Target.SIZE_ORIGINAL)
                             .apply(RequestOptions.circleCropTransform())
                             .into(ivProfileImage);
                     if (selectedImage == null) {
@@ -192,7 +195,6 @@ public class SignUpActivity extends AppCompatActivity {
                     }else {
                         ivProfileImage.setVisibility(View.VISIBLE);
                     }
-                    //ivProfileImage.setImageBitmap(selectedImage);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -204,14 +206,18 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp() {
         // Create the ParseUser
-        ParseUser user = new ParseUser();
+        User user = new User();
 
         // Set core properties
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
-        user.put("bio", bio);
-        user.put("homeState", state);
+        user.setBio(bio);
+        user.setHomeState(state);
+        user.setFollowers(0);
+        user.setFollowing(0);
+        user.setFavorites(0);
+
 
 
         // Invoke signUpInBackground
@@ -220,8 +226,8 @@ public class SignUpActivity extends AppCompatActivity {
                 if (e == null) {
                     // Hooray! Let them use the app now.
                     Log.d("SignUpActivity", "SignUp successful!");
-                    ParseUser newUser = ParseUser.getCurrentUser();
-                    newUser.put("profileImage", image);
+                    User newUser = (User) User.getCurrentUser();
+                    newUser.setProfileImage(image);
                     newUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {

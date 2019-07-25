@@ -55,6 +55,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvUsername;
     private TextView tvHometown;
     private ImageView ivProfileImage;
+    private SwipeRefreshLayout swipeContainer;
     private TextView tvFollowingCount;
     private TextView tvFollowersCount;
     private TextView tvFavoritesCOunt;
@@ -77,18 +78,18 @@ public class ProfileFragment extends Fragment {
         Bundle userBundle = getArguments();
         if (userBundle != null) {
             username = userBundle.getString("username");
-            ParseQuery<User> userQuery = new ParseQuery<User>(User.class);
+            ParseQuery<ParseUser> userQuery = new ParseQuery<>(ParseUser.class);
             userQuery.whereEqualTo("username", username);
-            userQuery.findInBackground(new FindCallback<User>() {
+            userQuery.findInBackground(new FindCallback<ParseUser>() {
                 @Override
-                public void done(List<User> objects, ParseException e) {
+                public void done(List<ParseUser> objects, ParseException e) {
                     if (e != null) {
                         Log.e("ProfileFragment", "Error");
                         e.printStackTrace();
                         return;
                     }
-                    Log.d("ProfileFragment", objects.toString());
-                    user = objects.get(0);
+                    Log.d("ComposeFragment", objects.toString());
+                    user = (User) objects.get(0);
                     FillInLayout(view);
                 }
             });
@@ -188,10 +189,10 @@ public class ProfileFragment extends Fragment {
 
         //Populate views in Profile Fragment
         tvUsername.setText(user.getUsername());
-        tvHometown.setText((String) user.getHomeState());
+        tvHometown.setText(user.getHomeState());
         tvBio.setText(user.getBio());
         if (user.getProfileImage() != null) {
-            ParseFile image = (ParseFile) user.getProfileImage();
+            ParseFile image = user.getProfileImage();
             Glide.with(getContext())
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
