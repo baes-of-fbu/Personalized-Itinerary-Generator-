@@ -136,6 +136,7 @@ public class TripReviewFragment extends Fragment {
                 Fragment fragment = new TripDetailsFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Trip", trip);
+                bundle.putParcelableArrayList("DayPlans", dayPlans);
                 fragment.setArguments(bundle);
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)

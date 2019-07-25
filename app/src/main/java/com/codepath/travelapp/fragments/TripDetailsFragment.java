@@ -1,5 +1,6 @@
 package com.codepath.travelapp.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,7 +40,7 @@ public class TripDetailsFragment extends Fragment {
 
     private DayPlanAdapter adapter;
     private ArrayList<DayPlan> mDayPlan;
-
+    private ProgressDialog progressDialog;
 
 
     @Nullable
@@ -65,39 +66,43 @@ public class TripDetailsFragment extends Fragment {
         assert bundle != null;
         Trip trip = (Trip) bundle.getSerializable("Trip");
 
-        //create the adapter
-        mDayPlan = new ArrayList<>();
-        //create the data source
-        adapter = new DayPlanAdapter(mDayPlan);
-        // set the layout manager on the recycler view
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        rvSchedule.setLayoutManager(linearLayoutManager);
-        rvSchedule.setAdapter(adapter);
+        if (bundle.containsKey("DayPlans")) {
+            mDayPlan.addAll(bundle.<DayPlan>getParcelableArrayList("DayPlans"));
 
-        ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
+            // TODO refactor this
+            adapter = new DayPlanAdapter(mDayPlan);
+            // set the layout manager on the recycler view
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+            rvSchedule.setLayoutManager(linearLayoutManager);
+            rvSchedule.setAdapter(adapter);
+        } else {
+            mDayPlan = new ArrayList<>();
+            //create the data source
+            adapter = new DayPlanAdapter(mDayPlan);
+            // set the layout manager on the recycler view
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+            rvSchedule.setLayoutManager(linearLayoutManager);
+            rvSchedule.setAdapter(adapter);
 
-        dayPlanQuery.include(DayPlan.KEY_TRIP);
-        dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
-        dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
-            @Override
-            public void done(List<DayPlan> dayPlans, ParseException e) {
-                if (e != null) {
-                    Log.e("DayPlan","Error");
-                    e.printStackTrace();
-                    return;
+            progressDialog = new ProgressDialog(getContext());
+            progressDialog.show();
+            ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<DayPlan>(DayPlan.class);
+
+            dayPlanQuery.include(DayPlan.KEY_TRIP);
+            dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
+            dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
+                @Override
+                public void done(List<DayPlan> dayPlans, ParseException e) {
+                    progressDialog.hide();
+                    if (e != null) {
+                        Log.e("DayPlan", "Error");
+                        e.printStackTrace();
+                        return;
+                    }
+                    mDayPlan.addAll(dayPlans);
                 }
-                mDayPlan.addAll(dayPlans);
-                // Circle Indicator
-                PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
-                pagerSnapHelper.attachToRecyclerView(rvSchedule);
-
-                CircleIndicator2 indicator = view.findViewById(R.id.indicator);
-                indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
-
-                adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
-            }
-        });
-
+            });
+        }
 
         if (trip != null) {
             tvTripName.setText(trip.getName());
@@ -117,6 +122,15 @@ public class TripDetailsFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
+
+        // Circle Indicator
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(rvSchedule);
+
+        CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+        indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+
+        adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
 
         tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
