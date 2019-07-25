@@ -1,15 +1,20 @@
 package com.codepath.travelapp.Models;
 
+import android.os.Parcelable;
+
+import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
-public class User extends ParseUser {
+@ParseClassName("User")
+public class User extends ParseUser implements Parcelable {
 
     // Instance Variables
     private static final String KEY_FOLLOWING = "following";
-    private static final String KEY_FOLLOWERS = "followers";
+    public static final String KEY_FOLLOWERS = "followers";
     private static final String KEY_FAVORITES = "favorites";
     private static final String KEY_BIO = "bio";
     private static final String KEY_IMAGE ="image";
+    private static final String KEY_HOMESTATE = "homeState";
 
     // Getters
     public Number getFollowing() {
@@ -21,8 +26,11 @@ public class User extends ParseUser {
     public Number getFavorites() {
         return  getNumber(KEY_FAVORITES);
     }
-    public String getBo() {
+    public String getBio() {
         return  getString(KEY_BIO);
+    }
+    public String getHomeState() {
+        return getString(KEY_HOMESTATE);
     }
 
     // Setters
@@ -37,5 +45,8 @@ public class User extends ParseUser {
     }
     public void setBio(String bio) {
         put(KEY_BIO, bio);
+    }
+    public void setHomeState (String homeState) {
+        put(KEY_HOMESTATE, homeState);
     }
 }

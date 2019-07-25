@@ -48,7 +48,7 @@ public class TimelineFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView rvPosts = view.findViewById(R.id.rvTrips);
 
-        // create the adapter
+        // create the upcomingTripAdapter
         ArrayList<Trip> mTrips = new ArrayList<>();
         // create the data source
         adapter = new TripAdapter(mTrips);

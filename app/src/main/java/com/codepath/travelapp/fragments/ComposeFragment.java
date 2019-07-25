@@ -107,9 +107,9 @@ public class ComposeFragment extends Fragment {
                 if (e == null) {
                     Log.d("DEBUG", "Successful query for tags");
                     allTags = objects;
-                    // Create adapter passing in the sample user data
+                    // Create upcomingTripAdapter passing in the sample user data
                     adapter = new TagGridAdapter(allTags);
-                    // Attach the adapter to the recyclerView to populate items
+                    // Attach the upcomingTripAdapter to the recyclerView to populate items
                     rvTags.setAdapter(adapter);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
                     gridLayoutManager.setSpanCount(NUM_COLUMNS);

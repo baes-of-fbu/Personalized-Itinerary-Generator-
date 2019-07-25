@@ -25,6 +25,7 @@ import com.codepath.travelapp.Adapters.FavoriteTripAdapter;
 import com.codepath.travelapp.Adapters.PreviousTripAdapter;
 import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
 import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
-import static com.parse.ParseUser.getCurrentUser;
 
 public class ProfileFragment extends Fragment {
 
@@ -44,13 +44,13 @@ public class ProfileFragment extends Fragment {
     private RecyclerView rvUpcoming;
     private  RecyclerView rvPrevious;
     private RecyclerView rvFavorite;
-    protected UpcomingTripAdapter adapter;
-    protected PreviousTripAdapter adapter2;
-    protected FavoriteTripAdapter adapter3;
+    protected UpcomingTripAdapter upcomingTripAdapter;
+    protected PreviousTripAdapter previousTripAdapter;
+    protected FavoriteTripAdapter favoriteTripAdapter;
 
-    protected ArrayList<Trip> mTrips;
-    protected ArrayList<Trip> nTrips;
-    protected ArrayList<Trip> oTrips;
+    protected ArrayList<Trip> upcomingTrips;
+    protected ArrayList<Trip> previousTrips;
+    protected ArrayList<Trip> favoriteTrips;
     private int pagesize = 10;
     private TextView tvUsername;
     private TextView tvHometown;
@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvBio;
     private Toolbar toolbar;
     private String username;
-    private ParseUser user;
+    private User user;
 
 
     @Nullable
@@ -90,7 +90,7 @@ public class ProfileFragment extends Fragment {
                         return;
                     }
                     Log.d("ComposeFragment", objects.toString());
-                    user = (ParseUser) objects.get(0);
+                    user = (User) objects.get(0);
                     FillInLayout(view);
                 }
             });
@@ -101,7 +101,7 @@ public class ProfileFragment extends Fragment {
     }
     protected void queryUpcomingPosts(ParseUser user) {
 
-        adapter.clear();
+        upcomingTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
 
@@ -118,13 +118,13 @@ public class ProfileFragment extends Fragment {
                     e.printStackTrace();
                     return;
                 }
-                adapter.addAll(trips);
+                upcomingTripAdapter.addAll(trips);
             }
         });
     }
     protected void queryPreviousPosts(ParseUser user) {
 
-        adapter2.clear();
+        previousTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
 
@@ -142,13 +142,13 @@ public class ProfileFragment extends Fragment {
                     e.printStackTrace();
                     return;
                 }
-                adapter2.addAll(trips);
+                previousTripAdapter.addAll(trips);
             }
         });
     }
     protected void queryFavoritePosts(ParseUser user) {
 
-        adapter3.clear();
+        favoriteTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<Trip>(Trip.class);
 
@@ -166,7 +166,7 @@ public class ProfileFragment extends Fragment {
                     e.printStackTrace();
                     return;
                 }
-                adapter3.addAll(trips);
+                favoriteTripAdapter.addAll(trips);
             }
         });
     }
@@ -191,8 +191,8 @@ public class ProfileFragment extends Fragment {
 
         //Populate views in Profile Fragment
         tvUsername.setText(user.getUsername());
-        tvHometown.setText((String) user.get("homeState"));
-        tvBio.setText((String)user.get("bio"));
+        tvHometown.setText((String) user.getHomeState());
+        tvBio.setText(user.getBio());
         if (user.get("profileImage") != null) {
             ParseFile image = (ParseFile) user.get("profileImage");
             Glide.with(getContext())
@@ -200,39 +200,38 @@ public class ProfileFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
-        if (user.get("followers") != null) {
-            tvFollowersCount.setText(user.get("followers").toString());
+        if (user.getFollowers() != null) {
+            tvFollowersCount.setText(user.getFollowers().toString());
         }
 
-        if (user.get("following") != null) {
-            tvFollowingCount.setText(user.get("following").toString());
+        if (user.getFollowing() != null) {
+            tvFollowingCount.setText(user.getFollowing().toString());
         }
 
-        if (user.get("favorites") != null) {
-            tvFavoritesCOunt.setText(user.get("favorites").toString());
+        if (user.getFavorites() != null) {
+            tvFavoritesCOunt.setText(user.getFavorites().toString());
         }
 
-
-        //create the adapter
-        mTrips = new ArrayList<>();
-        nTrips = new ArrayList<>();
-        oTrips = new ArrayList<>();
+        //create the upcomingTripAdapter
+        upcomingTrips = new ArrayList<>();
+        previousTrips = new ArrayList<>();
+        favoriteTrips = new ArrayList<>();
         //create the data source
-        adapter = new UpcomingTripAdapter(mTrips);
-        adapter2 = new PreviousTripAdapter(nTrips);
-        adapter3 = new FavoriteTripAdapter(oTrips);
+        upcomingTripAdapter = new UpcomingTripAdapter(upcomingTrips);
+        previousTripAdapter = new PreviousTripAdapter(previousTrips);
+        favoriteTripAdapter = new FavoriteTripAdapter(favoriteTrips);
         // set the layout manager on the recycler view
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext(),HORIZONTAL,false);
-        LinearLayoutManager linearLayoutManager3 = new LinearLayoutManager(getContext(),HORIZONTAL, false);
+        LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL,false);
+        LinearLayoutManager favoriteLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL, false);
 
-        rvUpcoming.setLayoutManager(linearLayoutManager);
-        rvPrevious.setLayoutManager(linearLayoutManager2);
-        rvFavorite.setLayoutManager(linearLayoutManager3);
+        rvUpcoming.setLayoutManager(upcomingLayoutManager);
+        rvPrevious.setLayoutManager(previousLayoutManager);
+        rvFavorite.setLayoutManager(favoriteLayoutManager);
 
-        rvUpcoming.setAdapter(adapter);
-        rvPrevious.setAdapter(adapter2);
-        rvFavorite.setAdapter(adapter3);
+        rvUpcoming.setAdapter(upcomingTripAdapter);
+        rvPrevious.setAdapter(previousTripAdapter);
+        rvFavorite.setAdapter(favoriteTripAdapter);
 
         queryUpcomingPosts(user);
         queryPreviousPosts(user);
