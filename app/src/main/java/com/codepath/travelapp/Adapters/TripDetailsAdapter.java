@@ -37,14 +37,16 @@ public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.
         holder.rvSchedule.setAdapter(adapter);
     }
 
+    // Returns total count of dayPlans
     @Override
     public int getItemCount() {return dayPlans.size();}
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private RecyclerView rvSchedule;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Finds view that will be populated
             rvSchedule = itemView.findViewById(R.id.rvSchedule);
         }
     }

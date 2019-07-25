@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,21 +22,27 @@ import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String TAG = "MainActivity";
+    private final String APP_TAG = "MainActivity";
     public static FragmentManager fragmentManager;
-    private String username;
+    private BottomNavigationView bottomNavigationView;
+    private Button logoutBtn;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
         fragmentManager = getSupportFragmentManager();
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        logoutBtn = findViewById(R.id.logoutBtn);
+        toolbar = findViewById(R.id.toolbarMain);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        final Button logoutBtn = findViewById(R.id.logoutBtn);
-        final Toolbar toolbar = findViewById(R.id.toolbarMain);
+        addOnClickListeners();
+    }
 
+    private void addOnClickListeners() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -47,36 +52,37 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new TimelineFragment();
                         toolbar.setVisibility(View.VISIBLE);
                         logoutBtn.setVisibility(View.INVISIBLE);
-                        Toast.makeText(MainActivity.this, "Home!", Toast.LENGTH_SHORT).show();
+                        Log.d(APP_TAG, "Opening timeline fragment");
                         break;
                     case R.id.action_compose:
                         fragment = new ComposeFragment();
                         toolbar.setVisibility(View.GONE);
-                        Toast.makeText(MainActivity.this, "Compose!", Toast.LENGTH_SHORT).show();
+                        Log.d(APP_TAG, "Opening compose fragment");
                         break;
                     case R.id.action_profile:
                         fragment = new ProfileFragment();
                         Bundle userBundle = new Bundle();
                         userBundle.putString("username",  ParseUser.getCurrentUser().getUsername());
                         fragment.setArguments(userBundle);
-
-                        MainActivity.fragmentManager.beginTransaction()
-                                .replace(R.id.flContainer, fragment)
-                                .addToBackStack(null)
-                                .commit();
                         toolbar.setVisibility(View.VISIBLE);
                         logoutBtn.setVisibility(View.VISIBLE);
-                        Toast.makeText(MainActivity.this, "Profile!", Toast.LENGTH_SHORT).show();
+                        Log.d(APP_TAG, "Opening profile fragment");
+
+//                        TODO remove is unnecessary
+//                        MainActivity.fragmentManager.beginTransaction()
+//                                .replace(R.id.flContainer, fragment)
+//                                .addToBackStack(null)
+//                                .commit();
                         break;
                     default:
                         fragment = new TimelineFragment();
+                        Log.d(APP_TAG, "Opening timeline fragment");
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,15 +90,14 @@ public class MainActivity extends AppCompatActivity {
                 ParseUser.logOut();
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 if (currentUser == null) {
-                    Log.d(TAG, "User successfully logged out!");
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                     finish();
+                    Log.d(APP_TAG, "User successfully logged out!");
                 } else {
-                    Log.d(TAG, "Logout failure.");
+                    Log.d(APP_TAG, "Logout failure.");
                 }
             }
         });
-
     }
 }

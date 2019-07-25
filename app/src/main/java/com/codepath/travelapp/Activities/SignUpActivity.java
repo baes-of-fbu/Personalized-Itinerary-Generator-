@@ -112,7 +112,7 @@ public class SignUpActivity extends AppCompatActivity {
                 image = conversionBitmapParseFile(selectedImage);
 
 
-                // User can only sign up if all fields are complete
+                // User can only sign up if all inputs are valid
                 if (username.length() == 0) {
                     Log.e(APP_TAG, "No username");
                     Toast.makeText(getApplicationContext(), "Please make a username", Toast.LENGTH_LONG).show();
@@ -152,22 +152,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private File getPhotoFileUri(String photoFileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
-
-        // Create the storage director y if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-            Log.d(APP_TAG, "failed to create directory");
-        }
-
-        // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + photoFileName);
-
-        return file;
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -176,19 +160,19 @@ public class SignUpActivity extends AppCompatActivity {
                 File photoFile = new File(getRealPathFromURI(this, imageUri));
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(SignUpActivity.this.getContentResolver(), imageUri);
-                    Glide.with(this)
-                            .load(selectedImage)
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(ivProfileImage);
                     if (selectedImage == null) {
                         ivProfileImage.setVisibility(View.GONE);
-                    }else {
+                    } else {
+                        Glide.with(this)
+                                .load(selectedImage)
+                                .apply(RequestOptions.circleCropTransform())
+                                .into(ivProfileImage);
                         ivProfileImage.setVisibility(View.VISIBLE);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }else {
+            } else {
                 Toast.makeText(this, "You haven't picked Image",Toast.LENGTH_LONG).show();
             }
         }
@@ -208,14 +192,12 @@ public class SignUpActivity extends AppCompatActivity {
         user.setFollowing(0);
         user.setFavorites(0);
 
-
-
         // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e == null) {
                     // Hooray! Let them use the app now.
-                    Log.d("SignUpActivity", "SignUp successful!");
+                    Log.d(APP_TAG, "SignUp successful!");
                     User newUser = (User) User.getCurrentUser();
                     newUser.setProfileImage(image);
                     newUser.saveInBackground(new SaveCallback() {
@@ -226,13 +208,14 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Log.d("SignUpActivity", "SignUp failure");
+                    Log.d(APP_TAG, "SignUp failure");
                     Toast.makeText(SignUpActivity.this, e.toString(), Toast.LENGTH_LONG).show(); // TODO cut down e.toString()
                     e.printStackTrace();
                 }
             }
         });
     }
+
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
@@ -247,6 +230,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
     }
+
     public static ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
@@ -254,6 +238,26 @@ public class SignUpActivity extends AppCompatActivity {
         ParseFile parseFile = new ParseFile("image_file.png",imageByte);
         return parseFile;
     }
+
+    // TODO user for camera
+    private File getPhotoFileUri(String photoFileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+
+        // Create the storage director y if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            Log.d(APP_TAG, "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        File file = new File(mediaStorageDir.getPath() + File.separator + photoFileName);
+
+        return file;
+    }
+
+    // TODO user for camera
     public Bitmap rotateBitmapOrientation(String photoFilePath) {
         // Create and configure BitmapFactory
         BitmapFactory.Options bounds = new BitmapFactory.Options();

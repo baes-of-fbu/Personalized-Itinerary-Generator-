@@ -18,6 +18,8 @@ import com.parse.facebook.ParseFacebookUtils;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private final String APP_TAG = "LoginActivity";
+
     private EditText etUsername;
     private EditText etPassword;
     private Button loginBtn;
@@ -47,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void addOnClickListeners() {
+        // TODO fix login with Facebook
         facebookLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,15 +57,15 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
-                            Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-                            Log.d("MyApp", e.toString());
+                            Log.d(APP_TAG, "Uh oh. The user cancelled the Facebook login.");
+                            Log.d(APP_TAG, e.toString());
                         } else if (user.isNew()) {
-                            Log.d("MyApp", "User signed up and logged in through Facebook!");
+                            Log.d(APP_TAG, "User signed up and logged in through Facebook!");
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
                         } else {
-                            Log.d("MyApp", "User logged in through Facebook!");
+                            Log.d(APP_TAG, "User logged in through Facebook!");
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -93,24 +96,26 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Parse network request sent, logging in user
     private void login(String username, String password) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
-            public void done(ParseUser user, ParseException e) { // Returned when network request completed
-                if (e == null) {  // True if user login successfully
-                    Log.d("LoginActivity", "Login successful!");
+            public void done(ParseUser user, ParseException e) {
+                if (e == null) {
+                    Log.d(APP_TAG, "Login successful!");
                     final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Log.d("LoginActivity", "Login failure.");
-                    Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_LONG).show(); // TODO cut down e.toString()
+                    Log.d(APP_TAG, "Login failure.");
                     e.printStackTrace();
+                    Toast.makeText(LoginActivity.this, "Invalid login credentials", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
+    // TODO remove if Facebook login is removed
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

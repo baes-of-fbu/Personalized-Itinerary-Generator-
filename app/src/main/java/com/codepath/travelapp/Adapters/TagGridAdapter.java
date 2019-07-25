@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHolder> {
-
     private Context context;
     private List<Tag> mTags; // Stores all of the tags
     private ArrayList<Tag> selectedTags;
@@ -62,7 +61,6 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
         }
     }
 
-    // Pass in the contact array into the constructor
     public TagGridAdapter(List<Tag> tags) {
         mTags = tags;
     }
@@ -82,14 +80,14 @@ public class TagGridAdapter extends RecyclerView.Adapter<TagGridAdapter.ViewHold
         return viewHolder;
     }
 
-    // Involves populating data into the item through holder
+
     @Override
     public void onBindViewHolder(TagGridAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
         Tag tag = mTags.get(position);
         // Set item views based on your views and data model
         viewHolder.tvTagName.setText(tag.getName());
-        ParseFile image = (ParseFile) tag.getImage();
+        ParseFile image =  tag.getImage();
         Glide.with(context)
                 .load(image.getUrl())
                 .into(viewHolder.ivTagImage);

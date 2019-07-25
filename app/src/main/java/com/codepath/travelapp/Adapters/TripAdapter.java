@@ -24,13 +24,12 @@ import com.parse.ParseFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Trip> trips;
     private String username;
-    private String APP_TAG = "TripAdapter";
-
 
     public TripAdapter(ArrayList<Trip> trips) {
         this.trips = trips;
@@ -46,12 +45,16 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        // Get a trip
         Trip trip = trips.get(position);
+        // Set views for this trip
         holder.tvTripBudget.setText("$" + trip.getBudget().toString());
-        holder.tvTripDates.setText(trip.getNumDays().toString());
-        holder.tvTripName.setText(trip.getName());
-        holder.tvUsername.setText(trip.getOwner().getUsername());
 
+        holder.tvTripDates.setText(trip.getNumDays().toString());
+
+        holder.tvTripName.setText(trip.getName());
+
+        holder.tvUsername.setText(trip.getOwner().getUsername());
 
         if (trip.getOwner().get("profileImage") != null) {
             ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
@@ -61,6 +64,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
                     .apply(RequestOptions.circleCropTransform())
                     .into(holder.ivProfileImage);
         }
+
         if (trip.get("image") != null) {
             ParseFile image = (ParseFile) trip.get("image");
             assert image != null;
@@ -68,6 +72,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
                     .load(image.getUrl())
                     .into(holder.ivTripImage);
         }
+        // Sends a bundle to ProfileFragment when username is clicked
         holder.tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +90,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         });
     }
 
+    // Returns total count of trips
     @Override
     public int getItemCount() {
         return trips.size();
@@ -100,6 +106,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Finds views that will be populated
             tvTripDates = itemView.findViewById(R.id.tvTripDates);
             tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
             tvTripName = itemView.findViewById(R.id.tvTripName);
@@ -112,6 +119,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
         @Override
         public void onClick(View v) {
+            // Sends a bundle to TripDetailsFragment when trip item is clicked
             Log.d("Adapter", "item clicked");
             final Trip trip = trips.get(getAdapterPosition());
             if (trip != null) {
