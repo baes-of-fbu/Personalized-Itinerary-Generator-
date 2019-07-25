@@ -22,8 +22,6 @@ import com.codepath.travelapp.R;
 
 import java.util.Objects;
 
-
-
 public class EventDetailsFragment extends Fragment {
 
     private TextView tvAddress;

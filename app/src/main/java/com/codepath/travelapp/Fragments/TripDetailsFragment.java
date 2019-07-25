@@ -63,7 +63,6 @@ public class TripDetailsFragment extends Fragment {
         final RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
 
         Bundle bundle = getArguments();
-        assert bundle != null;
         Trip trip = (Trip) bundle.getSerializable("Trip");
         mDayPlan = new ArrayList<>();
         //create the data source
@@ -82,15 +81,13 @@ public class TripDetailsFragment extends Fragment {
             ArrayList<DayPlan> temp = bundle.getParcelableArrayList("DayPlans");
             if (temp != null) {
                 mDayPlan.addAll(temp);
-                CircleIndicator2 indicator = view.findViewById(R.id.indicator);
-                indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
-                adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+                addCircleIndicator(view, rvSchedule, pagerSnapHelper);
             } else {
                 Toast.makeText(getContext(), "There are no current schedules", Toast.LENGTH_LONG).show();
             }
         } else {
             ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<>(DayPlan.class);
-            dayPlanQuery.setLimit(10);
+            dayPlanQuery.setLimit(20);
             dayPlanQuery.include(DayPlan.KEY_TRIP);
             dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
             dayPlanQuery.addAscendingOrder(DayPlan.KEY_DATE);
@@ -104,10 +101,7 @@ public class TripDetailsFragment extends Fragment {
                     }
                     adapter.clear();
                     mDayPlan.addAll(dayPlans);
-
-                    CircleIndicator2 indicator = view.findViewById(R.id.indicator);
-                    indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
-                    adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+                    addCircleIndicator(view, rvSchedule, pagerSnapHelper);
                 }
             });
         }
@@ -128,7 +122,6 @@ public class TripDetailsFragment extends Fragment {
                     .into(ivCoverPhoto);
 
             ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
-            assert image != null;
             Glide.with(getContext())
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
@@ -151,5 +144,11 @@ public class TripDetailsFragment extends Fragment {
                         .commit();
             }
         });
+    }
+
+    private void addCircleIndicator(@NonNull View view, RecyclerView rvSchedule, PagerSnapHelper pagerSnapHelper) {
+        CircleIndicator2 indicator = view.findViewById(R.id.indicator);
+        indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+        adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
     }
 }
