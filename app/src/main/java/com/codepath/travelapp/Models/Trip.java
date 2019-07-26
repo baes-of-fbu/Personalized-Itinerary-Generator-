@@ -88,21 +88,12 @@ public class Trip extends ParseObject implements Serializable {
         put(KEY_ENDDATE, date);
     }
 
-    public Boolean isUpcoming() {
-        return getBoolean(KEY_ISUPCOMING);
-    }
-
     public Boolean isFavorited() {
         return getBoolean(KEY_ISFAVORITED);
     }
 
     public void setFavorited(Boolean bool) {
         put(KEY_ISFAVORITED, bool);
-    }
-
-    // TODO remove this getter and handle locally
-    public void setUpcoming(Boolean bool) {
-        put(KEY_ISUPCOMING, bool);
     }
 
 }

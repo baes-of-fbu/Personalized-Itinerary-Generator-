@@ -159,8 +159,6 @@ public class TripReviewFragment extends Fragment {
                 trip.setBudget(budget);
                 trip.setImage(image);
                 trip.setFavorited(false);
-                // TODO remove this getter and handle locally
-                trip.setUpcoming(false);
                 trip.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
