@@ -39,4 +39,8 @@ public class City extends ParseObject implements Parcelable {
     public ParseFile getImage() {
         return getParseFile(KEY_IMAGE);
     }
+
+    public void setImage(ParseFile image) {
+        put(KEY_IMAGE, image);
+    }
 }

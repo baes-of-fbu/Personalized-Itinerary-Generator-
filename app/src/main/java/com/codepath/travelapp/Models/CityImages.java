@@ -6,7 +6,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
-@ParseClassName("cityImages")
+@ParseClassName("CityImages")
 public class CityImages extends ParseObject implements Parcelable {
 
     // Constants
@@ -16,10 +16,6 @@ public class CityImages extends ParseObject implements Parcelable {
     public CityImages() {}
 
     // Getters
-    public City getCity() {
-        return (City) getParseObject(KEY_CITY);
-    }
-
     public ParseFile getImage() {
         return getParseFile(KEY_IMAGE);
     }
