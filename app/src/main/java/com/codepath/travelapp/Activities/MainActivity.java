@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         logoutBtn = findViewById(R.id.logoutBtn);
         toolbar = findViewById(R.id.toolbarMain);
+        logoutBtn.setVisibility(View.GONE);
 
         addOnClickListeners();
     }

@@ -1,5 +1,6 @@
 package com.codepath.travelapp.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
+import static com.parse.ParseUser.getCurrentUser;
 
 public class ProfileFragment extends Fragment {
 
@@ -78,28 +80,12 @@ public class ProfileFragment extends Fragment {
                     Log.d("ComposeFragment", objects.toString());
                     user = (User) objects.get(0);
                     FillInLayout(view);
+                    SideSwipe(view);
                 }
             });
         }
-        clProfile = view.findViewById(R.id.clProfile);
 
-        clProfile.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            @Override
-            public void onSwipeLeft() {
-                Toast.makeText(getContext(), "Left", Toast.LENGTH_SHORT).show();
-                SidebarFragment fragment = new SidebarFragment();
 
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-
-            @Override
-            public void onSwipeRight() {
-                Toast.makeText(getContext(), "Right", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
     private void queryUpcomingPosts(ParseUser user) {
 
@@ -232,5 +218,24 @@ public class ProfileFragment extends Fragment {
         queryFavoritePosts(user);
 
         Toast.makeText(getContext(), "Welcome to Your Profile",Toast.LENGTH_SHORT).show();
+    }
+    @SuppressLint("ClickableViewAccessibility")
+    private void SideSwipe (View view) {
+        clProfile = view.findViewById(R.id.clProfile);
+        if (getCurrentUser() != user) {
+            clProfile.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+                @Override
+                public void onSwipeLeft() {
+                    SidebarFragment fragment = new SidebarFragment();
+                    Bundle userBundle = new Bundle();
+                    userBundle.putParcelable("User", getCurrentUser());
+                    fragment.setArguments(userBundle);
+                    MainActivity.fragmentManager.beginTransaction()
+                            .replace(R.id.flContainer, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        }
     }
 }
