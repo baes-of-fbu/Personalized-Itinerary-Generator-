@@ -222,10 +222,10 @@ public class ProfileFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void SideSwipe (View view) {
         clProfile = view.findViewById(R.id.clProfile);
-        if (getCurrentUser() != user) {
-            clProfile.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-                @Override
-                public void onSwipeLeft() {
+        clProfile.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+                if (getCurrentUser().getUsername().equals(user.getUsername())) {
                     SidebarFragment fragment = new SidebarFragment();
                     Bundle userBundle = new Bundle();
                     userBundle.putParcelable("User", getCurrentUser());
@@ -235,7 +235,7 @@ public class ProfileFragment extends Fragment {
                             .addToBackStack(null)
                             .commit();
                 }
-            });
-        }
+            }
+        });
     }
 }

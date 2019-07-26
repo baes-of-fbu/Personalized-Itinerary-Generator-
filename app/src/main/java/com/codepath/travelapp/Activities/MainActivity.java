@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,12 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
         logoutBtn = findViewById(R.id.logoutBtn);
         toolbar = findViewById(R.id.toolbarMain);
         logoutBtn.setVisibility(View.GONE);
-
         addOnClickListeners();
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
     private void addOnClickListeners() {
