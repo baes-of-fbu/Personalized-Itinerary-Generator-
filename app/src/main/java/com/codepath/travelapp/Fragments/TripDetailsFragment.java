@@ -61,6 +61,7 @@ public class TripDetailsFragment extends Fragment {
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
         final RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
+        ImageView ivShare = view.findViewById(R.id.ivShare); 
 
         Bundle bundle = getArguments();
         Trip trip = (Trip) bundle.getSerializable("Trip");
