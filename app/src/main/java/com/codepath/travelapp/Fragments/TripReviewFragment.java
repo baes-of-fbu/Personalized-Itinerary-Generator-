@@ -3,6 +3,7 @@ package com.codepath.travelapp.Fragments;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,23 +112,24 @@ public class TripReviewFragment extends Fragment {
         rvTags.setLayoutManager(linearLayoutManager);
         rvTags.setAdapter(adapter);
 
-
-        // TODO Fix query so that it does not return null
         ParseQuery<CityImages> cityImagesQuery = new ParseQuery<>(CityImages.class);
+        cityImagesQuery.setLimit(10);
         cityImagesQuery.include(CityImages.KEY_IMAGE);
         cityImagesQuery.whereEqualTo(CityImages.KEY_CITY, city);
         cityImagesQuery.findInBackground(new FindCallback<CityImages>() {
             @Override
             public void done(List<CityImages> objects, ParseException e) {
-                CityImages cityImage = getRandomElement(objects);
-                // TODO Don't make this crash
-                image = cityImage.getImage();
-                Glide.with(Objects.requireNonNull(getContext()))
-                        .load(image)
-                        .into(ivCoverPhoto);
+                if (e == null) {
+                    CityImages cityImage = getRandomElement(objects);
+                    image = cityImage.getImage();
+                    Glide.with(Objects.requireNonNull(getContext()))
+                            .load(image.getUrl())
+                            .into(ivCoverPhoto);
+                } else {
+                    Log.d("TripReviewFragment", "Unable to parse for a photo");
+                }
             }
         });
-
 
         // Populate DayPlans
         DayPlanAdapter dayPlanAdapter = new DayPlanAdapter(dayPlans);
