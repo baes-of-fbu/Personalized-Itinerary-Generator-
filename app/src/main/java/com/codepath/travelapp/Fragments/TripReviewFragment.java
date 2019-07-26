@@ -158,6 +158,7 @@ public class TripReviewFragment extends Fragment {
                 trip.setNumDays(numDays);
                 trip.setBudget(budget);
                 trip.setImage(image);
+                trip.setFavorited(false);
                 trip.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
