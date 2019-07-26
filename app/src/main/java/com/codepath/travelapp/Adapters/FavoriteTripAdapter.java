@@ -1,6 +1,8 @@
 package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +42,7 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
         return new ViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull FavoriteTripAdapter.ViewHolder holder, int position) {
         // Get a trip
@@ -46,10 +50,10 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
 
         // Set the views for the trip
         holder.tvTripBudget.setText("$" + trip.getBudget().toString());
-
         holder.tvTripName.setText(trip.getName());
-
         holder.tvTripBudget.setText(trip.getBudget().toString());
+        holder.ivBanner.setBackgroundColor(Color.argb(255, 216, 27, 96));
+        holder.tvStatus.setText("CURRENT");
 
         if (trip.getImage() != null) {
             ParseFile image = trip.getImage();
@@ -69,7 +73,8 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
         private TextView tvTripBudget;
         private ImageView ivTripImage;
         private TextView tvTripName;
-
+        private TextView tvStatus;
+        private ImageView ivBanner;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +82,9 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
             tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
+            ivBanner = itemView.findViewById(R.id.ivBanner);
+
 
             itemView.setOnClickListener(this);
         }

@@ -31,33 +31,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/tvTripName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:text="@string/trip_name"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/ivTripImage"
             app:layout_constraintStart_toStartOf="@+id/ivTripImage"
-            app:layout_constraintTop_toTopOf="@+id/ivTripImage" />
+            card_view:layout_constraintHorizontal_bias="0.0"
+            card_view:layout_constraintTop_toBottomOf="@+id/ivTripImage" />
 
         <TextView
             android:id="@+id/Budget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:text="@string/budget_bold"
             android:textAlignment="textEnd"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/tvTripName" />
 
@@ -66,13 +67,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
             android:text="@string/dollar_sign"
             android:textAlignment="textStart"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="12sp"
             card_view:layout_constraintStart_toEndOf="@+id/Budget"
             card_view:layout_constraintTop_toBottomOf="@+id/tvTripName" />
+
+        <ImageView
+            android:id="@+id/ivBanner"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:background="#03A9F4"
+
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.0"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/place_holder"
+            android:textStyle="bold"
+            card_view:layout_constraintBottom_toBottomOf="@+id/ivBanner"
+            card_view:layout_constraintEnd_toEndOf="@+id/ivBanner"
+            card_view:layout_constraintStart_toStartOf="@+id/ivBanner"
+            card_view:layout_constraintTop_toTopOf="@+id/ivBanner" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

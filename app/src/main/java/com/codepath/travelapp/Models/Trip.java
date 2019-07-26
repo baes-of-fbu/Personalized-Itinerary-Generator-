@@ -18,8 +18,8 @@ public class Trip extends ParseObject implements Serializable {
     private static final String KEY_BUDGET = "budget";
     private static final String KEY_CITY = "city";
     private static final String KEY_NUMDAYS = "numDays";
-    private static final String KEY_STARTDATE = "startDate";
-    private static final String KEY_ENDDATE = "endDate";
+    public static final String KEY_STARTDATE = "startDate";
+    public static final String KEY_ENDDATE = "endDate";
     public static final String KEY_ISUPCOMING = "isUpcoming";
     public static final String KEY_ISFAVORITED = "isFavorited";
 

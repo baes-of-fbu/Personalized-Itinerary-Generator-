@@ -36,6 +36,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
@@ -47,7 +48,7 @@ public class ProfileFragment extends Fragment {
     private UpcomingTripAdapter upcomingTripAdapter;
     private PreviousTripAdapter previousTripAdapter;
     private FavoriteTripAdapter favoriteTripAdapter;
-    private int pagesize = 10;
+    private int pageSize = 10;
     private User user;
     private ConstraintLayout clProfile;
     private Fragment sidebarFragment;
@@ -93,11 +94,12 @@ public class ProfileFragment extends Fragment {
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
-        tripQuery.setLimit(pagesize);
+        tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
-        tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, true);
+    //    tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, true);
+        tripQuery.whereGreaterThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime());
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+        tripQuery.addDescendingOrder(Trip.KEY_STARTDATE);
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
@@ -116,12 +118,13 @@ public class ProfileFragment extends Fragment {
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
-        tripQuery.setLimit(pagesize);
+        tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
         // TODO query by time
-        tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, false);
+       // tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, false);
+        tripQuery.whereLessThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+        tripQuery.addDescendingOrder(Trip.KEY_ENDDATE);
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
@@ -140,12 +143,16 @@ public class ProfileFragment extends Fragment {
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
-        tripQuery.setLimit(pagesize);
+        tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
         // TODO query by time
-        tripQuery.whereEqualTo(Trip.KEY_ISFAVORITED, true);
+        //tripQuery.whereEqualTo(Trip.KEY_ISFAVORITED, true);
+
+         tripQuery.whereLessThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime()); // TODO currently querying for "is current"
+         tripQuery.whereGreaterThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime()); // TODO look comment above
+
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+        tripQuery.addDescendingOrder(Trip.KEY_STARTDATE);
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {

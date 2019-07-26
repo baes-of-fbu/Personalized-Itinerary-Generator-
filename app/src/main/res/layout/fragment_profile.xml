@@ -166,16 +166,17 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/PreviousTitle"
+                android:id="@+id/FavoritesTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="@string/previous_trips"
+                android:layout_marginBottom="8dp"
+                android:text="@string/favorite_trips"
                 android:textAlignment="textStart"
                 android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvPrevious"
+                android:id="@+id/rvFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -184,7 +185,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rvUpcoming" >
+                app:layout_constraintTop_toBottomOf="@+id/rvPrevious">
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -210,17 +211,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/FavoritesTitle"
+                android:id="@+id/PreviousTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/favorite_trips"
+                android:text="@string/previous_trips"
                 android:textAlignment="textStart"
                 android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvFavorite"
+                android:id="@+id/rvPrevious"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -229,7 +229,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rvPrevious" />
+                app:layout_constraintTop_toBottomOf="@+id/rvUpcoming">
+
+            </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
