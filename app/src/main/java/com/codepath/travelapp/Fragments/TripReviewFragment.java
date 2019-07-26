@@ -113,11 +113,12 @@ public class TripReviewFragment extends Fragment {
 
 
         // TODO Fix query so that it does not return null
-        ParseQuery<CityImages> cityImagesQuery = new ParseQuery<CityImages>(CityImages.class);
+        ParseQuery<CityImages> cityImagesQuery = new ParseQuery<>(CityImages.class);
+        cityImagesQuery.include(CityImages.KEY_IMAGE);
+        cityImagesQuery.whereEqualTo(CityImages.KEY_CITY, city);
         cityImagesQuery.findInBackground(new FindCallback<CityImages>() {
             @Override
             public void done(List<CityImages> objects, ParseException e) {
-
                 CityImages cityImage = getRandomElement(objects);
                 // TODO Don't make this crash
                 image = cityImage.getImage();
