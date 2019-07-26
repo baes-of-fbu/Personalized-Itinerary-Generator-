@@ -27,11 +27,15 @@ import com.codepath.travelapp.Adapters.DayPlanAdapter;
 import com.codepath.travelapp.Adapters.TagSelectedAdapter;
 import com.codepath.travelapp.GravitySnapHelper;
 import com.codepath.travelapp.Models.City;
+import com.codepath.travelapp.Models.CityImages;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -39,7 +43,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import me.relex.circleindicator.CircleIndicator2;
 
@@ -55,6 +61,7 @@ public class TripReviewFragment extends Fragment {
     private int numDays;
     private ArrayList<Tag> tags;
     private ArrayList<DayPlan> dayPlans;
+    private ParseFile image;
 
 
     @Nullable
@@ -80,7 +87,7 @@ public class TripReviewFragment extends Fragment {
             dayPlans = bundle.getParcelableArrayList("dayPlans");
         }
 
-        ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
+        final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
@@ -103,9 +110,23 @@ public class TripReviewFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         rvTags.setLayoutManager(linearLayoutManager);
         rvTags.setAdapter(adapter);
-        Glide.with(Objects.requireNonNull(getContext()))
-                .load(city.getImage().getUrl())
-                .into(ivCoverPhoto);
+
+
+        // TODO Fix query so that it does not return null
+        ParseQuery<CityImages> cityImagesQuery = new ParseQuery<CityImages>(CityImages.class);
+        cityImagesQuery.findInBackground(new FindCallback<CityImages>() {
+            @Override
+            public void done(List<CityImages> objects, ParseException e) {
+
+                CityImages cityImage = getRandomElement(objects);
+                // TODO Don't make this crash
+                image = cityImage.getImage();
+                Glide.with(Objects.requireNonNull(getContext()))
+                        .load(image)
+                        .into(ivCoverPhoto);
+            }
+        });
+
 
         // Populate DayPlans
         DayPlanAdapter dayPlanAdapter = new DayPlanAdapter(dayPlans);
@@ -129,12 +150,11 @@ public class TripReviewFragment extends Fragment {
                 trip.setOwner(ParseUser.getCurrentUser());
                 trip.setName(tripName);
                 trip.setCity(city);
-                trip.setImage(city.getImage());
                 trip.setStartDate(convertToDate(getParseDate(startDate)));
                 trip.setEndDate(convertToDate(getParseDate(endDate)));
                 trip.setNumDays(numDays);
                 trip.setBudget(budget);
-
+                trip.setImage(image);
                 trip.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -190,5 +210,14 @@ public class TripReviewFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static Date convertToDate(LocalDate d1) {
         return java.sql.Date.valueOf(d1.toString());
+    }
+
+    // Returns a random event from a list of events
+    private CityImages getRandomElement(List<CityImages> list) {
+        Random rand = new Random();
+        if (list.size() == 0) {
+            return null;
+        }
+        return list.get(rand.nextInt(list.size()));
     }
 }
