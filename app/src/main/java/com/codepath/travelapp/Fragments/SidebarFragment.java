@@ -1,9 +1,7 @@
 package com.codepath.travelapp.Fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import com.codepath.travelapp.Activities.LoginActivity;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
 import com.codepath.travelapp.R;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 import static com.parse.ParseUser.getCurrentUser;
 
@@ -41,21 +38,26 @@ public class SidebarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         Button logoutBtn = view.findViewById(R.id.logout_btn);
+        Button editBtn = view.findViewById(R.id.editBtn);
         LinearLayout llSidebar = view.findViewById(R.id.llSidebar);
         tvUsername.setText(User.getCurrentUser().getUsername());
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ParseUser.logOut();
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                if (currentUser == null) {
-                    Intent intent = new Intent(getContext(), LoginActivity.class);
-                    startActivity(intent);
-                    Log.d("SidebarFragment", "User successfully logged out!");
-                } else {
-                    Log.d("SidebarFragment", "Logout failure.");
-                }
+                Fragment fragment = new LogoutDialogFragment();
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                LogoutDialogFragment logoutDialogFragment = LogoutDialogFragment.newInstance();
+                logoutDialogFragment.show(fragmentManager, "fragment_logout_confirmation");
+            }
+        });
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new ProfileDialogFragment();
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                ProfileDialogFragment profileDialogFragment = ProfileDialogFragment.newInstance();
+                profileDialogFragment.show(fragmentManager, "fragment_edit_profile");
             }
         });
 

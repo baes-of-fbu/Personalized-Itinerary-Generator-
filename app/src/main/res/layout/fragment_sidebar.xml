@@ -17,6 +17,14 @@
         android:textSize="18sp" />
 
     <Button
+        android:id="@+id/editBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_btn"
+        android:text="Edit Profile" />
+
+    <Button
         android:id="@+id/report_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
