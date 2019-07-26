@@ -172,7 +172,7 @@ public class TripReviewFragment extends Fragment {
 //                        .addToBackStack(null)
 //                        .commit();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
-                EditTripDialogFragment editTripDialogFragment = EditTripDialogFragment.newInstance();
+                EditTripDialogFragment editTripDialogFragment = EditTripDialogFragment.newInstance(dayPlans, tripName);
                 editTripDialogFragment.show(fragmentManager, "fragment_edit_trip");
 
             }
