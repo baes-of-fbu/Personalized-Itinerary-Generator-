@@ -26,17 +26,17 @@ import com.parse.ParseFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapter.ViewHolder>{
+public class CurrentTripAdapter extends RecyclerView.Adapter<CurrentTripAdapter.ViewHolder>{
     private Context context;
     private ArrayList<Trip> trips;
 
-    public FavoriteTripAdapter(ArrayList<Trip> trips) {
+    public CurrentTripAdapter(ArrayList<Trip> trips) {
         this.trips = trips;
     }
 
     @NonNull
     @Override
-    public FavoriteTripAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CurrentTripAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_post_profile, parent, false);
         return new ViewHolder(view);
@@ -44,7 +44,7 @@ public class FavoriteTripAdapter extends RecyclerView.Adapter<FavoriteTripAdapte
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onBindViewHolder(@NonNull FavoriteTripAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CurrentTripAdapter.ViewHolder holder, int position) {
         // Get a trip
         final Trip trip = trips.get(position);
 

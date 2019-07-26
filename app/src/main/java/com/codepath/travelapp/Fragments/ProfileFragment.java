@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
-import com.codepath.travelapp.Adapters.FavoriteTripAdapter;
+import com.codepath.travelapp.Adapters.CurrentTripAdapter;
 import com.codepath.travelapp.Adapters.PreviousTripAdapter;
 import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
 import com.codepath.travelapp.Models.Trip;
@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment {
     private final String TAG = "ProfileFragment";
     private UpcomingTripAdapter upcomingTripAdapter;
     private PreviousTripAdapter previousTripAdapter;
-    private FavoriteTripAdapter favoriteTripAdapter;
+    private CurrentTripAdapter currentTripAdapter;
     private int pageSize = 10;
     private User user;
     private ConstraintLayout clProfile;
@@ -99,7 +99,7 @@ public class ProfileFragment extends Fragment {
     //    tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, true);
         tripQuery.whereGreaterThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime());
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addDescendingOrder(Trip.KEY_STARTDATE);
+        tripQuery.addAscendingOrder(Trip.KEY_STARTDATE);
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
@@ -124,7 +124,7 @@ public class ProfileFragment extends Fragment {
        // tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, false);
         tripQuery.whereLessThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addDescendingOrder(Trip.KEY_ENDDATE);
+        tripQuery.addAscendingOrder(Trip.KEY_ENDDATE);
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
@@ -137,22 +137,20 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    private void queryFavoritePosts(ParseUser user) {
+    private void queryCurrentPosts(ParseUser user) {
 
-        favoriteTripAdapter.clear();
+        currentTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
         tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
-        // TODO query by time
-        //tripQuery.whereEqualTo(Trip.KEY_ISFAVORITED, true);
 
-         tripQuery.whereLessThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime()); // TODO currently querying for "is current"
-         tripQuery.whereGreaterThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime()); // TODO look comment above
+        tripQuery.whereLessThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime()); // TODO currently querying for "is current"
+        tripQuery.whereGreaterThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime()); // TODO look comment above
 
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addDescendingOrder(Trip.KEY_STARTDATE);
+        tripQuery.addAscendingOrder(Trip.KEY_STARTDATE);
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
@@ -161,7 +159,7 @@ public class ProfileFragment extends Fragment {
                     e.printStackTrace();
                     return;
                 }
-                favoriteTripAdapter.addAll(trips);
+                currentTripAdapter.addAll(trips);
             }
         });
     }
@@ -173,14 +171,14 @@ public class ProfileFragment extends Fragment {
     private void FillInLayout(View view) {
         RecyclerView rvUpcoming = view.findViewById(R.id.rvUpcoming);
         RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);
-        RecyclerView rvFavorite = view.findViewById(R.id.rvFavorite);
+        RecyclerView rvCurrent = view.findViewById(R.id.rvCurrent);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
         TextView tvBio = view.findViewById(R.id.tvBio);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         TextView tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
         TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
-        TextView tvFavoritesCOunt = view.findViewById(R.id.tvFavoriteCcount);
+        TextView tvFavoritesCount = view.findViewById(R.id.tvFavoriteCount);
 
 
         //Populate views in Profile Fragment
@@ -196,33 +194,33 @@ public class ProfileFragment extends Fragment {
         }
         tvFollowersCount.setText(user.getFollowers().toString());
         tvFollowingCount.setText(user.getFollowing().toString());
-        tvFavoritesCOunt.setText(user.getFavorites().toString());
+        tvFavoritesCount.setText(user.getFavorites().toString());
 
 
         //create the upcomingTripAdapter
         ArrayList<Trip> upcomingTrips = new ArrayList<>();
         ArrayList<Trip> previousTrips = new ArrayList<>();
-        ArrayList<Trip> favoriteTrips = new ArrayList<>();
+        ArrayList<Trip> currentTrips = new ArrayList<>();
         //create the data source
         upcomingTripAdapter = new UpcomingTripAdapter(upcomingTrips);
         previousTripAdapter = new PreviousTripAdapter(previousTrips);
-        favoriteTripAdapter = new FavoriteTripAdapter(favoriteTrips);
+        currentTripAdapter = new CurrentTripAdapter(currentTrips);
         // set the layout manager on the recycler view
         LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL,false);
-        LinearLayoutManager favoriteLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL, false);
+        LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL, false);
 
         rvUpcoming.setLayoutManager(upcomingLayoutManager);
         rvPrevious.setLayoutManager(previousLayoutManager);
-        rvFavorite.setLayoutManager(favoriteLayoutManager);
+        rvCurrent.setLayoutManager(currentLayoutManager);
 
         rvUpcoming.setAdapter(upcomingTripAdapter);
         rvPrevious.setAdapter(previousTripAdapter);
-        rvFavorite.setAdapter(favoriteTripAdapter);
+        rvCurrent.setAdapter(currentTripAdapter);
 
         queryUpcomingPosts(user);
         queryPreviousPosts(user);
-        queryFavoritePosts(user);
+        queryCurrentPosts(user);
 
         Toast.makeText(getContext(), "Welcome to Your Profile",Toast.LENGTH_SHORT).show();
     }
