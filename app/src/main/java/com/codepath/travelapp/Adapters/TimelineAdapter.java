@@ -18,9 +18,13 @@ import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TripDetailsFragment;
+import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +57,27 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());
 
+        // Trip does not store the complete City object, so a Parse
+        // query must be made to get the object, allowing access to
+        // city.getName() and city.getState()
+        String cityId = trip.getCity().getObjectId();
+        ParseQuery<City> cityQuery = new ParseQuery<City>(City.class);
+        cityQuery.whereEqualTo(City.KEY_OBJECT_ID, cityId);
+        cityQuery.findInBackground(new FindCallback<City>() {
+            @Override
+            public void done(List<City> objects, ParseException e) {
+                if (e == null) {
+                    City city = objects.get(0);
+                    String cityStateString = city.getName() + ", " + city.getState();
+                    holder.tvCityName.setText(cityStateString);
+                }
+            }
+        });
+
+
+
         if (trip.getOwner().get("profileImage") != null) {
-            ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+            ParseFile image = (ParseFile) trip.getOwner().get("profileImage"); // TODO CHANGE TO USER, NOT PARSEUSER
             assert image != null;
             Glide.with(context)
                     .load(image.getUrl())
@@ -62,8 +85,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                     .into(holder.ivProfileImage);
         }
 
-        if (trip.get("image") != null) {
-            ParseFile image = (ParseFile) trip.get("image");
+        if (trip.getImage() != null) {
+            ParseFile image = trip.getImage();
             assert image != null;
             Glide.with(context)
                     .load(image.getUrl())
@@ -101,6 +124,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         private TextView tvUsername;
         private ImageView ivProfileImage;
         private TextView tvTags;
+        private TextView tvCityName;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,6 +136,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvTags = itemView.findViewById(R.id.tvTags);
+            tvCityName = itemView.findViewById(R.id.tvCityName);
 
             itemView.setOnClickListener(this);
         }

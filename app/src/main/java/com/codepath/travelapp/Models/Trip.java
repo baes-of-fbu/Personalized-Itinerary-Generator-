@@ -20,7 +20,6 @@ public class Trip extends ParseObject implements Serializable {
     private static final String KEY_NUMDAYS = "numDays";
     public static final String KEY_STARTDATE = "startDate";
     public static final String KEY_ENDDATE = "endDate";
-    public static final String KEY_ISUPCOMING = "isUpcoming";
     public static final String KEY_ISFAVORITED = "isFavorited";
 
     // Getters and setters
@@ -56,11 +55,11 @@ public class Trip extends ParseObject implements Serializable {
         put(KEY_BUDGET, budget);
     }
 
-    public ParseObject getCity() { // TODO might need to be changed to an city
-        return getParseObject(KEY_CITY);
+    public City getCity() { // TODO might need to be changed to an city
+        return (City) getParseObject(KEY_CITY);
     }
 
-    public void setCity(ParseObject city) {
+    public void setCity(City city) {
         put(KEY_CITY, city);
     }
 

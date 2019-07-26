@@ -32,8 +32,9 @@
             android:layout_marginStart="16dp"
             android:text="@string/username"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/ivProfileImage"
             app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
             app:layout_constraintTop_toTopOf="@+id/ivProfileImage" />
 
@@ -122,6 +123,27 @@
             android:text="Tags"
             app:layout_constraintEnd_toStartOf="@+id/tvTags"
             app:layout_constraintTop_toTopOf="@+id/tvTags" />
+
+        <TextView
+            android:id="@+id/tvCityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/city"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivLocationPin"
+            app:layout_constraintEnd_toStartOf="@+id/ivLocationPin"
+            app:layout_constraintTop_toTopOf="@+id/ivLocationPin" />
+
+        <ImageView
+            android:id="@+id/ivLocationPin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@drawable/ic_location_on_black_24dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
