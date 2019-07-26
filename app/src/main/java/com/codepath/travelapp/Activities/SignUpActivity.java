@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String bio;
     private ParseFile image;
 
+    private LinearLayout llSignUp;
     private Button signUpBtn;
     private EditText etUsername;
     private EditText etPassword;
@@ -63,6 +65,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        llSignUp = findViewById(R.id.llSignUp);
         signUpBtn = findViewById(R.id.signUpBtn);
         etUsername =  findViewById(R.id.etSignUpUsername);
         etPassword = findViewById(R.id.etSignUpPassword);

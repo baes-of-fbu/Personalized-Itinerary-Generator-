@@ -38,13 +38,14 @@
         app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
+            android:id="@+id/llSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
-            android:background="@android:color/transparent"
+            android:background="@color/signUpTransparent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -127,17 +128,8 @@
                     android:ems="150"
                     android:enabled="true"
                     android:hint="@string/bio_prompt" />
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/ivSignUpProfileImage"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="40dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@android:color/transparent" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
                 android:id="@+id/spSelectState"
@@ -153,6 +145,16 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+
+            <ImageView
+                android:id="@+id/ivSignUpProfileImage"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@android:color/transparent" />
 
             <Button
                 android:id="@+id/signUpProfileImageBtn"

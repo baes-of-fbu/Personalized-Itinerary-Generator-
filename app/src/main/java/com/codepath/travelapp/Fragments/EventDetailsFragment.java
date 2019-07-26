@@ -3,6 +3,8 @@ package com.codepath.travelapp.Fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +22,9 @@ import com.codepath.travelapp.R;
 
 import java.util.Objects;
 
-
-
 public class EventDetailsFragment extends Fragment {
 
-    private TextView tvEventName;
-    private ImageView ivCoverPhoto;
-    private TextView tvCost;
-    private RatingBar rbRating;
     private TextView tvAddress;
-    private TextView tvDescription;
     private String location;
     private Event event;
 
@@ -43,12 +38,12 @@ public class EventDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvEventName = view.findViewById(R.id.tvEventName);
-        ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
-        tvCost = view.findViewById(R.id.tvCost);
-        rbRating = view.findViewById(R.id.rbRating);
+        TextView tvEventName = view.findViewById(R.id.tvEventName);
+        ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
+        TextView tvCost = view.findViewById(R.id.tvCost);
+        RatingBar rbRating = view.findViewById(R.id.rbRating);
         tvAddress = view.findViewById(R.id.tvAddress);
-        tvDescription = view.findViewById(R.id.tvDescription);
+        TextView tvDescription = view.findViewById(R.id.tvDescription);
 
 
         Bundle bundle = getArguments();
@@ -59,19 +54,21 @@ public class EventDetailsFragment extends Fragment {
             tvEventName.setText(event.getName());
             tvCost.setText(event.getCost().toString());
             rbRating.setRating(event.getRating().floatValue());
-            // TODO add SpannableString for address to do .setSpan(new UnderlineSpan(), , , ); then set text
-            tvAddress.setText(event.getAddress());
+
+            SpannableString address = new SpannableString(event.getAddress());
+            address.setSpan(new UnderlineSpan(), 0, address.length(), 0);
+            tvAddress.setText(address);
             tvDescription.setText(event.getDescription());
 
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(event.getImage().getUrl())
                     .into(ivCoverPhoto);
             location = geoPointToString(event.get("location").toString());
-            addOnClickListners();
+            addOnClickListeners();
         }
     }
 
-    private void addOnClickListners() {
+    private void addOnClickListeners() {
         tvAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,8 +82,8 @@ public class EventDetailsFragment extends Fragment {
             }
         });
     }
-    private String geoPointToString(String geopoint) {
-        String temp = geopoint.substring(geopoint.indexOf('[') + 1, geopoint.length() - 1);
+    private String geoPointToString(String geoPoint) {
+        String temp = geoPoint.substring(geoPoint.indexOf('[') + 1, geoPoint.length() - 1);
         return "geo:" + temp;
     }
 }
