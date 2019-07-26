@@ -96,7 +96,7 @@ public class TripReviewFragment extends Fragment {
         RecyclerView rvTags = view.findViewById(R.id.rvTags);
         RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
         Button btnAccept = view.findViewById(R.id.btnAccept);
-        Button btnDeny = view.findViewById(R.id.btnDeny);
+        Button btnEdit = view.findViewById(R.id.btnDeny);
 
         SnapHelper snapHelper = new GravitySnapHelper(Gravity.END);
         snapHelper.attachToRecyclerView(rvTags);
@@ -182,7 +182,7 @@ public class TripReviewFragment extends Fragment {
             }
         });
 
-        btnDeny.setOnClickListener(new View.OnClickListener() {
+        btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new TimelineFragment();
