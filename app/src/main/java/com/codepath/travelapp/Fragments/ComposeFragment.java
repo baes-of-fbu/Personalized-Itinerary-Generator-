@@ -162,6 +162,8 @@ public class ComposeFragment extends Fragment {
                     numDays = (int) getDifferenceBetweenDays(TripReviewFragment.getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
                     if (numDays < 1) {
                         Toast.makeText(getContext(), "Invalid dates. Please fix your start and/or end date", Toast.LENGTH_LONG).show();
+                    } else if (dateHasPassed(TripReviewFragment.getParseDate(startDate))) {
+                        Toast.makeText(getContext(), "Start date has already passed", Toast.LENGTH_SHORT).show();
                     } else if (etBudget.getText().toString().length() == 0) {
                         Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
                     } else if (budget <= 0) {
@@ -398,5 +400,21 @@ public class ComposeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static Date changeToDate(LocalDate d1, int numDays) {
         return java.sql.Date.valueOf((DAYS.addTo(d1, numDays)).toString());
+    }
+
+    // Prevents a user from creating a trip with a start date that has already passed
+    @TargetApi(Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private Boolean dateHasPassed(LocalDate startDate) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String currDate = simpleDateFormat.format(android.icu.util.Calendar.getInstance().getTime());
+        LocalDate todaysDate = TripReviewFragment.getParseDate(currDate);
+
+        int numDays = (int) getDifferenceBetweenDays(todaysDate, startDate);
+        if (numDays < 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -96,4 +96,13 @@ public class Trip extends ParseObject implements Serializable {
         return getBoolean(KEY_ISFAVORITED);
     }
 
+    public void setFavorited(Boolean bool) {
+        put(KEY_ISFAVORITED, bool);
+    }
+
+    // TODO remove this getter and handle locally
+    public void setUpcoming(Boolean bool) {
+        put(KEY_ISUPCOMING, bool);
+    }
+
 }
