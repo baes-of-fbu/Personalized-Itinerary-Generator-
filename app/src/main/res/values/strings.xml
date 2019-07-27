@@ -91,4 +91,8 @@
     <string name="previous_trips">Previous Trips</string>
     <string name="upcoming_trips">Upcoming Trips</string>
     <string name="favorite_trips">Favorite Trips</string>
+    <string name="edit">Edit</string>
+    <string name="save_for_later">Save for later</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

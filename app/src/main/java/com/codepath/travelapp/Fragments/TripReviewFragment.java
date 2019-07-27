@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,7 +53,7 @@ import me.relex.circleindicator.CircleIndicator2;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 
-public class TripReviewFragment extends Fragment {
+public class TripReviewFragment extends Fragment implements EditTripDialogFragment.EditTripDialogListener {
 
     private String tripName;
     private City city;
@@ -93,6 +94,7 @@ public class TripReviewFragment extends Fragment {
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
+        TextView tvCityState = view.findViewById(R.id.tvCityState);
         RecyclerView rvTags = view.findViewById(R.id.rvTags);
         RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
         Button btnAccept = view.findViewById(R.id.btnAccept);
@@ -105,6 +107,7 @@ public class TripReviewFragment extends Fragment {
         tvTravelDates.setText(startDate + " - " + endDate);
         tvDays.setText("" + numDays);
         tvBudget.setText(String.valueOf(budget));
+        tvCityState.setText(city.getName() + ", " + city.getState());
 
         // Populate list of Tags
         TagSelectedAdapter adapter = new TagSelectedAdapter(tags);
@@ -197,11 +200,18 @@ public class TripReviewFragment extends Fragment {
 //                        .commit();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
                 EditTripDialogFragment editTripDialogFragment = EditTripDialogFragment.newInstance(dayPlans, tripName);
+                editTripDialogFragment.setTargetFragment(TripReviewFragment.this, 300);
                 editTripDialogFragment.show(fragmentManager, "fragment_edit_trip");
 
             }
         });
 
+    }
+
+    // This is called when the dialog is completed and the results have been passed
+    @Override
+    public void onFinishEditDialog(String inputText) {
+        Toast.makeText(getContext(), inputText, Toast.LENGTH_LONG).show();
     }
 
     @TargetApi(Build.VERSION_CODES.O)

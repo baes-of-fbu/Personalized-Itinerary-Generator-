@@ -9,39 +9,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.codepath.travelapp.Adapters.EditableEventAdapter;
 import com.codepath.travelapp.Models.DayPlan;
-import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.R;
 
 import java.util.ArrayList;
 
 public class EditTripDialogFragment extends DialogFragment {
 
-    private EditText etEditTripname;
-    private Button btnSave;
-    private Button btnCancel;
-    private ListView lvEditSchedule;
+    private TextView tvEdit;
+    private TextView tvSaveForLater;
+    private TextView tvCancel;
+    private TextView tvDelete;
+    private String actionToReturn;
 
     public EditTripDialogFragment() {
         // Empty constructor is required for DialogFragment
     }
 
+    // TODO REMOVE PARAMETERS
     public static EditTripDialogFragment newInstance(ArrayList<DayPlan> dayPlans, String tripName) {
-
-        Bundle args = new Bundle();
-        args.putParcelableArrayList("dayPlans", dayPlans);
-        args.putString("tripName", tripName);
         EditTripDialogFragment fragment = new EditTripDialogFragment();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -59,7 +52,7 @@ public class EditTripDialogFragment extends DialogFragment {
         Display display = window.getWindowManager().getDefaultDisplay();
         display.getSize(size);
         // Set the width of the dialog proportional to 75% of the screen width
-        window.setLayout((int) (size.x * 1), WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setLayout((int) (size.x * 0.6), WindowManager.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
         // Call super onResume after sizing
         super.onResume();
@@ -70,55 +63,58 @@ public class EditTripDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        etEditTripname = view.findViewById(R.id.etEditTripName);
-        btnSave = view.findViewById(R.id.btnEditSave);
-        btnCancel = view.findViewById(R.id.btnEditCancel);
-        lvEditSchedule = view.findViewById(R.id.lvEditSchedule);
-
-        Bundle bundle = getArguments();
-        String tripName = bundle.getString("tripName");
-        ArrayList<DayPlan> dayPlans = bundle.getParcelableArrayList("dayPlans");
-        ArrayList<Event> events = getEventsFromDayPlans(dayPlans);
-        EditableEventAdapter adapter = new EditableEventAdapter(getContext(), events);
-        lvEditSchedule.setAdapter(adapter);
-        etEditTripname.setText(tripName);
-        getDialog().setTitle("Testing");
+        tvEdit = view.findViewById(R.id.tvEdit);
+        tvSaveForLater = view.findViewById(R.id.tvSaveForLater);
+        tvCancel = view.findViewById(R.id.tvCancel);
+        tvDelete = view.findViewById(R.id.tvDelete);
+        actionToReturn = "";
         addOnClickListeners();
     }
 
     private void addOnClickListeners() {
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        tvEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss(); // Closes the fragment
+                actionToReturn = "edit";
+                sendBackResult();
+            }
+        });
+
+        tvSaveForLater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionToReturn = "save";
+                sendBackResult();
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionToReturn = "cancel"; // TODO potentially swap with dismiss()
+                sendBackResult();
+            }
+        });
+
+        tvDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionToReturn = "delete";
+                sendBackResult();
             }
         });
     }
 
-    private ArrayList<Event> getEventsFromDayPlans(ArrayList<DayPlan> dayPlans) {
-        ArrayList<Event> events = new ArrayList<>();
-        for (int i = 0; i < dayPlans.size(); i ++) {
-            DayPlan currPlan = dayPlans.get(i);
-            Event morningEvent = currPlan.getMorningEvent();
-            if (morningEvent != null) {
-                events.add(morningEvent);
-            } else {
-                // TODO handle null case
-            }
-            Event afternoonEvent = currPlan.getAfternoonEvent();
-            if (afternoonEvent != null) {
-                events.add(afternoonEvent);
-            } else {
-                // TODO handle null case
-            }
-            Event eveningEvent = currPlan.getEveningEvent();
-            if (eveningEvent != null) {
-                events.add(eveningEvent);
-            } else {
-                // TODO handle null case
-            }
-        }
-        return events;
+    // User to return info to the parent
+    public interface EditTripDialogListener {
+        void onFinishEditDialog(String inputText); // May want to change for a bundle
     }
 
+    // Call this method to send the data back to the parent fragment
+    private void sendBackResult() {
+        // 'getTargetFragment' will be set when the dialog is displayed
+        EditTripDialogListener listener = (EditTripDialogListener) getTargetFragment();
+        listener.onFinishEditDialog(actionToReturn);
+        dismiss();
+    }
 }
