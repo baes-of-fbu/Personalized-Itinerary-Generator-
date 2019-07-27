@@ -1,6 +1,7 @@
 package com.codepath.travelapp.Fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.codepath.travelapp.Adapters.DayPlanAdapter;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Adapters.DayPlanAdapter;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
@@ -53,7 +54,7 @@ public class TripDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.show();
-        ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
+        final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
         final TextView tvUsername = view.findViewById(R.id.tvUsername);
@@ -61,10 +62,10 @@ public class TripDetailsFragment extends Fragment {
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
         final RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
-        ImageView ivShare = view.findViewById(R.id.ivShare); 
+        ImageView ivShare = view.findViewById(R.id.ivShare);
 
         Bundle bundle = getArguments();
-        Trip trip = (Trip) bundle.getSerializable("Trip");
+        final Trip trip = (Trip) bundle.getSerializable("Trip");
         mDayPlan = new ArrayList<>();
         //create the data source
         adapter = new DayPlanAdapter(mDayPlan);
@@ -143,6 +144,31 @@ public class TripDetailsFragment extends Fragment {
                         .replace(R.id.flContainer, fragment)
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+
+        // Allows User to share a text message containing the City, start date, and end date of their trip
+        // TODO send a link to our app or send a more detailed version of the itinerary with all the events and pictures 
+        ivShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String text = null;
+                try {
+                    text = "Check out this awesome trip! I'm going to " + trip.getCity().fetchIfNeeded().getString("name");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                text += " from " + trip.getStartDate().toString() + " to " + trip.getEndDate().toString() + "!";
+//                File imagePath = new File(getContext().getFilesDir(), "Pictures");
+//                File newFile = new File(imagePath, "default_image.jpg");
+//                Uri imageUri = getUriForFile(getContext(), "com.codepath.fileprovider.travelApp", newFile);
+//                Uri imageUri = Uri.parse("file://my_picture");
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+//                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                shareIntent.setType("text/plain");
+//                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(shareIntent, "Share Trip"));
             }
         });
     }
