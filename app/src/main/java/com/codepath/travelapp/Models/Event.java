@@ -15,11 +15,12 @@ public class Event extends ParseObject implements Parcelable {
     private static final String KEY_IMAGE = "eventImage";
     private static final String KEY_COST = "cost";
     private static final String KEY_RATING = "rating";
-    public static final String KEY_MORNING = "morning";
-    public static final String KEY_AFTERNOON = "afternoon";
-    public static final String KEY_EVENING = "evening";
+    private static final String KEY_MORNING = "morning";
+    private static final String KEY_AFTERNOON = "afternoon";
+    private static final String KEY_EVENING = "evening";
     private static final String KEY_CITY = "city";
     private static final String KEY_ADDRESS = "address";
+    private static final String KEY_WEBSITE = "website";
 
     // Getters
     public String getName() {
@@ -61,5 +62,7 @@ public class Event extends ParseObject implements Parcelable {
     public String getAddress() {
         return getString(KEY_ADDRESS);
     }
+
+    public String getWebsite() { return getString(KEY_WEBSITE); }
 
 }

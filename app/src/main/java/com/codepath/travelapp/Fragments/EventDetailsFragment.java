@@ -27,6 +27,7 @@ public class EventDetailsFragment extends Fragment {
     private TextView tvAddress;
     private String location;
     private Event event;
+    private TextView tvWebsite;
 
     @Nullable
     @Override
@@ -44,6 +45,7 @@ public class EventDetailsFragment extends Fragment {
         RatingBar rbRating = view.findViewById(R.id.rbRating);
         tvAddress = view.findViewById(R.id.tvAddress);
         TextView tvDescription = view.findViewById(R.id.tvDescription);
+        tvWebsite = view.findViewById(R.id.tvWebsite);
 
 
         Bundle bundle = getArguments();
@@ -59,6 +61,9 @@ public class EventDetailsFragment extends Fragment {
             address.setSpan(new UnderlineSpan(), 0, address.length(), 0);
             tvAddress.setText(address);
             tvDescription.setText(event.getDescription());
+            SpannableString website = new SpannableString(event.getWebsite());
+            website.setSpan(new UnderlineSpan(), 0, website.length(), 0);
+            tvWebsite.setText(website);
 
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(event.getImage().getUrl())
@@ -78,6 +83,15 @@ public class EventDetailsFragment extends Fragment {
                 intent.setData(Uri.parse(data));
                 if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(intent);
+                }
+            }
+        });
+        tvWebsite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getWebsite()));
+                if (browserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(browserIntent);
                 }
             }
         });
