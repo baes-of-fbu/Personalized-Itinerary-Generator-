@@ -192,9 +192,9 @@ public class ProfileFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
-        tvFollowersCount.setText(user.getFollowers().toString());
-        tvFollowingCount.setText(user.getFollowing().toString());
-        tvFavoritesCount.setText(user.getFavorites().toString());
+        //tvFollowersCount.setText(user.getFollowers().toString());
+        //tvFollowingCount.setText(user.getFollowing().toString());
+        //tvFavoritesCount.setText(user.getFavorites().toString());
 
 
         //create the upcomingTripAdapter

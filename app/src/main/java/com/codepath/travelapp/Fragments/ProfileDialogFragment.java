@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -102,7 +105,7 @@ public class ProfileDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 newBio = etBio.getText().toString();
                 newState = spHomeState.getSelectedItem().toString();
-                newImage = conversionBitmapParseFile(selectedImage);
+
 
                 // Check to see all fields are entered
                 if (newBio.length() == 0) {
@@ -135,16 +138,14 @@ public class ProfileDialogFragment extends DialogFragment {
                 final Uri imageUri = data.getData();
                 File photoFile = new File(getRealPathFromURI(getContext(), imageUri));
                 try {
-                   selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
-                    if (selectedImage == null) {
-                        ivProfileImage.setVisibility(View.GONE);
-                    } else {
-                        Glide.with(this)
-                                .load(selectedImage)
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(ivProfileImage);
-                        ivProfileImage.setVisibility(View.VISIBLE);
-                    }
+                    selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+                    Bitmap rotatedImage = modifyOrientation(selectedImage, imageUri.getPath());
+                    Glide.with(this)
+                            .load(selectedImage)
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(ivProfileImage);
+                    ivProfileImage.setVisibility(View.VISIBLE);
+                    newImage = conversionBitmapParseFile(selectedImage);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -153,6 +154,7 @@ public class ProfileDialogFragment extends DialogFragment {
             }
         }
     }
+
 
     private String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
@@ -169,13 +171,51 @@ public class ProfileDialogFragment extends DialogFragment {
         }
     }
 
+    private static Bitmap modifyOrientation(Bitmap bitmap, String image_absolute_path) throws IOException {
+        ExifInterface ei = new ExifInterface(image_absolute_path);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotate(bitmap, 90);
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotate(bitmap, 180);
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotate(bitmap, 270);
+
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                return flip(bitmap, true, false);
+
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                return flip(bitmap, false, true);
+
+            default:
+                return bitmap;
+        }
+    }
+
+    private static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    private static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+
     private static ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
         byte[] imageByte = byteArrayOutputStream.toByteArray();
-        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
-        return parseFile;
+        return new ParseFile("image_file.png",imageByte);
     }
+
 
     private void SetViews () {
         user = (User) User.getCurrentUser();
@@ -186,6 +226,7 @@ public class ProfileDialogFragment extends DialogFragment {
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
+            newImage = user.getProfileImage();
         }
     }
 
