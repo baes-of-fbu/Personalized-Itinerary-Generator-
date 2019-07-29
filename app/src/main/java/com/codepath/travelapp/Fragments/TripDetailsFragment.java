@@ -148,7 +148,7 @@ public class TripDetailsFragment extends Fragment {
         });
 
         // Allows User to share a text message containing the City, start date, and end date of their trip
-        // TODO send a link to our app or send a more detailed version of the itinerary with all the events and pictures 
+        // TODO send a link to our app or send a more detailed version of the itinerary with all the events and pictures
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
