@@ -1,14 +1,17 @@
 package com.codepath.travelapp.Fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.codepath.travelapp.Activities.MainActivity;
@@ -58,7 +61,6 @@ public class EditTripFragment extends Fragment {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("Edit Trip");
 
-
         bundle = getArguments();
         if (bundle != null) {
             // TODO CHANGE WHY THE BUNDLE ISN'T PASSING
@@ -83,10 +85,21 @@ public class EditTripFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SaveAlertDialogFragment saveAlertDialog = SaveAlertDialogFragment.newInstance("Saving Item");
-                saveAlertDialog.show(MainActivity.fragmentManager, "fragment_alert");
-
-                save();
+                AlertDialog dialog = new AlertDialog.Builder(getContext())
+                        .setTitle("Are you sure you want to return without saving?")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Fragment fragment = new TripReviewFragment();
+                                fragment.setArguments(bundle);
+                                MainActivity.fragmentManager.beginTransaction()
+                                        .replace(R.id.flContainer, fragment)
+                                        .addToBackStack(null)
+                                        .commit();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+                dialog.show();
             }
         });
 
@@ -107,5 +120,6 @@ public class EditTripFragment extends Fragment {
                 .replace(R.id.flContainer, fragment)
                 .addToBackStack(null)
                 .commit();
+        Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
     }
 }
