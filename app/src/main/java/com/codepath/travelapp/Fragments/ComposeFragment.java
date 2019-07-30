@@ -65,6 +65,7 @@ public class ComposeFragment extends Fragment {
     private String endDate;
     private int budget;
     private String cityName;
+    private int tripCost;
 
     private City city;
     private Event emptyEvent;
@@ -172,7 +173,7 @@ public class ComposeFragment extends Fragment {
                         Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
                     } else {
                         selectedTags = adapter.getSelectedTags();
-                        generateSchedule(cityName, budget);
+                        generateSchedule(cityName);
                     }
                 }
             }
@@ -180,7 +181,7 @@ public class ComposeFragment extends Fragment {
     }
 
     // Generates schedule and opens review fragment
-    private void generateSchedule(final String cityName, final int budget) {
+    private void generateSchedule(final String cityName) {
         // Sends network request for city name
         ParseQuery<City> cityQuery = new ParseQuery<>(City.class);
         cityQuery.whereEqualTo(City.KEY_NAME, cityName);
@@ -188,8 +189,37 @@ public class ComposeFragment extends Fragment {
             @Override
             public void done(List<City> cityList, ParseException e) {
                 if (e == null) {
-                    city = cityList.get(0); // Assumes only one city is associated with the name TODO make more generic
-                    parseCity(budget);
+                    city = cityList.get(0);
+                    // Creates a new query for the events in the city
+                    allAvailableEvents = new ArrayList<>();
+                    List<ParseQuery<Event>> queries = new ArrayList<>();
+
+                    // Creates queries for each tag
+                    for (int i = 0; i < selectedTags.size(); i++) {
+                        Tag tag = selectedTags.get(i);
+                        ParseQuery<Event> eventQuery = tag.getEventsRelation().getQuery();
+                        eventQuery.whereEqualTo("city", city);
+                        queries.add(eventQuery);
+                    }
+
+                    // Sends all tag queries in one main query
+                    ParseQuery<Event> mainQuery = ParseQuery.or(queries);
+                    mainQuery.findInBackground(new FindCallback<Event>() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void done(List<Event> eventList, ParseException e) {
+                            if (e == null) {
+                                Log.d("ComposeFragment", "All events" + eventList.toString());
+                                allAvailableEvents.addAll(eventList);
+                                // Creates Day Plans using the events
+                                createDayPlans();
+                                sendBundle();
+                            } else {
+                                Log.d("Compose Fragment", e.toString());
+                                Toast.makeText(getContext(), "Query for available events unsuccessful", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
                 } else {
                     Log.d("ComposeFragment", "Failed to query city: " + e.toString());
                     e.printStackTrace();
@@ -199,64 +229,12 @@ public class ComposeFragment extends Fragment {
         });
     }
 
-    // Sends network request for the empty event, unique to each city
-    private void parseCity(final int budget) {
-        ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
-        eventQuery.whereEqualTo(Event.KEY_NAME, "Empty Event");
-        eventQuery.findInBackground(new FindCallback<Event>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void done(List<Event> eventList, ParseException e) {
-                if (e == null) {
-                    emptyEvent = eventList.get(0);
-                    parseEvents(budget);
-                } else {
-                    Log.d("Compose Fragment", "Failed to query empty city");
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "Failed to load data", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-    // Sends network requests for all events in a city, based off the tags
-    private void parseEvents(final int budget) {
-        allAvailableEvents = new ArrayList<>();
-        List<ParseQuery<Event>> queries = new ArrayList<>();
-
-        // Create queries for each tag
-        for (int i = 0; i < selectedTags.size(); i++) {
-            Tag tag = selectedTags.get(i);
-            ParseQuery<Event> eventQuery = tag.getEventsRelation().getQuery();
-            eventQuery.whereEqualTo("city", city);
-            queries.add(eventQuery);
-        }
-
-        // Send all tag queries in one main query
-        ParseQuery<Event> mainQuery = ParseQuery.or(queries);
-        mainQuery.findInBackground(new FindCallback<Event>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void done(List<Event> eventList, ParseException e) {
-                if (e == null) {
-                    Log.d("ComposeFragment", "All events" + eventList.toString());
-                    allAvailableEvents.addAll(eventList);
-                    createDayPlans(budget);
-                    sendBundle(budget);
-                } else {
-                    Log.d("Compose Fragment", e.toString());
-                    Toast.makeText(getContext(), "Query for available events unsuccessful", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
     // Adds events to day plans
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void createDayPlans(int runningBudget) {
+    private void createDayPlans() {
         dayPlans = new ArrayList<>();
-
+        int runningBudget = budget;
         // Loop through each day
         for (int day = 0; day < numDays; day++) {
             // Create a DayPlan for each day in the Trip and assign it the appropriate calendar Date
@@ -300,29 +278,30 @@ public class ComposeFragment extends Fragment {
             tempDay.saveInBackground();
             dayPlans.add(tempDay);
         }
+
+        tripCost = budget - runningBudget;
     }
 
     private Event getEvent(String timeOfDay, int runningBudget) {
-        Event randomEvent = null;
+        Event randomEvent;
         ArrayList<Event> alreadyChecked = new ArrayList<>();
-        boolean isFinished = false;
 
-        while (!isFinished) {
+        while (true) {
             randomEvent = getRandomElement(allAvailableEvents);
 
             if (alreadyChecked.size() == allAvailableEvents.size() || randomEvent == null) {
-                isFinished = true;
+                // Returns null if no event was found
+                return null;
             } else if (!alreadyChecked.contains(randomEvent)) {
                 alreadyChecked.add(randomEvent);
-                // Returns the event if it's available and within our budget
                 if (isEventAvailable(randomEvent, timeOfDay)) {
                     if (isEventWithinBudget(randomEvent, runningBudget)) {
-                        isFinished = true;
+                        // Returns the event if it's available and within our budget
+                        return randomEvent;
                     }
                 }
             }
         }
-        return randomEvent;
     }
 
     // Returns a random event from a list of events
@@ -352,7 +331,7 @@ public class ComposeFragment extends Fragment {
     }
 
     // Sends information to review fragment
-    private void sendBundle(int budget) {
+    private void sendBundle() {
         Fragment fragment = new TripReviewFragment();
 
         Bundle bundle = new Bundle();
@@ -361,6 +340,7 @@ public class ComposeFragment extends Fragment {
         bundle.putString("end_date", etEndDate.getText().toString());
         bundle.putInt("number_days", numDays);
         bundle.putInt("budget", budget);
+        bundle.putInt("trip_cost", tripCost);
         bundle.putParcelableArrayList("selected_tags", selectedTags);
         bundle.putParcelable("city", city);
         bundle.putParcelableArrayList("dayPlans", dayPlans);
@@ -410,10 +390,6 @@ public class ComposeFragment extends Fragment {
         LocalDate todaysDate = TripReviewFragment.getParseDate(currDate);
 
         int numDays = (int) getDifferenceBetweenDays(todaysDate, startDate);
-        if (numDays < 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return (numDays < 1);
     }
 }

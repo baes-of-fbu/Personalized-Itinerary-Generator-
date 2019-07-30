@@ -42,6 +42,7 @@ public class EditTripFragment extends Fragment {
     private String endDate;
     private int budget;
     private int numDays;
+    private int tripCost;
     private ArrayList<Tag> tags;
     private ArrayList<DayPlan> dayPlans;
 
@@ -69,8 +70,6 @@ public class EditTripFragment extends Fragment {
         toolbar.setTitle("Edit Trip");
 
 
-
-
         bundle = getArguments();
         if (bundle == null) {
             Log.d("EditTrip Fragment", "No bundle");
@@ -82,11 +81,12 @@ public class EditTripFragment extends Fragment {
         endDate = bundle.getString("end_date");
         numDays = bundle.getInt("number_days");
         budget = bundle.getInt("budget");
+        tripCost = bundle.getInt("trip_cost");
         tags = bundle.getParcelableArrayList("selected_tags");
         dayPlans = bundle.getParcelableArrayList("dayPlans");
 
-
         etEditTripName.setText(tripName);
+
 
 
         // Populate DayPlans

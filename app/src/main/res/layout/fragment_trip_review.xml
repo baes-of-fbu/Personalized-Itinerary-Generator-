@@ -114,43 +114,49 @@
                     android:id="@+id/tvDays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/place_holder"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvStringDays"
-                    app:layout_constraintStart_toEndOf="@+id/tvStringDays"
-                    app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvStringDays"
+                    app:layout_constraintStart_toStartOf="@+id/tvStringDays"
+                    app:layout_constraintTop_toBottomOf="@+id/tvStringDays" />
 
                 <TextView
                     android:id="@+id/tvBudget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/dollar_sign"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvStringBudget"
-                    app:layout_constraintStart_toEndOf="@+id/tvStringBudget"
-                    app:layout_constraintTop_toTopOf="@+id/tvStringBudget" />
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvStringBudget"
+                    app:layout_constraintStart_toStartOf="@+id/tvStringBudget"
+                    app:layout_constraintTop_toBottomOf="@+id/tvStringBudget" />
 
                 <TextView
                     android:id="@+id/tvStringBudget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/budget_bold"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/tvDays"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
+                    app:layout_constraintEnd_toStartOf="@+id/divider"
+                    app:layout_constraintStart_toEndOf="@+id/divider2"
+                    app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
 
                 <TextView
                     android:id="@+id/tvStringDays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/days"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/tvTravelDates"
+                    app:layout_constraintEnd_toStartOf="@+id/divider2"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
 
                 <TextView
@@ -177,45 +183,87 @@
                     android:id="@+id/tvTripCost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/cost"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/tvBudget"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
+                    app:layout_constraintEnd_toStartOf="@+id/divider3"
+                    app:layout_constraintStart_toEndOf="@+id/divider"
+                    app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
 
                 <TextView
                     android:id="@+id/tvCost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/dollar_sign"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvTripCost"
-                    app:layout_constraintStart_toEndOf="@+id/tvTripCost"
-                    app:layout_constraintTop_toTopOf="@+id/tvTripCost" />
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvTripCost"
+                    app:layout_constraintStart_toStartOf="@+id/tvTripCost"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTripCost" />
 
                 <TextView
                     android:id="@+id/tvTripRemaining"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/remaining"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvTripCost"
-                    app:layout_constraintStart_toEndOf="@+id/tvCost"
-                    app:layout_constraintTop_toTopOf="@+id/tvTripCost" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/divider3"
+                    app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
 
                 <TextView
                     android:id="@+id/tvRemainingBudget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/dollar_sign"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvTripRemaining"
-                    app:layout_constraintStart_toEndOf="@+id/tvTripRemaining"
-                    app:layout_constraintTop_toTopOf="@+id/tvTripRemaining" />
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvTripRemaining"
+                    app:layout_constraintStart_toStartOf="@+id/tvTripRemaining"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTripRemaining" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvBudget"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvStringBudget" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toBottomOf="@+id/divider"
+                    app:layout_constraintEnd_toStartOf="@+id/divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/divider" />
+
+                <View
+                    android:id="@+id/divider3"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toBottomOf="@+id/divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/divider"
+                    app:layout_constraintTop_toTopOf="@+id/divider" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView

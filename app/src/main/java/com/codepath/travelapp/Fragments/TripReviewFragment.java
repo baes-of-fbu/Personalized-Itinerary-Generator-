@@ -2,6 +2,7 @@ package com.codepath.travelapp.Fragments;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,6 +61,7 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
     private String startDate;
     private String endDate;
     private int budget;
+    private int tripCost;
     private int numDays;
     private ArrayList<Tag> tags;
     private ArrayList<DayPlan> dayPlans;
@@ -95,6 +97,7 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
         endDate = bundle.getString("end_date");
         numDays = bundle.getInt("number_days");
         budget = bundle.getInt("budget");
+        tripCost = bundle.getInt("trip_cost");
         tags = bundle.getParcelableArrayList("selected_tags");
         dayPlans = bundle.getParcelableArrayList("dayPlans");
 
@@ -104,6 +107,8 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
+        TextView tvTripCost = view.findViewById(R.id.tvCost);
+        TextView tvRemainingBudget = view.findViewById(R.id.tvRemainingBudget);
         TextView tvCityState = view.findViewById(R.id.tvCityState);
         RecyclerView rvTags = view.findViewById(R.id.rvTags);
         RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
@@ -114,10 +119,19 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
         snapHelper.attachToRecyclerView(rvTags);
 
         tvTripName.setText(tripName);
-        tvTravelDates.setText(startDate + " - " + endDate);
-        tvDays.setText("" + numDays);
-        tvBudget.setText(String.valueOf(budget));
-        tvCityState.setText(city.getName() + ", " + city.getState());
+        tvTravelDates.setText(String.format("%s - %s", startDate, endDate));
+        tvDays.setText(String.valueOf(numDays));
+        tvBudget.setText(String.format("$%s", String.valueOf(budget)));
+        tvTripCost.setText(String.format("$%s", String.valueOf(tripCost)));
+        tvCityState.setText(String.format("%s, %s", city.getName(), city.getState()));
+        int remainingMoney = budget-tripCost;
+        tvRemainingBudget.setText(String.format("$%s", String.valueOf(remainingMoney)));
+        if (remainingMoney < 0) {
+            tvRemainingBudget.setTextColor(Color.RED);
+        } else if (remainingMoney > 0) {
+            tvRemainingBudget.setTextColor(getResources().getColor(R.color.LightSkyBlue)); // TODO change color?
+        }
+
 
         // Populate list of Tags
         TagSelectedAdapter adapter = new TagSelectedAdapter(tags);
@@ -210,7 +224,6 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
                 EditDialogFragment editTripDialogFragment = EditDialogFragment.newInstance();
                 editTripDialogFragment.setTargetFragment(TripReviewFragment.this, 300);
                 editTripDialogFragment.show(fragmentManager, "fragment_editdialog_options");
-
             }
         });
 
