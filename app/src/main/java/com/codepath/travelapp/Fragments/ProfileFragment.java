@@ -1,6 +1,7 @@
 package com.codepath.travelapp.Fragments;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,9 +9,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +34,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -48,10 +50,12 @@ public class ProfileFragment extends Fragment {
     private UpcomingTripAdapter upcomingTripAdapter;
     private PreviousTripAdapter previousTripAdapter;
     private CurrentTripAdapter currentTripAdapter;
-    private int pageSize = 10;
+//    private Fragment sidebarFragment; TODO check if needed
+
     private User user;
-    private ConstraintLayout clProfile;
-    private Fragment sidebarFragment;
+    private int pageSize = 10;
+    private ParseRelation<User> relation;
+    private List<String> following = new ArrayList<>();
 
 
     @Nullable
@@ -78,25 +82,20 @@ public class ProfileFragment extends Fragment {
                         e.printStackTrace();
                         return;
                     }
-                    Log.d("ComposeFragment", objects.toString());
                     user = (User) objects.get(0);
-                    FillInLayout(view);
-                    SideSwipe(view);
+                    relation = ((User) ParseUser.getCurrentUser()).getFollowing();
+                    getFollowing(relation, view);
                 }
             });
         }
-
-
     }
-    private void queryUpcomingPosts(ParseUser user) {
 
+    private void queryUpcomingPosts(ParseUser user) {
         upcomingTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-
         tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
-    //    tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, true);
         tripQuery.whereGreaterThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime());
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
         tripQuery.addAscendingOrder(Trip.KEY_STARTDATE);
@@ -112,16 +111,13 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    private void queryPreviousPosts(ParseUser user) {
 
+    private void queryPreviousPosts(ParseUser user) {
         previousTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-
         tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
-        // TODO query by time
-       // tripQuery.whereEqualTo(Trip.KEY_ISUPCOMING, false);
         tripQuery.whereLessThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
         tripQuery.addAscendingOrder(Trip.KEY_ENDDATE);
@@ -137,18 +133,15 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    private void queryCurrentPosts(ParseUser user) {
 
+    private void queryCurrentPosts(ParseUser user) {
         currentTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-
         tripQuery.setLimit(pageSize);
         tripQuery.include(Trip.KEY_OWNER);
-
-        tripQuery.whereLessThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime()); // TODO currently querying for "is current"
-        tripQuery.whereGreaterThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime()); // TODO look comment above
-
+        tripQuery.whereLessThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime());
+        tripQuery.whereGreaterThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
         tripQuery.addAscendingOrder(Trip.KEY_STARTDATE);
         tripQuery.findInBackground(new FindCallback<Trip>() {
@@ -163,11 +156,13 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
     private void FillInLayout(View view) {
         RecyclerView rvUpcoming = view.findViewById(R.id.rvUpcoming);
         RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);
@@ -176,16 +171,26 @@ public class ProfileFragment extends Fragment {
         TextView tvHometown = view.findViewById(R.id.tvHometown);
         TextView tvBio = view.findViewById(R.id.tvBio);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
-        TextView tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
-        TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
-        TextView tvFavoritesCount = view.findViewById(R.id.tvFavoriteCount);
+        final Button btnFollowingStatus = view.findViewById(R.id.btnFollowingStatus);
+//        TextView tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
+//        TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
+//        TextView tvFavoritesCount = view.findViewById(R.id.tvFavoriteCount);
 
+        if (user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+            btnFollowingStatus.setVisibility(View.GONE);
+        } else {
+            btnFollowingStatus.setVisibility(View.VISIBLE);
+            if (following.contains(user.getObjectId())) {
+                btnFollowingStatus.setBackgroundColor(Color.GRAY);
+                btnFollowingStatus.setText(getString(R.string.following));
+            }
+        }
 
         //Populate views in Profile Fragment
         tvUsername.setText(user.getUsername());
         tvHometown.setText(user.getHomeState());
         tvBio.setText(user.getBio());
-        if (user.getProfileImage() != null) {
+        if (user.getProfileImage() != null && getContext() != null) {
             ParseFile image = user.getProfileImage();
             Glide.with(getContext())
                     .load(image.getUrl())
@@ -222,11 +227,30 @@ public class ProfileFragment extends Fragment {
         queryPreviousPosts(user);
         queryCurrentPosts(user);
 
-        Toast.makeText(getContext(), "Welcome to Your Profile",Toast.LENGTH_SHORT).show();
+        // Set onClick listener for follow/following button
+        btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (following.contains(user.getObjectId())) {
+                    relation.remove(user);
+                    following.remove(user.getObjectId());
+                    ParseUser.getCurrentUser().saveInBackground();
+                    btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
+                    btnFollowingStatus.setText(getString(R.string.follow));
+                } else {
+                    relation.add(user);
+                    following.add(user.getObjectId());
+                    ParseUser.getCurrentUser().saveInBackground();
+                    btnFollowingStatus.setBackgroundColor(Color.GRAY);
+                    btnFollowingStatus.setText(getString(R.string.following));
+                }
+            }
+        });
     }
+
     @SuppressLint("ClickableViewAccessibility")
     private void SideSwipe (View view) {
-        clProfile = view.findViewById(R.id.clProfile);
+        ConstraintLayout clProfile = view.findViewById(R.id.clProfile);
         clProfile.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
             public void onSwipeLeft() {
@@ -239,6 +263,24 @@ public class ProfileFragment extends Fragment {
                             .replace(R.id.flContainer, fragment)
                             .addToBackStack(null)
                             .commit();
+                }
+            }
+        });
+    }
+
+    // Get a list of users a give user is following and then makes calls to fill in layout and set up side swipe
+    private void getFollowing(ParseRelation<User> relation, final View view) {
+        relation.getQuery().findInBackground(new FindCallback<User>() {
+            @Override
+            public void done(List<User> objects, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < objects.size(); i++) {
+                        following.add(objects.get(i).getObjectId());
+                    }
+                    FillInLayout(view);
+                    SideSwipe(view);
+                } else {
+                    e.printStackTrace();
                 }
             }
         });

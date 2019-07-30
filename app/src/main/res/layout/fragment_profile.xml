@@ -145,6 +145,23 @@
                 app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <Button
+            android:id="@+id/btnFollowingStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/LightSkyBlue"
+            android:text="@string/follow"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvUsername"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tvUsername"
+            app:layout_constraintTop_toTopOf="@+id/tvUsername"
+            app:layout_constraintVertical_bias="0.173" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

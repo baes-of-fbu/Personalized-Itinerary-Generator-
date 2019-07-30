@@ -87,6 +87,7 @@
     <string name="bio_prompt">Write a short bio</string>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
+    <string name="follow">Follow</string>
     <string name="favorites">Favorites</string>
     <string name="previous_trips">Previous Trips</string>
     <string name="upcoming_trips">Upcoming Trips</string>

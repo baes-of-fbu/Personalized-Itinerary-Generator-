@@ -2,14 +2,10 @@ package com.codepath.travelapp.Models;
 
 import android.os.Parcelable;
 
-import com.parse.FindCallback;
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
-
-import java.util.List;
 
 @ParseClassName("_User")
 public class User extends ParseUser implements Parcelable {
@@ -24,20 +20,10 @@ public class User extends ParseUser implements Parcelable {
 
     // Getters
     public ParseRelation<User> getFollowing() {
-        return getRelation(KEY_FOLLOWING); //TODO change this to reflect new relation data structure
+        return getRelation(KEY_FOLLOWING);
     }
-    public int getFollowers() { //TODO assess method use in application 
-        final int[] size = new int[1];
-        ParseRelation<User> relation = getRelation(KEY_FOLLOWERS);
-        relation.getQuery().findInBackground(new FindCallback<User>() {
-            @Override
-            public void done(List<User> objects, ParseException e) {
-                if (e == null) {
-                    size[0] = objects.size();
-                }
-            }
-        });
-        return size[0];
+    public ParseRelation<User> getFollowers() {
+        return getRelation(KEY_FOLLOWERS);
     }
     public Number getFavorites() {
         return  getNumber(KEY_FAVORITES);
