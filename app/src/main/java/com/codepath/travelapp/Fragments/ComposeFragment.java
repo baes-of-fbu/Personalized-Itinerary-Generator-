@@ -68,7 +68,6 @@ public class ComposeFragment extends Fragment {
     private int tripCost;
 
     private City city;
-    private Event emptyEvent;
 
     private TagGridAdapter adapter;
     private List<Tag> allTags;
@@ -204,6 +203,7 @@ public class ComposeFragment extends Fragment {
 
                     // Sends all tag queries in one main query
                     ParseQuery<Event> mainQuery = ParseQuery.or(queries);
+                    mainQuery.include("name");
                     mainQuery.findInBackground(new FindCallback<Event>() {
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
@@ -250,7 +250,6 @@ public class ComposeFragment extends Fragment {
                 tempDay.setMorningEvent(morningEvent);
             } else {
                 // TODO ADD RECOMMENDED EVENT
-                tempDay.setMorningEvent(emptyEvent);
             }
 
             // Picks afternoon event and updates budget
@@ -261,7 +260,6 @@ public class ComposeFragment extends Fragment {
                 tempDay.setAfternoonEvent(afternoonEvent);
             } else {
                 // TODO ADD RECOMMENDED EVENT
-                tempDay.setAfternoonEvent(emptyEvent);
             }
 
             // Picks evening event and updates budget
@@ -272,7 +270,6 @@ public class ComposeFragment extends Fragment {
                 tempDay.setEveningEvent(eveningEvent);
             } else {
                 // TODO ADD RECOMMENDED EVENT
-                tempDay.setEveningEvent(emptyEvent);
             }
 
             tempDay.saveInBackground();
