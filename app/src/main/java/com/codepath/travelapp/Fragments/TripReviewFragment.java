@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -221,8 +220,6 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
     @Override
     public void onFinishEditDialog(String inputText) {
         if (inputText.contentEquals(getString(R.string.edit))) {
-            Toast.makeText(getContext(), "edit", Toast.LENGTH_LONG).show();
-
             // Send Fragment to edit trip
             Fragment fragment = new EditTripFragment();
             fragment.setArguments(bundle);
@@ -233,8 +230,6 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
         }
 
         if (inputText.contentEquals(getString(R.string.delete))) {
-            Toast.makeText(getContext(), "delete", Toast.LENGTH_LONG).show();
-
             // Returns to the timeline fragment without saving the trip
             Fragment fragment = new TimelineFragment();
             MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);
@@ -245,7 +240,6 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
         }
 
         if (inputText.contentEquals(getString(R.string.save_for_later))) {
-            Toast.makeText(getContext(), "save", Toast.LENGTH_LONG).show();
             // TODO save trip in background
              // Somehow mark that it is saved, not published
         }

@@ -76,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        // Disables the back button
-    }
+    // This disables the back button on the phone
+//    @Override
+//    public void onBackPressed() {
+//        // Disables the back button
+//    }
 }
