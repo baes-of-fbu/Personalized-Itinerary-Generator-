@@ -64,5 +64,4 @@ public class Event extends ParseObject implements Parcelable {
     }
 
     public String getWebsite() { return getString(KEY_WEBSITE); }
-
 }

@@ -10,6 +10,7 @@ import java.util.Date;
 @ParseClassName("DayPlan")
 public class DayPlan extends ParseObject implements Parcelable {
 
+    // Constants
     private static String KEY_MORNING_EVENT = "morning_event";
     private static String KEY_AFTERNOON_EVENT = "afternoon_event";
     private static String KEY_EVENING_EVENT = "evening_event";
@@ -18,6 +19,7 @@ public class DayPlan extends ParseObject implements Parcelable {
 
     public DayPlan() {}
 
+    // Getters and Setters
     public Event getMorningEvent() {
         return (Event) getParseObject(KEY_MORNING_EVENT);
     }

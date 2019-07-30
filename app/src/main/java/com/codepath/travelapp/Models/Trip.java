@@ -20,7 +20,7 @@ public class Trip extends ParseObject implements Serializable {
     private static final String KEY_NUMDAYS = "numDays";
     public static final String KEY_STARTDATE = "startDate";
     public static final String KEY_ENDDATE = "endDate";
-    public static final String KEY_ISFAVORITED = "isFavorited";
+    private static final String KEY_ISFAVORITED = "isFavorited";
 
     // Getters and setters
     public String getName() {
@@ -94,5 +94,4 @@ public class Trip extends ParseObject implements Serializable {
     public void setFavorited(Boolean bool) {
         put(KEY_ISFAVORITED, bool);
     }
-
 }

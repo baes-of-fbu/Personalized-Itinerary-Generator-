@@ -19,7 +19,7 @@ public class City extends ParseObject implements Parcelable {
 
     public City() {}
 
-    // Getters
+    // Getters and setter
     public String getName() {
         return getString(KEY_NAME);
     }
