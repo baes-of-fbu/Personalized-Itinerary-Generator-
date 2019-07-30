@@ -235,16 +235,22 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 if (following.contains(user.getObjectId())) {
                     relationProfileUserFollowers.remove((User) ParseUser.getCurrentUser());
+                    user.saveInBackground();
+
                     relationCurrentUserFollowing.remove(user);
                     following.remove(user.getObjectId());
                     ParseUser.getCurrentUser().saveInBackground();
+
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
                 } else {
                     relationProfileUserFollowers.add((User) ParseUser.getCurrentUser());
+                    user.saveInBackground();
+
                     relationCurrentUserFollowing.add(user);
                     following.add(user.getObjectId());
                     ParseUser.getCurrentUser().saveInBackground();
+
                     btnFollowingStatus.setBackgroundColor(Color.GRAY);
                     btnFollowingStatus.setText(getString(R.string.following));
                 }
