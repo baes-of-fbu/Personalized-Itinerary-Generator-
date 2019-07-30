@@ -191,9 +191,9 @@ public class SignUpActivity extends AppCompatActivity {
         user.setEmail(email);
         user.setBio(bio);
         user.setHomeState(state);
-        user.setFollowers(0);
-        user.setFollowing(0);
-        user.setFavorites(0);
+//        user.setFollowers(0);
+//        user.setFollowing(0);
+//        user.setFavorites(0);
 
         // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {

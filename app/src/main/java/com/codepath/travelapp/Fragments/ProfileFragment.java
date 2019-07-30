@@ -52,12 +52,17 @@ public class ProfileFragment extends Fragment {
     private CurrentTripAdapter currentTripAdapter;
 //    private Fragment sidebarFragment; TODO check if needed
 
-    private User userProfile;
-    private User userCurrent;
     private int pageSize = 10;
-    private ParseRelation<User> relationCurrentUserFollowing;
+
+    private User userProfile;
     private ParseRelation<User> relationProfileUserFollowers;
-    private List<String> following = new ArrayList<>();
+    private List<User> profileFollowers;
+    private ParseRelation<User> relationProfileUserFollowing;
+    private List<User> profileFollowing;
+
+    private User userCurrent;
+    private ParseRelation<User> relationCurrentUserFollowing;
+    private List<String> currentFollowing;
 
 
     @Nullable
@@ -70,6 +75,10 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        profileFollowers = new ArrayList<>();
+        profileFollowing = new ArrayList<>();
+        currentFollowing = new ArrayList<>();
 
         Bundle userBundle = getArguments();
         if (userBundle != null) {
@@ -86,10 +95,12 @@ public class ProfileFragment extends Fragment {
                     }
                     userProfile = (User) objects.get(0);
                     relationProfileUserFollowers = userProfile.getFollowers(); //TODO add proper query so relation updates profile user's followers
+                    getUserList(relationProfileUserFollowers, profileFollowers);
+                    relationProfileUserFollowing = userProfile.getFollowing();
+                    getUserList(relationProfileUserFollowing, profileFollowing);
 
                     userCurrent = (User) getCurrentUser();
                     relationCurrentUserFollowing = userCurrent.getFollowing();
-
                     getFollowing(relationCurrentUserFollowing, view);
                 }
             });
@@ -169,6 +180,7 @@ public class ProfileFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressLint("SetTextI18n")
     private void FillInLayout(View view) {
         RecyclerView rvUpcoming = view.findViewById(R.id.rvUpcoming);
         RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);
@@ -178,15 +190,17 @@ public class ProfileFragment extends Fragment {
         TextView tvBio = view.findViewById(R.id.tvBio);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         final Button btnFollowingStatus = view.findViewById(R.id.btnFollowingStatus);
-//        TextView tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
-//        TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
-//        TextView tvFavoritesCount = view.findViewById(R.id.tvFavoriteCount);
+        final TextView tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
+        final TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
+        TextView tvFavoritesCount = view.findViewById(R.id.tvFavoriteCount);
+        TextView tvFollowers = view.findViewById(R.id.tvFollowers);
+        TextView tvFollowing = view.findViewById(R.id.tvFollowing);
 
         if (userProfile.getUsername().equals(userCurrent.getUsername())) {
             btnFollowingStatus.setVisibility(View.GONE);
         } else {
             btnFollowingStatus.setVisibility(View.VISIBLE);
-            if (following.contains(userProfile.getObjectId())) {
+            if (currentFollowing.contains(userProfile.getObjectId())) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
                 btnFollowingStatus.setText(getString(R.string.following));
             }
@@ -203,63 +217,84 @@ public class ProfileFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
-        //tvFollowersCount.setText(userProfile.getFollowers().toString());
-        //tvFollowingCount.setText(userProfile.getFollowing().toString());
-        //tvFavoritesCount.setText(userProfile.getFavorites().toString());
+
+        updateFollowCnt(tvFollowersCount, tvFollowingCount);
+
+        tvFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO open dialogue to show list of followers and can click on a different user and go to their profile
+            }
+        });
+        tvFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO open dialogue to show list of following and can click on a different user and go to their profile
+            }
+        });
 
 
         //create the upcomingTripAdapter
         ArrayList<Trip> upcomingTrips = new ArrayList<>();
-        ArrayList<Trip> previousTrips = new ArrayList<>();
+        final ArrayList<Trip> previousTrips = new ArrayList<>();
         ArrayList<Trip> currentTrips = new ArrayList<>();
         //create the data source
         upcomingTripAdapter = new UpcomingTripAdapter(upcomingTrips);
         previousTripAdapter = new PreviousTripAdapter(previousTrips);
         currentTripAdapter = new CurrentTripAdapter(currentTrips);
-        // set the layout manager on the recycler view
+        // initialize the linear layout manager
         LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL,false);
         LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL, false);
-
+        // set the layout manager on the recycler view
         rvUpcoming.setLayoutManager(upcomingLayoutManager);
         rvPrevious.setLayoutManager(previousLayoutManager);
         rvCurrent.setLayoutManager(currentLayoutManager);
-
+        // set the adapters
         rvUpcoming.setAdapter(upcomingTripAdapter);
         rvPrevious.setAdapter(previousTripAdapter);
         rvCurrent.setAdapter(currentTripAdapter);
-
+        // query posts for each view
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);
         queryCurrentPosts(userProfile);
 
-        // Set onClick listener for follow/following button
+        // Set onClick listener for follow/currentFollowing button
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (following.contains(userProfile.getObjectId())) {
+                if (currentFollowing.contains(userProfile.getObjectId())) {
                     relationProfileUserFollowers.remove(userCurrent);
+                    profileFollowers.remove(userCurrent);
                     userProfile.saveInBackground();
 
                     relationCurrentUserFollowing.remove(userProfile);
-                    following.remove(userProfile.getObjectId());
+                    currentFollowing.remove(userProfile.getObjectId());
                     userCurrent.saveInBackground();
 
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
                 } else {
                     relationProfileUserFollowers.add(userCurrent);
+                    profileFollowers.add(userCurrent);
                     userProfile.saveInBackground();
 
                     relationCurrentUserFollowing.add(userProfile);
-                    following.add(userProfile.getObjectId());
+                    currentFollowing.add(userProfile.getObjectId());
                     userCurrent.saveInBackground();
 
-                    btnFollowingStatus.setBackgroundColor(Color.GRAY);
+                    btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
                     btnFollowingStatus.setText(getString(R.string.following));
                 }
+                updateFollowCnt(tvFollowersCount, tvFollowingCount);
             }
         });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateFollowCnt(TextView tvFollowersCount, TextView tvFollowingCount) {
+        tvFollowersCount.setText(Integer.toString(profileFollowers.size()));
+        tvFollowingCount.setText(Integer.toString(profileFollowing.size()));
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -282,17 +317,30 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    // Get a list of users a give userProfile is following and then makes calls to fill in layout and set up side swipe
+    // Get a list of users a give userProfile is currentFollowing and then makes calls to fill in layout and set up side swipe
     private void getFollowing(ParseRelation<User> relation, final View view) {
         relation.getQuery().findInBackground(new FindCallback<User>() {
             @Override
             public void done(List<User> objects, ParseException e) {
                 if (e == null) {
                     for (int i = 0; i < objects.size(); i++) {
-                        following.add(objects.get(i).getObjectId());
+                        currentFollowing.add(objects.get(i).getObjectId());
                     }
                     FillInLayout(view);
                     SideSwipe(view);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void getUserList(ParseRelation<User> relation, final List<User> users) {
+        relation.getQuery().findInBackground(new FindCallback<User>() {
+            @Override
+            public void done(List<User> objects, ParseException e) {
+                if (e == null) {
+                    users.addAll(objects);
                 } else {
                     e.printStackTrace();
                 }

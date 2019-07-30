@@ -25,15 +25,15 @@ public class User extends ParseUser implements Parcelable {
 
     public void setFollowing(Number following) {
         put(KEY_FOLLOWING, following);
-    }
+    } //TODO make relevant
 
     public ParseRelation<User> getFollowers() {
         return getRelation(KEY_FOLLOWERS);
     }
 
-    public void setFollowers(Number followers) {
+    public void setFollowers(ParseRelation<User> followers) {
         put(KEY_FOLLOWERS, followers);
-    }
+    } //TODO make relevant
 
     public Number getFavorites() {
         return  getNumber(KEY_FAVORITES);
