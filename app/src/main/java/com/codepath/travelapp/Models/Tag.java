@@ -18,6 +18,7 @@ public class Tag extends ParseObject implements Parcelable {
 
     public Tag() {}
 
+    // Getters
     public String getName() {
         return getString(KEY_NAME);
     }

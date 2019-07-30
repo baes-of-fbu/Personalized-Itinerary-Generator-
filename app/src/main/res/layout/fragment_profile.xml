@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0"
+                android:text="@string/num_zero"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="0"
+                android:text="@string/num_zero"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvFollowers"
                 app:layout_constraintTop_toTopOf="parent"
@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="0"
+                android:text="@string/num_zero"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvFollowing"
                 app:layout_constraintTop_toTopOf="parent"
@@ -188,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Current Trips"
+                android:text="@string/current_trips"
                 android:textAlignment="textStart"
                 android:textSize="18sp" />
 
