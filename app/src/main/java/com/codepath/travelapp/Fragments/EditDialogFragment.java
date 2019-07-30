@@ -20,7 +20,7 @@ import com.codepath.travelapp.R;
 
 import java.util.ArrayList;
 
-public class EditTripDialogFragment extends DialogFragment {
+public class EditDialogFragment extends DialogFragment {
 
     private TextView tvEdit;
     private TextView tvSaveForLater;
@@ -28,20 +28,20 @@ public class EditTripDialogFragment extends DialogFragment {
     private TextView tvDelete;
     private String actionToReturn;
 
-    public EditTripDialogFragment() {
+    public EditDialogFragment() {
         // Empty constructor is required for DialogFragment
     }
 
     // TODO REMOVE PARAMETERS
-    public static EditTripDialogFragment newInstance(ArrayList<DayPlan> dayPlans, String tripName) {
-        EditTripDialogFragment fragment = new EditTripDialogFragment();
+    public static EditDialogFragment newInstance(ArrayList<DayPlan> dayPlans, String tripName) {
+        EditDialogFragment fragment = new EditDialogFragment();
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_edit_trip, container, false);
+        return inflater.inflate(R.layout.fragment_editdialog_options, container, false);
     }
 
     public void onResume() {
@@ -75,15 +75,15 @@ public class EditTripDialogFragment extends DialogFragment {
         tvEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionToReturn = "edit";
+                actionToReturn = getString(R.string.edit);
                 sendBackResult();
-            }
+              }
         });
 
         tvSaveForLater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionToReturn = "save";
+                actionToReturn = getString(R.string.save_for_later);
                 sendBackResult();
             }
         });
@@ -91,15 +91,14 @@ public class EditTripDialogFragment extends DialogFragment {
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionToReturn = "cancel"; // TODO potentially swap with dismiss()
-                sendBackResult();
+                dismiss();
             }
         });
 
         tvDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionToReturn = "delete";
+                actionToReturn = getString(R.string.delete);
                 sendBackResult();
             }
         });

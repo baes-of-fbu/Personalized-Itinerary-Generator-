@@ -23,8 +23,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.codepath.travelapp.Adapters.TagGridAdapter;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Adapters.TagGridAdapter;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Event;
@@ -365,7 +365,6 @@ public class ComposeFragment extends Fragment {
         bundle.putParcelable("city", city);
         bundle.putParcelableArrayList("dayPlans", dayPlans);
         fragment.setArguments(bundle);
-
         MainActivity.fragmentManager.beginTransaction()
                 .replace(R.id.flContainer, fragment)
                 .addToBackStack(null)

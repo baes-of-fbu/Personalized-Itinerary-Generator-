@@ -1,6 +1,7 @@
 package com.codepath.travelapp.Fragments;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,7 +54,7 @@ import me.relex.circleindicator.CircleIndicator2;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 
-public class TripReviewFragment extends Fragment implements EditTripDialogFragment.EditTripDialogListener {
+public class TripReviewFragment extends Fragment implements EditDialogFragment.EditTripDialogListener {
 
     private String tripName;
     private City city;
@@ -64,6 +65,7 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
     private ArrayList<Tag> tags;
     private ArrayList<DayPlan> dayPlans;
     private ParseFile image;
+    private Bundle bundle;
 
 
     @Nullable
@@ -77,17 +79,26 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            tripName = bundle.getString("trip_name");
-            city = bundle.getParcelable("city");
-            startDate = bundle.getString("start_date");
-            endDate = bundle.getString("end_date");
-            numDays = bundle.getInt("number_days");
-            budget = bundle.getInt("budget");
-            tags = bundle.getParcelableArrayList("selected_tags");
-            dayPlans = bundle.getParcelableArrayList("dayPlans");
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Creating your schedule...");
+        progressDialog.setTitle("Please wait");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        bundle = getArguments();
+        if (bundle == null) {
+            Log.d("Review Fragment", "No bundle");
         }
+
+        tripName = bundle.getString("trip_name");
+        city = bundle.getParcelable("city");
+        startDate = bundle.getString("start_date");
+        endDate = bundle.getString("end_date");
+        numDays = bundle.getInt("number_days");
+        budget = bundle.getInt("budget");
+        tags = bundle.getParcelableArrayList("selected_tags");
+        dayPlans = bundle.getParcelableArrayList("dayPlans");
+
 
         final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
@@ -128,6 +139,7 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
                     Glide.with(Objects.requireNonNull(getContext()))
                             .load(image.getUrl())
                             .into(ivCoverPhoto);
+                    progressDialog.hide();
                 } else {
                     Log.d("TripReviewFragment", "Unable to parse for a photo");
                 }
@@ -175,10 +187,10 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
                 });
 
                 Fragment fragment = new TripDetailsFragment();
-                Bundle bundle = new Bundle();
+                Bundle finalBundle = new Bundle();
                 bundle.putSerializable("Trip", trip);
                 bundle.putParcelableArrayList("DayPlans", dayPlans);
-                fragment.setArguments(bundle);
+                fragment.setArguments(finalBundle);
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)
                         .addToBackStack(null)
@@ -190,18 +202,15 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
             @Override
             public void onClick(View view) {
                 Fragment fragment = new TimelineFragment();
-                // TODO Remove this bundle if unnecessary
-                Bundle bundle = new Bundle();
-                fragment.setArguments(bundle);
-
+                // TODO remove the button and use the three dots in the corner instead
 //                MainActivity.fragmentManager.beginTransaction()
 //                        .replace(R.id.flContainer, fragment)
 //                        .addToBackStack(null)
 //                        .commit();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
-                EditTripDialogFragment editTripDialogFragment = EditTripDialogFragment.newInstance(dayPlans, tripName);
+                EditDialogFragment editTripDialogFragment = EditDialogFragment.newInstance(dayPlans, tripName);
                 editTripDialogFragment.setTargetFragment(TripReviewFragment.this, 300);
-                editTripDialogFragment.show(fragmentManager, "fragment_edit_trip");
+                editTripDialogFragment.show(fragmentManager, "fragment_editdialog_options");
 
             }
         });
@@ -211,7 +220,35 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
     // This is called when the dialog is completed and the results have been passed
     @Override
     public void onFinishEditDialog(String inputText) {
-        Toast.makeText(getContext(), inputText, Toast.LENGTH_LONG).show();
+        if (inputText.contentEquals(getString(R.string.edit))) {
+            Toast.makeText(getContext(), "edit", Toast.LENGTH_LONG).show();
+
+            // Send Fragment to edit trip
+            Fragment fragment = new EditTripFragment();
+            fragment.setArguments(bundle);
+            MainActivity.fragmentManager.beginTransaction()
+                    .replace(R.id.flContainer, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+        if (inputText.contentEquals(getString(R.string.delete))) {
+            Toast.makeText(getContext(), "delete", Toast.LENGTH_LONG).show();
+
+            // Returns to the timeline fragment without saving the trip
+            Fragment fragment = new TimelineFragment();
+            MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);
+            MainActivity.fragmentManager.beginTransaction()
+                    .replace(R.id.flContainer, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+        if (inputText.contentEquals(getString(R.string.save_for_later))) {
+            Toast.makeText(getContext(), "save", Toast.LENGTH_LONG).show();
+            // TODO save trip in background
+             // Somehow mark that it is saved, not published
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.O)

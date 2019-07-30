@@ -1,12 +1,9 @@
 package com.codepath.travelapp.Activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,10 +11,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.codepath.travelapp.R;
 import com.codepath.travelapp.Fragments.ComposeFragment;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TimelineFragment;
+import com.codepath.travelapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
 
@@ -25,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String APP_TAG = "MainActivity";
     public static FragmentManager fragmentManager;
-    private BottomNavigationView bottomNavigationView;
+    public static BottomNavigationView bottomNavigationView;
     private Toolbar toolbar;
 
     @Override
@@ -77,5 +74,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Disables the back button
     }
 }
