@@ -54,7 +54,8 @@ public class ProfileFragment extends Fragment {
 
     private User user;
     private int pageSize = 10;
-    private ParseRelation<User> relation;
+    private ParseRelation<User> relationCurrentUserFollowing;
+    private ParseRelation<User> relationProfileUserFollowers;
     private List<String> following = new ArrayList<>();
 
 
@@ -83,8 +84,9 @@ public class ProfileFragment extends Fragment {
                         return;
                     }
                     user = (User) objects.get(0);
-                    relation = ((User) ParseUser.getCurrentUser()).getFollowing();
-                    getFollowing(relation, view);
+                    relationProfileUserFollowers = user.getFollowers();
+                    relationCurrentUserFollowing = ((User) ParseUser.getCurrentUser()).getFollowing();
+                    getFollowing(relationCurrentUserFollowing, view);
                 }
             });
         }
@@ -232,13 +234,15 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (following.contains(user.getObjectId())) {
-                    relation.remove(user);
+                    relationProfileUserFollowers.remove((User) ParseUser.getCurrentUser());
+                    relationCurrentUserFollowing.remove(user);
                     following.remove(user.getObjectId());
                     ParseUser.getCurrentUser().saveInBackground();
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
                 } else {
-                    relation.add(user);
+                    relationProfileUserFollowers.add((User) ParseUser.getCurrentUser());
+                    relationCurrentUserFollowing.add(user);
                     following.add(user.getObjectId());
                     ParseUser.getCurrentUser().saveInBackground();
                     btnFollowingStatus.setBackgroundColor(Color.GRAY);
