@@ -52,7 +52,8 @@ public class ProfileFragment extends Fragment {
     private CurrentTripAdapter currentTripAdapter;
 //    private Fragment sidebarFragment; TODO check if needed
 
-    private User user;
+    private User userProfile;
+    private User userCurrent;
     private int pageSize = 10;
     private ParseRelation<User> relationCurrentUserFollowing;
     private ParseRelation<User> relationProfileUserFollowers;
@@ -83,9 +84,12 @@ public class ProfileFragment extends Fragment {
                         e.printStackTrace();
                         return;
                     }
-                    user = (User) objects.get(0);
-                    relationProfileUserFollowers = user.getFollowers();
-                    relationCurrentUserFollowing = ((User) ParseUser.getCurrentUser()).getFollowing();
+                    userProfile = (User) objects.get(0);
+                    relationProfileUserFollowers = userProfile.getFollowers();
+
+                    userCurrent = (User) getCurrentUser();
+                    relationCurrentUserFollowing = userCurrent.getFollowing();
+
                     getFollowing(relationCurrentUserFollowing, view);
                 }
             });
@@ -178,30 +182,30 @@ public class ProfileFragment extends Fragment {
 //        TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
 //        TextView tvFavoritesCount = view.findViewById(R.id.tvFavoriteCount);
 
-        if (user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+        if (userProfile.getUsername().equals(userCurrent.getUsername())) {
             btnFollowingStatus.setVisibility(View.GONE);
         } else {
             btnFollowingStatus.setVisibility(View.VISIBLE);
-            if (following.contains(user.getObjectId())) {
+            if (following.contains(userProfile.getObjectId())) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
                 btnFollowingStatus.setText(getString(R.string.following));
             }
         }
 
         //Populate views in Profile Fragment
-        tvUsername.setText(user.getUsername());
-        tvHometown.setText(user.getHomeState());
-        tvBio.setText(user.getBio());
-        if (user.getProfileImage() != null && getContext() != null) {
-            ParseFile image = user.getProfileImage();
+        tvUsername.setText(userProfile.getUsername());
+        tvHometown.setText(userProfile.getHomeState());
+        tvBio.setText(userProfile.getBio());
+        if (userProfile.getProfileImage() != null && getContext() != null) {
+            ParseFile image = userProfile.getProfileImage();
             Glide.with(getContext())
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
-        //tvFollowersCount.setText(user.getFollowers().toString());
-        //tvFollowingCount.setText(user.getFollowing().toString());
-        //tvFavoritesCount.setText(user.getFavorites().toString());
+        //tvFollowersCount.setText(userProfile.getFollowers().toString());
+        //tvFollowingCount.setText(userProfile.getFollowing().toString());
+        //tvFavoritesCount.setText(userProfile.getFavorites().toString());
 
 
         //create the upcomingTripAdapter
@@ -225,31 +229,31 @@ public class ProfileFragment extends Fragment {
         rvPrevious.setAdapter(previousTripAdapter);
         rvCurrent.setAdapter(currentTripAdapter);
 
-        queryUpcomingPosts(user);
-        queryPreviousPosts(user);
-        queryCurrentPosts(user);
+        queryUpcomingPosts(userProfile);
+        queryPreviousPosts(userProfile);
+        queryCurrentPosts(userProfile);
 
         // Set onClick listener for follow/following button
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (following.contains(user.getObjectId())) {
-                    relationProfileUserFollowers.remove((User) ParseUser.getCurrentUser());
-                    user.saveInBackground();
+                if (following.contains(userProfile.getObjectId())) {
+                    relationProfileUserFollowers.remove(userCurrent);
+                    userProfile.saveInBackground();
 
-                    relationCurrentUserFollowing.remove(user);
-                    following.remove(user.getObjectId());
-                    ParseUser.getCurrentUser().saveInBackground();
+                    relationCurrentUserFollowing.remove(userProfile);
+                    following.remove(userProfile.getObjectId());
+                    userCurrent.saveInBackground();
 
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
                 } else {
-                    relationProfileUserFollowers.add((User) ParseUser.getCurrentUser());
-                    user.saveInBackground();
+                    relationProfileUserFollowers.add(userCurrent);
+                    userProfile.saveInBackground();
 
-                    relationCurrentUserFollowing.add(user);
-                    following.add(user.getObjectId());
-                    ParseUser.getCurrentUser().saveInBackground();
+                    relationCurrentUserFollowing.add(userProfile);
+                    following.add(userProfile.getObjectId());
+                    userCurrent.saveInBackground();
 
                     btnFollowingStatus.setBackgroundColor(Color.GRAY);
                     btnFollowingStatus.setText(getString(R.string.following));
@@ -264,7 +268,7 @@ public class ProfileFragment extends Fragment {
         clProfile.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
             public void onSwipeLeft() {
-                if (getCurrentUser().getUsername().equals(user.getUsername())) {
+                if (getCurrentUser().getUsername().equals(userProfile.getUsername())) {
                     SidebarFragment fragment = new SidebarFragment();
                     Bundle userBundle = new Bundle();
                     userBundle.putParcelable("User", getCurrentUser());
@@ -278,7 +282,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    // Get a list of users a give user is following and then makes calls to fill in layout and set up side swipe
+    // Get a list of users a give userProfile is following and then makes calls to fill in layout and set up side swipe
     private void getFollowing(ParseRelation<User> relation, final View view) {
         relation.getQuery().findInBackground(new FindCallback<User>() {
             @Override
