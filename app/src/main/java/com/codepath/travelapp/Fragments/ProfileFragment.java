@@ -85,7 +85,7 @@ public class ProfileFragment extends Fragment {
                         return;
                     }
                     userProfile = (User) objects.get(0);
-                    relationProfileUserFollowers = userProfile.getFollowers();
+                    relationProfileUserFollowers = userProfile.getFollowers(); //TODO add proper query so relation updates profile user's followers
 
                     userCurrent = (User) getCurrentUser();
                     relationCurrentUserFollowing = userCurrent.getFollowing();
