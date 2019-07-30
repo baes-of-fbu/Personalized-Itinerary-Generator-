@@ -1,6 +1,7 @@
 package com.codepath.travelapp.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,10 +69,11 @@ public class SidebarFragment extends Fragment {
                 Bundle userBundle = new Bundle();
                 userBundle.putString("username", getCurrentUser().getUsername());
                 fragment.setArguments(userBundle);
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .addToBackStack(null)
-                        .commit();
+
+//                MainActivity.fragmentManager.beginTransaction()
+//                        .replace(R.id.flContainer, fragment)
+//                        .addToBackStack(null)
+//                        .commit();
             }
         });
     }
