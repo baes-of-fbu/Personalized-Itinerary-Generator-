@@ -32,10 +32,14 @@ public class OpeningActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opening);
         imageSwitcher = findViewById(R.id.imageSwitcher);
+        start();
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView()
             {
+                ImageView imageView = new ImageView(OpeningActivity.this);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
                 return new ImageView(OpeningActivity.this);
             }
         });

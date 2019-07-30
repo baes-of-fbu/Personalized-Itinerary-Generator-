@@ -1,6 +1,8 @@
 package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,11 +30,14 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Trip> trips;
     private String username;
+    private City city;
 
     public TimelineAdapter(ArrayList<Trip> trips) {
         this.trips = trips;
@@ -67,7 +72,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             @Override
             public void done(List<City> objects, ParseException e) {
                 if (e == null) {
-                    City city = objects.get(0);
+                    city = objects.get(0);
                     String cityStateString = city.getName() + ", " + city.getState();
                     holder.tvCityName.setText(cityStateString);
                 }
@@ -106,6 +111,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                         .replace(R.id.flContainer, fragment)
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+        holder.tvCityName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String location = geoPointToString((Objects.requireNonNull(city.get("location"))).toString());
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                String data = String.format("%s?q=%s", location,city.getName());
+                intent.setData(Uri.parse(data));
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(intent);
+                }
             }
         });
     }
@@ -170,6 +188,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     public void addAll(List<Trip> list) {
         trips.addAll(list);
         notifyDataSetChanged();
+    }
+    private String geoPointToString(String geoPoint) {
+        String temp = geoPoint.substring(geoPoint.indexOf('[') + 1, geoPoint.length() - 1);
+        return "geo:" + temp;
     }
 
 }
