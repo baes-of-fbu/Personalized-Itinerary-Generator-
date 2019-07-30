@@ -12,7 +12,7 @@ public class User extends ParseUser implements Parcelable {
 
     // Instance Variables
     private static final String KEY_FOLLOWING = "following";
-    public static final String KEY_FOLLOWERS = "followers";
+    private static final String KEY_FOLLOWERS = "followers";
     private static final String KEY_FAVORITES = "favorites";
     private static final String KEY_BIO = "bio";
     private static final String KEY_IMAGE ="profileImage";
@@ -25,9 +25,9 @@ public class User extends ParseUser implements Parcelable {
     public ParseRelation<User> getFollowers() {
         return getRelation(KEY_FOLLOWERS);
     }
-    public Number getFavorites() {
-        return  getNumber(KEY_FAVORITES);
-    }
+//    public Number getFavorites() {
+//        return  getNumber(KEY_FAVORITES);
+//    }
     public String getBio() {
         return  getString(KEY_BIO);
     }
