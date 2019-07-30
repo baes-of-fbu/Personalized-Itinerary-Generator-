@@ -220,6 +220,7 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
     @Override
     public void onFinishEditDialog(String inputText) {
         if (inputText.contentEquals(getString(R.string.edit))) {
+
             // Send Fragment to edit trip
             Fragment fragment = new EditTripFragment();
             fragment.setArguments(bundle);
@@ -230,6 +231,13 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
         }
 
         if (inputText.contentEquals(getString(R.string.delete))) {
+
+            // Deletes each dayPlan
+            for (int day = 0; day < numDays; day++) {
+                DayPlan dayPlan = dayPlans.get(day);
+                dayPlan.deleteInBackground();
+            }
+
             // Returns to the timeline fragment without saving the trip
             Fragment fragment = new TimelineFragment();
             MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);

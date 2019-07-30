@@ -98,4 +98,6 @@
     <string name="save_for_later">Save for later</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="selected_categories">Selected Categories</string>
+    <string name="remaining">Remaining:</string>
 </resources>

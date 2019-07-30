@@ -114,21 +114,21 @@
                     android:id="@+id/tvDays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="3dp"
                     android:text="@string/place_holder"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvStringDays"
                     app:layout_constraintStart_toEndOf="@+id/tvStringDays"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
+                    app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
 
                 <TextView
                     android:id="@+id/tvBudget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="3dp"
                     android:text="@string/dollar_sign"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvStringBudget"
                     app:layout_constraintStart_toEndOf="@+id/tvStringBudget"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
+                    app:layout_constraintTop_toTopOf="@+id/tvStringBudget" />
 
                 <TextView
                     android:id="@+id/tvStringBudget"
@@ -172,6 +172,50 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_location_on_black_24dp" />
+
+                <TextView
+                    android:id="@+id/tvTripCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/cost"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/tvBudget"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
+
+                <TextView
+                    android:id="@+id/tvCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="@string/dollar_sign"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvTripCost"
+                    app:layout_constraintStart_toEndOf="@+id/tvTripCost"
+                    app:layout_constraintTop_toTopOf="@+id/tvTripCost" />
+
+                <TextView
+                    android:id="@+id/tvTripRemaining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:text="@string/remaining"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvTripCost"
+                    app:layout_constraintStart_toEndOf="@+id/tvCost"
+                    app:layout_constraintTop_toTopOf="@+id/tvTripCost" />
+
+                <TextView
+                    android:id="@+id/tvRemainingBudget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="@string/dollar_sign"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvTripRemaining"
+                    app:layout_constraintStart_toEndOf="@+id/tvTripRemaining"
+                    app:layout_constraintTop_toTopOf="@+id/tvTripRemaining" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -179,7 +223,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="Selected Categories"
+                android:text="@string/selected_categories"
                 android:textAlignment="textStart"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
