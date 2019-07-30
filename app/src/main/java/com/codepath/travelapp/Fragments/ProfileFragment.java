@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +41,9 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 import static com.parse.ParseUser.getCurrentUser;
@@ -57,6 +60,7 @@ public class ProfileFragment extends Fragment {
 
     private User userProfile;
     private User userCurrent;
+    private Map<String, ParseObject> following;
     private List<User> currentFollowing;
 
 
@@ -71,6 +75,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        following = new HashMap<>();
         currentFollowing = new ArrayList<>();
 
         Bundle userBundle = getArguments();
@@ -97,6 +102,7 @@ public class ProfileFragment extends Fragment {
                             if (e == null) {
                                 for (int i = 0; i < followList.size(); i++) {
                                     currentFollowing.add((User) followList.get(i).get("to"));
+                                    following.put(((User) followList.get(i).get("to")).getUsername(), followList.get(i));
                                 }
                                 FillInLayout(view);
                                 SideSwipe(view);
@@ -201,7 +207,7 @@ public class ProfileFragment extends Fragment {
             btnFollowingStatus.setVisibility(View.GONE);
         } else {
             btnFollowingStatus.setVisibility(View.VISIBLE);
-            if (currentFollowing.contains(userProfile)) {
+            if (following.containsKey(userProfile.getUsername())) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
                 btnFollowingStatus.setText(getString(R.string.following));
             }
@@ -264,8 +270,10 @@ public class ProfileFragment extends Fragment {
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currentFollowing.contains(userProfile.getObjectId())) {
-
+                Toast.makeText(getContext(), "HELLO", Toast.LENGTH_SHORT).show();
+                if (following.containsKey(userProfile.getUsername())) {
+                    following.get(userProfile.getUsername()).deleteInBackground();
+                    following.remove(userProfile.getUsername());
 
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
@@ -274,6 +282,8 @@ public class ProfileFragment extends Fragment {
                     follow.put("from", userCurrent);
                     follow.put("to", userProfile);
                     follow.saveInBackground();
+
+                    following.put(userProfile.getUsername(), follow);
 
                     btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
                     btnFollowingStatus.setText(getString(R.string.following));
