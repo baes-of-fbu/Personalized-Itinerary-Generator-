@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tvDayTitle"
+            android:id="@+id/tvDayTitleEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -24,21 +24,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cvMorning"
-            android:layout_width="match_parent"
+            android:id="@+id/cvMorningEdit"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+
             android:clickable="true"
             android:focusable="true"
-
             android:foreground="?android:attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDayTitle"
             app:cardCornerRadius="@dimen/card_corner_radius"
-            app:cardElevation="@dimen/card_elevation">
+            app:cardElevation="@dimen/card_elevation"
+            app:layout_constraintEnd_toStartOf="@+id/ivEditMorningEvent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDayTitleEdit">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ConstraintLayout"
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tvMorningName"
+                    android:id="@+id/tvMorningNameEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -55,11 +55,11 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/ivMorningImage"
+                    app:layout_constraintStart_toStartOf="@+id/ivMorningImageEdit"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/ivMorningImage"
+                    android:id="@+id/ivMorningImageEdit"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:background="#FFEB3B"
@@ -68,29 +68,29 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvMorningName" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvMorningNameEdit" />
 
                 <TextView
-                    android:id="@+id/tvMorningTime"
+                    android:id="@+id/tvMorningTimeEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:padding="5dp"
                     android:text="9am - 11am "
-                    app:layout_constraintBottom_toBottomOf="@+id/tvMorningName"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvMorningNameEdit"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/tvMorningName"
-                    app:layout_constraintTop_toTopOf="@+id/tvMorningName" />
+                    app:layout_constraintStart_toEndOf="@+id/tvMorningNameEdit"
+                    app:layout_constraintTop_toTopOf="@+id/tvMorningNameEdit" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cvAfternoon"
-            android:layout_width="match_parent"
+            android:id="@+id/cvAfternoonEdit"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
@@ -98,9 +98,9 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivEditAfternoonEvent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cvMorning"
+            app:layout_constraintTop_toBottomOf="@+id/cvMorningEdit"
             card_view:cardCornerRadius="@dimen/card_corner_radius"
             card_view:cardElevation="@dimen/card_elevation">
 
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tvAfternoonName"
+                    android:id="@+id/tvAfternoonNameEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -118,11 +118,11 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/ivAfternoonImage"
+                    app:layout_constraintStart_toStartOf="@+id/ivAfternoonImageEdit"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/ivAfternoonImage"
+                    android:id="@+id/ivAfternoonImageEdit"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:background="#FFEB3B"
@@ -131,39 +131,41 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvAfternoonName" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvAfternoonNameEdit" />
 
-            <TextView
-                android:id="@+id/tvAfternoonTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:padding="5dp"
-                android:text="2pm - 4pm"
-                app:layout_constraintBottom_toBottomOf="@+id/tvAfternoonName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/tvAfternoonName"
-                app:layout_constraintTop_toTopOf="@+id/tvAfternoonName" />
+                <TextView
+                    android:id="@+id/tvAfternoonTimeEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:padding="5dp"
+                    android:text="2pm - 4pm"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvAfternoonNameEdit"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/tvAfternoonNameEdit"
+                    app:layout_constraintTop_toTopOf="@+id/tvAfternoonNameEdit" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cvEvening"
-            android:layout_width="match_parent"
+            android:id="@+id/cvEveningEdit"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivEditEveningEvent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cvAfternoon"
+            app:layout_constraintTop_toBottomOf="@+id/cvAfternoonEdit"
             card_view:cardCornerRadius="@dimen/card_corner_radius"
             card_view:cardElevation="@dimen/card_elevation">
 
@@ -172,7 +174,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tvEveningName"
+                    android:id="@+id/tvEveningNameEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -181,11 +183,11 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/ivEveningImage"
+                    app:layout_constraintStart_toStartOf="@+id/ivEveningImageEdit"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/ivEveningImage"
+                    android:id="@+id/ivEveningImageEdit"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:background="#FFEB3B"
@@ -194,22 +196,55 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvEveningName" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvEveningNameEdit" />
 
                 <TextView
-                    android:id="@+id/tvEveningTime"
+                    android:id="@+id/tvEveningTimeEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:padding="5dp"
                     android:text="6pm - 8pm"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvEveningName"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvEveningNameEdit"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/tvEveningName"
-                    app:layout_constraintTop_toTopOf="@+id/tvEveningName" />
+                    app:layout_constraintStart_toEndOf="@+id/tvEveningNameEdit"
+                    app:layout_constraintTop_toTopOf="@+id/tvEveningNameEdit" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/ivEditMorningEvent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cvMorningEdit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cvMorningEdit"
+            app:srcCompat="@drawable/ic_edit_black" />
+
+        <ImageView
+            android:id="@+id/ivEditAfternoonEvent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cvAfternoonEdit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cvAfternoonEdit"
+            app:srcCompat="@drawable/ic_edit_black"
+            tools:layout_editor_absoluteY="188dp" />
+
+        <ImageView
+            android:id="@+id/ivEditEveningEvent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cvEveningEdit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cvEveningEdit"
+            app:srcCompat="@drawable/ic_edit_black"
+            tools:layout_editor_absoluteY="309dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

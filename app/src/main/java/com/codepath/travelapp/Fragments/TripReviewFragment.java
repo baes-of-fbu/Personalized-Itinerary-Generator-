@@ -200,14 +200,14 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new TimelineFragment();
+                // Fragment fragment = new TimelineFragment();
                 // TODO remove the button and use the three dots in the corner instead
 //                MainActivity.fragmentManager.beginTransaction()
 //                        .replace(R.id.flContainer, fragment)
 //                        .addToBackStack(null)
 //                        .commit();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
-                EditDialogFragment editTripDialogFragment = EditDialogFragment.newInstance(dayPlans, tripName);
+                EditDialogFragment editTripDialogFragment = EditDialogFragment.newInstance();
                 editTripDialogFragment.setTargetFragment(TripReviewFragment.this, 300);
                 editTripDialogFragment.show(fragmentManager, "fragment_editdialog_options");
 

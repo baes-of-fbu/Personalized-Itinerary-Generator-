@@ -15,10 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.R;
-
-import java.util.ArrayList;
 
 public class EditDialogFragment extends DialogFragment {
 
@@ -33,7 +30,7 @@ public class EditDialogFragment extends DialogFragment {
     }
 
     // TODO REMOVE PARAMETERS
-    public static EditDialogFragment newInstance(ArrayList<DayPlan> dayPlans, String tripName) {
+    public static EditDialogFragment newInstance() {
         EditDialogFragment fragment = new EditDialogFragment();
         return fragment;
     }
@@ -106,7 +103,7 @@ public class EditDialogFragment extends DialogFragment {
 
     // User to return info to the parent
     public interface EditTripDialogListener {
-        void onFinishEditDialog(String inputText); // May want to change for a bundle
+        void onFinishEditDialog(String inputText); // TODO May want to change for a bundle
     }
 
     // Call this method to send the data back to the parent fragment

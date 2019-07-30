@@ -39,7 +39,7 @@
         <ImageView
             android:id="@+id/ivEventTile"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             app:srcCompat="@color/com_facebook_button_background_color_selected" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

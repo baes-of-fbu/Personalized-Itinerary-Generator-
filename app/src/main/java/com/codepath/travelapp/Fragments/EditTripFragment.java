@@ -2,6 +2,7 @@ package com.codepath.travelapp.Fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Adapters.DayPlanEditableAdapter;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Tag;
@@ -23,6 +28,8 @@ import com.parse.ParseFile;
 
 import java.util.ArrayList;
 
+import me.relex.circleindicator.CircleIndicator2;
+
 public class EditTripFragment extends Fragment {
 
     private androidx.appcompat.widget.Toolbar toolbar;
@@ -30,10 +37,6 @@ public class EditTripFragment extends Fragment {
     private Button saveBtn;
 
     private String tripName;
-
-    private Bundle bundle;
-
-    // TODO USE THESE
     private City city;
     private String startDate;
     private String endDate;
@@ -41,6 +44,9 @@ public class EditTripFragment extends Fragment {
     private int numDays;
     private ArrayList<Tag> tags;
     private ArrayList<DayPlan> dayPlans;
+
+    private Bundle bundle;
+
     private ParseFile image;
 
     @Nullable
@@ -55,28 +61,45 @@ public class EditTripFragment extends Fragment {
 
         etEditTripName = view.findViewById(R.id.etEditTripName);
         saveBtn = view.findViewById(R.id.saveBtn);
+        RecyclerView rvSchedule = view.findViewById(R.id.rvEditableSchedule);
 
 
         toolbar = view.findViewById(R.id.tbEditProfile);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("Edit Trip");
 
+
+
+
         bundle = getArguments();
-        if (bundle != null) {
-            // TODO CHANGE WHY THE BUNDLE ISN'T PASSING
-            tripName = bundle.getString("trip_name");
-//            city = bundle.getParcelable("city");
-//            startDate = bundle.getString("start_date");
-//            endDate = bundle.getString("end_date");
-//            numDays = bundle.getInt("number_days");
-//            budget = bundle.getInt("budget");
-//            tags = bundle.getParcelableArrayList("selected_tags");
-//            dayPlans = bundle.getParcelableArrayList("dayPlans");
-
-
-            etEditTripName.setText(tripName);
+        if (bundle == null) {
+            Log.d("EditTrip Fragment", "No bundle");
         }
 
+        tripName = bundle.getString("trip_name");
+        city = bundle.getParcelable("city");
+        startDate = bundle.getString("start_date");
+        endDate = bundle.getString("end_date");
+        numDays = bundle.getInt("number_days");
+        budget = bundle.getInt("budget");
+        tags = bundle.getParcelableArrayList("selected_tags");
+        dayPlans = bundle.getParcelableArrayList("dayPlans");
+
+
+        etEditTripName.setText(tripName);
+
+
+        // Populate DayPlans
+        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans);
+        rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        rvSchedule.setAdapter(dayPlanEditableAdapterAdapter);
+
+        // Circle Indicator
+        final PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(rvSchedule);
+        CircleIndicator2 indicator = view.findViewById(R.id.indicatorEdit);
+        indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
+        dayPlanEditableAdapterAdapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
 
         addOnClickListeners();
     }
