@@ -18,42 +18,51 @@ public class User extends ParseUser implements Parcelable {
     private static final String KEY_IMAGE ="profileImage";
     private static final String KEY_HOMESTATE = "homeState";
 
-    // Getters
+    // Getters and setters
     public ParseRelation<User> getFollowing() {
         return getRelation(KEY_FOLLOWING);
     }
+
+    public void setFollowing(Number following) {
+        put(KEY_FOLLOWING, following);
+    }
+
     public ParseRelation<User> getFollowers() {
         return getRelation(KEY_FOLLOWERS);
     }
-//    public Number getFavorites() {
-//        return  getNumber(KEY_FAVORITES);
-//    }
+
+    public void setFollowers(Number followers) {
+        put(KEY_FOLLOWERS, followers);
+    }
+
+    public Number getFavorites() {
+        return  getNumber(KEY_FAVORITES);
+    }
+
+    public void setFavorites(Number favorites) {
+        put(KEY_FAVORITES, favorites);
+    }
+
     public String getBio() {
         return  getString(KEY_BIO);
     }
+
+    public void setBio(String bio) {
+        put(KEY_BIO, bio);
+    }
+
     public ParseFile getProfileImage() {
         return getParseFile(KEY_IMAGE);
     }
+
+    public void setProfileImage(ParseFile image) {
+        put(KEY_IMAGE, image);
+    }
+
     public String getHomeState() {
         return getString(KEY_HOMESTATE);
     }
 
-    // Setters
-    public void setFollowing(Number following) {
-        put(KEY_FOLLOWING, following);
-    }
-    public void setFollowers(Number followers) {
-        put(KEY_FOLLOWERS, followers);
-    }
-    public void setFavorites(Number favorites) {
-        put(KEY_FAVORITES, favorites);
-    }
-    public void setBio(String bio) {
-        put(KEY_BIO, bio);
-    }
-    public void setProfileImage(ParseFile image) {
-        put(KEY_IMAGE, image);
-    }
     public void setHomeState (String homeState) {
         put(KEY_HOMESTATE, homeState);
     }
