@@ -19,7 +19,7 @@ public class User extends ParseUser implements Parcelable {
     private static final String KEY_HOMESTATE = "homeState";
 
     // Getters and setters
-    public ParseRelation<User> getFollowing() {
+    public ParseRelation<User> getFollowingRelation() {
         return getRelation(KEY_FOLLOWING);
     }
 
@@ -27,13 +27,33 @@ public class User extends ParseUser implements Parcelable {
         put(KEY_FOLLOWING, following);
     } //TODO make relevant
 
-    public ParseRelation<User> getFollowers() {
+    public void addFollow (User user) {
+        getFollowingRelation().add(user);
+        saveInBackground();
+    }
+
+    public void removeFollow (User user) {
+        getFollowingRelation().remove(user);
+        saveInBackground();
+    }
+
+    public ParseRelation<User> getFollowersRelation() {
         return getRelation(KEY_FOLLOWERS);
     }
 
     public void setFollowers(ParseRelation<User> followers) {
         put(KEY_FOLLOWERS, followers);
     } //TODO make relevant
+
+    public void addFollower (User user) {
+        getFollowersRelation().add(user);
+        saveInBackground();
+    }
+
+    public void removeFollower (User user) {
+        getFollowersRelation().remove(user);
+        saveInBackground();
+    }
 
     public Number getFavorites() {
         return  getNumber(KEY_FAVORITES);

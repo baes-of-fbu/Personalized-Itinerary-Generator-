@@ -33,6 +33,7 @@ import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -55,14 +56,8 @@ public class ProfileFragment extends Fragment {
     private int pageSize = 10;
 
     private User userProfile;
-    private ParseRelation<User> relationProfileUserFollowers;
-    private List<User> profileFollowers;
-    private ParseRelation<User> relationProfileUserFollowing;
-    private List<User> profileFollowing;
-
     private User userCurrent;
-    private ParseRelation<User> relationCurrentUserFollowing;
-    private List<String> currentFollowing;
+    private List<User> currentFollowing;
 
 
     @Nullable
@@ -76,8 +71,6 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        profileFollowers = new ArrayList<>();
-        profileFollowing = new ArrayList<>();
         currentFollowing = new ArrayList<>();
 
         Bundle userBundle = getArguments();
@@ -94,14 +87,22 @@ public class ProfileFragment extends Fragment {
                         return;
                     }
                     userProfile = (User) objects.get(0);
-                    relationProfileUserFollowers = userProfile.getFollowers(); //TODO add proper query so relation updates profile user's followers
-                    getUserList(relationProfileUserFollowers, profileFollowers);
-                    relationProfileUserFollowing = userProfile.getFollowing();
-                    getUserList(relationProfileUserFollowing, profileFollowing);
-
                     userCurrent = (User) getCurrentUser();
-                    relationCurrentUserFollowing = userCurrent.getFollowing();
-                    getFollowing(relationCurrentUserFollowing, view);
+
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
+                    query.whereEqualTo("from", ParseUser.getCurrentUser());
+                    query.include("to");
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        public void done(List<ParseObject> followList, ParseException e) {
+                            if (e == null) {
+                                for (int i = 0; i < followList.size(); i++) {
+                                    currentFollowing.add((User) followList.get(i).get("to"));
+                                }
+                                FillInLayout(view);
+                                SideSwipe(view);
+                            }
+                        }
+                    });
                 }
             });
         }
@@ -200,7 +201,7 @@ public class ProfileFragment extends Fragment {
             btnFollowingStatus.setVisibility(View.GONE);
         } else {
             btnFollowingStatus.setVisibility(View.VISIBLE);
-            if (currentFollowing.contains(userProfile.getObjectId())) {
+            if (currentFollowing.contains(userProfile)) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
                 btnFollowingStatus.setText(getString(R.string.following));
             }
@@ -264,24 +265,15 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (currentFollowing.contains(userProfile.getObjectId())) {
-                    relationProfileUserFollowers.remove(userCurrent);
-                    profileFollowers.remove(userCurrent);
-                    userProfile.saveInBackground();
 
-                    relationCurrentUserFollowing.remove(userProfile);
-                    currentFollowing.remove(userProfile.getObjectId());
-                    userCurrent.saveInBackground();
 
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
                 } else {
-                    relationProfileUserFollowers.add(userCurrent);
-                    profileFollowers.add(userCurrent);
-                    userProfile.saveInBackground();
-
-                    relationCurrentUserFollowing.add(userProfile);
-                    currentFollowing.add(userProfile.getObjectId());
-                    userCurrent.saveInBackground();
+                    ParseObject follow = new ParseObject("Follow");
+                    follow.put("from", userCurrent);
+                    follow.put("to", userProfile);
+                    follow.saveInBackground();
 
                     btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
                     btnFollowingStatus.setText(getString(R.string.following));
@@ -293,8 +285,8 @@ public class ProfileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void updateFollowCnt(TextView tvFollowersCount, TextView tvFollowingCount) {
-        tvFollowersCount.setText(Integer.toString(profileFollowers.size()));
-        tvFollowingCount.setText(Integer.toString(profileFollowing.size()));
+//        tvFollowersCount.setText(Integer.toString(profileFollowers.size()));
+//        tvFollowingCount.setText(Integer.toString(profileFollowing.size()));
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -324,7 +316,7 @@ public class ProfileFragment extends Fragment {
             public void done(List<User> objects, ParseException e) {
                 if (e == null) {
                     for (int i = 0; i < objects.size(); i++) {
-                        currentFollowing.add(objects.get(i).getObjectId());
+//                        currentFollowing.add(objects.get(i).getObjectId());
                     }
                     FillInLayout(view);
                     SideSwipe(view);
