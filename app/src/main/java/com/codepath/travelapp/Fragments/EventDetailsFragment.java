@@ -49,8 +49,9 @@ public class EventDetailsFragment extends Fragment {
 
 
         Bundle bundle = getArguments();
-        assert bundle != null;
-        event = (Event) bundle.getParcelable("event");
+        if (bundle != null) {
+            event = bundle.getParcelable("event");
+        }
 
         if (event != null) {
             tvEventName.setText(event.getName());
@@ -68,7 +69,7 @@ public class EventDetailsFragment extends Fragment {
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(event.getImage().getUrl())
                     .into(ivCoverPhoto);
-            location = geoPointToString(event.get("location").toString());
+            location = geoPointToString((Objects.requireNonNull(event.get("location"))).toString());
             addOnClickListeners();
         }
     }
@@ -81,21 +82,23 @@ public class EventDetailsFragment extends Fragment {
                 intent.setAction(Intent.ACTION_VIEW);
                 String data = String.format("%s?q=%s", location, event.getName());
                 intent.setData(Uri.parse(data));
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
                     startActivity(intent);
                 }
             }
         });
+
         tvWebsite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getWebsite()));
-                if (browserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                if (browserIntent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
                     startActivity(browserIntent);
                 }
             }
         });
     }
+
     private String geoPointToString(String geoPoint) {
         String temp = geoPoint.substring(geoPoint.indexOf('[') + 1, geoPoint.length() - 1);
         return "geo:" + temp;
