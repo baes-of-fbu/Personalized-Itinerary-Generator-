@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,7 @@ import com.codepath.travelapp.Models.CityImages;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -199,15 +201,17 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
                     }
                 });
 
-                Fragment fragment = new TripDetailsFragment();
+                Fragment fragment = new ProfileFragment();
                 Bundle finalBundle = new Bundle();
-                bundle.putSerializable("Trip", trip);
-                bundle.putParcelableArrayList("DayPlans", dayPlans);
+                finalBundle.putString("username", User.getCurrentUser().getUsername());
                 fragment.setArguments(finalBundle);
+                Toast.makeText(getContext(), "Trip Successfully created", Toast.LENGTH_LONG).show(); // TODO REMOVE LATER
+                MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_profile);
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)
                         .addToBackStack(null)
                         .commit();
+
             }
         });
 

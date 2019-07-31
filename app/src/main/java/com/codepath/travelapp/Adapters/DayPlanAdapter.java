@@ -47,69 +47,81 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
 
         //Set the views
         holder.tvDayTitle.setText(dayPlan.getDate().toString());
-        try {
-            holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
-            Glide.with(context)
-                    .load(dayPlan.getMorningEvent().getImage().getUrl())
-                    .into(holder.ivMorningImage);
+        try { // Try/catch needed to handle except for '.fetchIfNeeded()'
+            if (dayPlan.getMorningEvent() != null) {
+                holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
+                Glide.with(context)
+                        .load(dayPlan.getMorningEvent().getImage().getUrl())
+                        .into(holder.ivMorningImage);
 
+                holder.cvMorning.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Fragment fragment = new EventDetailsFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("event", dayPlan.getMorningEvent());
+                        fragment.setArguments(bundle);
+
+                        MainActivity.fragmentManager.beginTransaction()
+                                .replace(R.id.flContainer, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+            } else {
+                useEmptyEvent(holder.tvMorningName, holder.ivMorningImage);
+            }
+
+            if (dayPlan.getAfternoonEvent() != null) {
             holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
             Glide.with(context)
                     .load(dayPlan.getAfternoonEvent().getImage().getUrl())
                     .into(holder.ivAfternoonImage);
 
-            holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
-            Glide.with(context)
-                    .load(dayPlan.getEveningEvent().getImage().getUrl())
-                    .into(holder.ivEveningImage);
+                holder.cvAfternoon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Fragment fragment = new EventDetailsFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("event", dayPlan.getAfternoonEvent());
+                        fragment.setArguments(bundle);
+
+                        MainActivity.fragmentManager.beginTransaction()
+                                .replace(R.id.flContainer, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+            } else {
+                useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage);
+            }
+
+            if (dayPlan.getEveningEvent() != null) {
+                holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
+                Glide.with(context)
+                        .load(dayPlan.getEveningEvent().getImage().getUrl())
+                        .into(holder.ivEveningImage);
+
+                holder.cvEvening.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Fragment fragment = new EventDetailsFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("event", dayPlan.getEveningEvent());
+                        fragment.setArguments(bundle);
+
+                        MainActivity.fragmentManager.beginTransaction()
+                                .replace(R.id.flContainer, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+            } else {
+                useEmptyEvent(holder.tvEveningName, holder.ivEveningImage);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        holder.cvMorning.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new EventDetailsFragment();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("event", dayPlan.getMorningEvent());
-                fragment.setArguments(bundle);
-
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
-        holder.cvAfternoon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new EventDetailsFragment();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("event", dayPlan.getAfternoonEvent());
-                fragment.setArguments(bundle);
-
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
-        holder.cvEvening.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new EventDetailsFragment();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("event", dayPlan.getEveningEvent());
-                fragment.setArguments(bundle);
-
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
     }
 
     // Returns the total count of dayPlans
@@ -143,6 +155,11 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
             ivAfternoonImage = itemView.findViewById(R.id.ivAfternoonImage);
             ivEveningImage = itemView.findViewById(R.id.ivEveningImage);
         }
+    }
+
+    public void useEmptyEvent(TextView tvEventName, ImageView ivEventImage) {
+        tvEventName.setText(R.string.empty_slot);
+        ivEventImage.setImageResource(R.drawable.emptyevent);
     }
 
     public void clear() {
