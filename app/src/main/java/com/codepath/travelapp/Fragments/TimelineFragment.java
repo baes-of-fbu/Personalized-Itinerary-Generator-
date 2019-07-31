@@ -35,6 +35,7 @@ public class TimelineFragment extends Fragment {
 
     private Integer skip = 0;
     private boolean loadMore = false;
+    private final int page_size = 10;
 
     @Nullable
     @Override
@@ -89,7 +90,7 @@ public class TimelineFragment extends Fragment {
         adapter.clear();
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
 
-        tripQuery.setLimit(10);
+        tripQuery.setLimit(page_size);
         tripQuery.include(Trip.KEY_OWNER);
         tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
         tripQuery.findInBackground(new FindCallback<Trip>() {
@@ -112,9 +113,9 @@ public class TimelineFragment extends Fragment {
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
         tripQuery.include(Trip.KEY_OWNER);
         if(loadMore) { // True when there are potentially more posts to load
-            tripQuery.setSkip(offset*10);
+            tripQuery.setSkip(offset*page_size);
         }
-        tripQuery.setLimit(10);
+        tripQuery.setLimit(page_size);
         tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override

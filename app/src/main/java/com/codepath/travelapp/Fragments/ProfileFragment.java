@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +29,6 @@ import com.codepath.travelapp.Adapters.CurrentTripAdapter;
 import com.codepath.travelapp.Adapters.PreviousTripAdapter;
 import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
 import com.codepath.travelapp.Models.Achievement;
-import com.codepath.travelapp.Models.Event;
-import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
@@ -49,6 +46,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 import static com.parse.ParseUser.getCurrentUser;
 
@@ -182,11 +181,21 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    private void queryAchievements(ParseUser user) {
-
-        // Create queries for each achievement
-        //for (int i  = 0; i = achievementAdapter)
+    private void queryAchievements(User user) {
+        ParseQuery<Achievement> achievementQuery = user.getAchievementRelation().getQuery();
+        achievementQuery.findInBackground(new FindCallback<Achievement>() {
+            @Override
+            public void done(List<Achievement> achievements, ParseException e) {
+                if (e == null) {
+                    Log.e(TAG,"Error");
+                    return;
+                }
+                Toast.makeText(getContext(),"Query works", LENGTH_LONG).show();
+                achievementAdapter.addAll(achievements);
+            }
+        });
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -276,13 +285,14 @@ public class ProfileFragment extends Fragment {
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);
         queryCurrentPosts(userProfile);
+        queryAchievements(userProfile);
 
 
         // Set onClick listener for follow/currentFollowing button
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "HELLO", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "HELLO", LENGTH_SHORT).show();
                 if (following.containsKey(userProfile.getUsername())) {
                     following.get(userProfile.getUsername()).deleteInBackground();
                     following.remove(userProfile.getUsername());
@@ -305,23 +315,28 @@ public class ProfileFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void updateFollowCnt(final TextView tvFollowersCount, TextView tvFollowingCount) {
-        final int followers;
-        int following;
+    private void updateFollowCnt(final TextView tvFollowersCount, final TextView tvFollowingCount) {
+        final int[] followers = {0};
+        final int[] following = {0};
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
+        query.include("from");
+        query.include("to");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> followList, ParseException e) {
                 if (e == null) {
                     for (int i = 0; i < followList.size(); i++) {
-
+                        if (((User) followList.get(i).get("to")).getUsername().equals(userProfile.getUsername())) {
+                            followers[0]++;
+                        } else if (((User) followList.get(i).get("from")).getUsername().equals(userProfile.getUsername())) {
+                            following[0]++;
+                        }
                     }
+                    tvFollowersCount.setText(Integer.toString(followers[0]));
+                    tvFollowingCount.setText(Integer.toString(following[0]));
                 }
             }
         });
-
-//        tvFollowersCount.setText(Integer.toString(followList.size()));
-//        tvFollowingCount.setText(Integer.toString(profileFollowing.size()));
     }
 
     @SuppressLint("ClickableViewAccessibility")

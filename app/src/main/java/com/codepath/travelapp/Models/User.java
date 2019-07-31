@@ -11,50 +11,13 @@ import com.parse.ParseUser;
 public class User extends ParseUser implements Parcelable {
 
     // Instance Variables
-    private static final String KEY_FOLLOWING = "following";
-    private static final String KEY_FOLLOWERS = "followers";
     private static final String KEY_FAVORITES = "favorites";
     private static final String KEY_BIO = "bio";
     private static final String KEY_IMAGE ="profileImage";
     private static final String KEY_HOMESTATE = "homeState";
+    private  static final String KEY_ACHIEVEMENT = "acievement";
 
     // Getters and setters
-    public ParseRelation<User> getFollowingRelation() {
-        return getRelation(KEY_FOLLOWING);
-    }
-
-    public void setFollowing(Number following) {
-        put(KEY_FOLLOWING, following);
-    } //TODO make relevant
-
-    public void addFollow (User user) {
-        getFollowingRelation().add(user);
-        saveInBackground();
-    }
-
-    public void removeFollow (User user) {
-        getFollowingRelation().remove(user);
-        saveInBackground();
-    }
-
-    public ParseRelation<User> getFollowersRelation() {
-        return getRelation(KEY_FOLLOWERS);
-    }
-
-    public void setFollowers(ParseRelation<User> followers) {
-        put(KEY_FOLLOWERS, followers);
-    } //TODO make relevant
-
-    public void addFollower (User user) {
-        getFollowersRelation().add(user);
-        saveInBackground();
-    }
-
-    public void removeFollower (User user) {
-        getFollowersRelation().remove(user);
-        saveInBackground();
-    }
-
     public Number getFavorites() {
         return  getNumber(KEY_FAVORITES);
     }
@@ -87,5 +50,5 @@ public class User extends ParseUser implements Parcelable {
         put(KEY_HOMESTATE, homeState);
     }
 
-
+    public ParseRelation<Achievement> getAchievementRelation () { return getRelation(KEY_ACHIEVEMENT);}
 }

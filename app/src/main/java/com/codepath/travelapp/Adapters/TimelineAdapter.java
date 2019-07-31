@@ -2,12 +2,14 @@ package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,15 +24,20 @@ import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TripDetailsFragment;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.codepath.travelapp.R.drawable.heart_filled;
+import static com.codepath.travelapp.R.drawable.ufi_heart;
 
 
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
@@ -54,13 +61,37 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        Trip trip = trips.get(position);
+        final Trip trip = trips.get(position);
+        final boolean[] likedCurrent = {false};
+        final int[] numLikes = {0};
 
-        String budgetString = "$" + trip.getBudget().toString();
-        holder.tvTripBudget.setText(budgetString);
+        final String[] budgetString = {"$" + trip.getBudget().toString()};
+        holder.tvTripBudget.setText(budgetString[0]);
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());
+
+        trip.getLikes().getQuery().findInBackground(new FindCallback<User>() {
+            @Override
+            public void done(List<User> objects, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < objects.size(); i++) {
+                        if (objects.get(i).getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+                            likedCurrent[0] = true;
+                        }
+                    }
+                    if (likedCurrent[0]) {
+                        holder.ibLike.setImageResource(heart_filled);
+                        holder.ibLike.setColorFilter(Color.rgb(255, 0,0 ));
+                    } else {
+                        holder.ibLike.setImageResource(ufi_heart);
+                        holder.ibLike.setColorFilter(Color.BLACK);
+                    }
+                    numLikes[0] = objects.size();
+                    holder.tvNumLikes.setText(Integer.toString(numLikes[0]));
+                }
+            }
+        });
 
         // Trip does not store the complete City object, so a Parse
         // query must be made to get the object, allowing access to
@@ -97,6 +128,28 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                     .load(image.getUrl())
                     .into(holder.ivTripImage);
         }
+
+        holder.ibLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (likedCurrent[0]) {
+                    trip.getLikes().remove((User) ParseUser.getCurrentUser());
+                    trip.saveInBackground();
+                    numLikes[0]--;
+                    holder.ibLike.setImageResource(ufi_heart);
+                    holder.ibLike.setColorFilter(Color.BLACK);
+                    likedCurrent[0] = false;
+                } else {
+                    trip.getLikes().add((User) ParseUser.getCurrentUser());
+                    trip.saveInBackground();
+                    numLikes[0]++;
+                    holder.ibLike.setImageResource(heart_filled);
+                    holder.ibLike.setColorFilter(Color.rgb(255, 0,0 ));
+                    likedCurrent[0] = true;
+                }
+                holder.tvNumLikes.setText(Integer.toString(numLikes[0]));
+            }
+        });
         // Sends a bundle to ProfileFragment when username is clicked
         holder.tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +196,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         private ImageView ivProfileImage;
         private TextView tvTags;
         private TextView tvCityName;
+        private TextView tvNumLikes;
+        private ImageButton ibLike;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -155,6 +210,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvTags = itemView.findViewById(R.id.tvTags);
             tvCityName = itemView.findViewById(R.id.tvCityName);
+            tvNumLikes = itemView.findViewById(R.id.tvNumLikes);
+            ibLike = itemView.findViewById(R.id.ibLike);
 
             itemView.setOnClickListener(this);
         }
