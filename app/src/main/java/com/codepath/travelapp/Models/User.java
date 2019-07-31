@@ -4,6 +4,7 @@ import android.os.Parcelable;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 @ParseClassName("_User")
@@ -14,6 +15,7 @@ public class User extends ParseUser implements Parcelable {
     private static final String KEY_BIO = "bio";
     private static final String KEY_IMAGE ="profileImage";
     private static final String KEY_HOMESTATE = "homeState";
+    private  static final String KEY_ACHIEVEMENT = "acievement";
 
     // Getters and setters
     public Number getFavorites() {
@@ -47,4 +49,8 @@ public class User extends ParseUser implements Parcelable {
     public void setHomeState (String homeState) {
         put(KEY_HOMESTATE, homeState);
     }
+
+    public ParseRelation<Achievement> getAchievementRelation () { return getRelation(KEY_ACHIEVEMENT);}
+
+
 }
