@@ -23,6 +23,7 @@ public class Trip extends ParseObject implements Serializable {
     public static final String KEY_ENDDATE = "endDate";
     private static final String KEY_LIKES = "likes";
     private static final String KEY_SAVED = "saved";
+    private static final String KEY_COMMENTS = "comments";
 
     // Getters and setters
     public String getName() {
@@ -95,5 +96,9 @@ public class Trip extends ParseObject implements Serializable {
 
     public ParseRelation<User> getSaved() {
         return getRelation(KEY_SAVED);
+    }
+
+    public ParseRelation<User> getComments() {
+        return getRelation(KEY_COMMENTS);
     }
 }

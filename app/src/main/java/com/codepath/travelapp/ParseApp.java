@@ -5,6 +5,7 @@ import android.app.Application;
 import com.codepath.travelapp.Models.Achievement;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.CityImages;
+import com.codepath.travelapp.Models.Comment;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Tag;
@@ -27,6 +28,7 @@ public class ParseApp extends Application {
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(CityImages.class);
         ParseObject.registerSubclass(Achievement.class);
+        ParseObject.registerSubclass(Comment.class);
 
         // Set up configuration
         final Parse.Configuration configuration = new Parse.Configuration.Builder(this)

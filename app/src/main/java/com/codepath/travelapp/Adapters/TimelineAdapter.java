@@ -196,11 +196,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             }
         });
 
-        // Send a Parse Query to get "comments"
-        //TODO
-
         // Set onClickListener to prompt the current user to write a comment for a trip
-        //TODO
+        holder.ibComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Send a Parse Query to get "comments"
+                //TODO
+
+                // open a dialogue fragment with a list of previous comments and an edit text to add your own comment
+            }
+        });
 
         // Sends a bundle to ProfileFragment when username is clicked
         holder.tvUsername.setOnClickListener(new View.OnClickListener() {
