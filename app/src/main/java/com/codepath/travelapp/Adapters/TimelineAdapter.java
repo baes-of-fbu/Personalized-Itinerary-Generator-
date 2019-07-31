@@ -38,7 +38,9 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.codepath.travelapp.R.drawable.heart_filled;
+import static com.codepath.travelapp.R.drawable.save_filled;
 import static com.codepath.travelapp.R.drawable.ufi_heart;
+import static com.codepath.travelapp.R.drawable.ufi_save;
 
 
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
@@ -63,6 +65,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
         final Trip trip = trips.get(position);
+        final boolean[] savedCurrent = {false};
         final boolean[] likedCurrent = {false};
         final int[] numLikes = {0};
 
@@ -157,10 +160,41 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         });
 
         // Send a Parse Query to get "saved" relation
-        //TODO
+        trip.getSaved().getQuery().findInBackground(new FindCallback<User>() {
+            @Override
+            public void done(List<User> objects, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < objects.size(); i++) {
+                        if (objects.get(i).getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+                            savedCurrent[0] = true;
+                        }
+                    }
+                    if (savedCurrent[0]) {
+                        setActiveSaveIcon(holder);
+                    } else {
+                        setInactiveSaveIcon(holder);
+                    }
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         // Set onClickListener to Save icon to reflect whether or not the current user has saved the trip
-        //TODO
+        holder.ibSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (savedCurrent[0]) {
+                    trip.getSaved().remove((User) ParseUser.getCurrentUser());
+                    setInactiveSaveIcon(holder);
+                } else {
+                    trip.getSaved().add((User) ParseUser.getCurrentUser());
+                    setActiveSaveIcon(holder);
+                }
+                savedCurrent[0] = !savedCurrent[0];
+                trip.saveInBackground();
+            }
+        });
 
         // Send a Parse Query to get "comments"
         //TODO
@@ -209,6 +243,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     private void setActiveLikeIcon(@NonNull ViewHolder holder) {
         holder.ibLike.setImageResource(heart_filled);
         holder.ibLike.setColorFilter(Color.rgb(255, 0,0 ));
+    }
+
+    private void setInactiveSaveIcon(@NonNull ViewHolder holder) {
+        holder.ibSave.setImageResource(ufi_save);
+        holder.ibSave.setColorFilter(Color.BLACK);
+    }
+
+    private void setActiveSaveIcon(@NonNull ViewHolder holder) {
+        holder.ibSave.setImageResource(save_filled);
     }
 
     private String geoPointToString(String geoPoint) {
