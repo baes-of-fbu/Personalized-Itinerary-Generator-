@@ -59,4 +59,16 @@ public class DayPlan extends ParseObject implements Parcelable {
     public void setTrip(Trip trip) {
         put(KEY_TRIP, trip);
     }
+
+    public void removeMorningEvent() {
+        remove(KEY_MORNING_EVENT);
+    }
+
+    public void removeAfternoonEvent() {
+        remove(KEY_AFTERNOON_EVENT);
+    }
+
+    public void removeEveningEvent() {
+        remove(KEY_EVENING_EVENT);
+    }
 }

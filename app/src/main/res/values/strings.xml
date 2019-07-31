@@ -101,9 +101,9 @@
     <string name="cancel">Cancel</string>
     <string name="selected_categories">Selected Categories</string>
     <string name="remaining">Remaining</string>
-    <string name="tags">Tags</string>
-    <string name="users">users</string>
-    <string name="liked_by">Liked by</string>
-    <string name="comment">comment</string>
-    <string name="save">save</string>
+    <string name="morning_event">Morning Event</string>
+    <string name="afternoon_event">Afternoon Event</string>
+    <string name="evening_event">Evening Event</string>
+    <string name="regenerate_event">Regenerate event</string>
+    <string name="remove_event">Remove event</string>
 </resources>

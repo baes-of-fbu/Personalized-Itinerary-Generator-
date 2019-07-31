@@ -29,6 +29,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
 
     private Context context;
     private ArrayList<DayPlan> dayPlans;
+    private ViewHolder currHolder;
 
 
     public DayPlanEditableAdapter(ArrayList<DayPlan> dayPlans) {
@@ -50,128 +51,123 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
 
         //Set the views
         holder.tvDayTitle.setText(dayPlan.getDate().toString());
-       // try { // Try/catch needed to handle except for '.fetchIfNeeded()'
-            if (dayPlan.getMorningEvent() == null) {
-                useEmptyEvent(holder.tvMorningName, holder.ivMorningImage);
-            } else {
-                try {
-                    holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Glide.with(context)
-                        .load(dayPlan.getMorningEvent().getImage().getUrl())
-                        .into(holder.ivMorningImage);
-
-                holder.cvMorning.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Fragment fragment = new EventDetailsFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("event", dayPlan.getMorningEvent());
-                        fragment.setArguments(bundle);
-
-                        MainActivity.fragmentManager.beginTransaction()
-                                .replace(R.id.flContainer, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                });
+        if (dayPlan.getMorningEvent() == null) {
+            useEmptyEvent(holder.tvMorningName, holder.ivMorningImage);
+        } else {
+            try {
+                holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+            Glide.with(context)
+                    .load(dayPlan.getMorningEvent().getImage().getUrl())
+                    .into(holder.ivMorningImage);
 
-            if (dayPlan.getAfternoonEvent() == null) {
-                useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage);
-            } else {
-                try {
-                holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
+            holder.cvMorning.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Fragment fragment = new EventDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("event", dayPlan.getMorningEvent());
+                    fragment.setArguments(bundle);
+
+                    MainActivity.fragmentManager.beginTransaction()
+                            .replace(R.id.flContainer, fragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
-                Glide.with(context)
-                        .load(dayPlan.getAfternoonEvent().getImage().getUrl())
-                        .into(holder.ivAfternoonImage);
+            });
+        }
 
-                holder.cvAfternoon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Fragment fragment = new EventDetailsFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("event", dayPlan.getAfternoonEvent());
-                        fragment.setArguments(bundle);
-
-                        MainActivity.fragmentManager.beginTransaction()
-                                .replace(R.id.flContainer, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                });
+        if (dayPlan.getAfternoonEvent() == null) {
+            useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage);
+        } else {
+            try {
+            holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+            Glide.with(context)
+                    .load(dayPlan.getAfternoonEvent().getImage().getUrl())
+                    .into(holder.ivAfternoonImage);
 
-            if (dayPlan.getEveningEvent() == null) {
-                useEmptyEvent(holder.tvEveningName, holder.ivEveningImage);
-            } else {
-                try {
-                holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
+            holder.cvAfternoon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Fragment fragment = new EventDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("event", dayPlan.getAfternoonEvent());
+                    fragment.setArguments(bundle);
+
+                    MainActivity.fragmentManager.beginTransaction()
+                            .replace(R.id.flContainer, fragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
-                Glide.with(context)
-                        .load(dayPlan.getEveningEvent().getImage().getUrl())
-                        .into(holder.ivEveningImage);
+            });
+        }
 
-                holder.cvEvening.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Fragment fragment = new EventDetailsFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("event", dayPlan.getEveningEvent());
-                        fragment.setArguments(bundle);
-
-                        MainActivity.fragmentManager.beginTransaction()
-                                .replace(R.id.flContainer, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                });
+        if (dayPlan.getEveningEvent() == null) {
+            useEmptyEvent(holder.tvEveningName, holder.ivEveningImage);
+        } else {
+            try {
+            holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-       // } catch (ParseException e) {
-       //     e.printStackTrace();
-       // }
+            Glide.with(context)
+                    .load(dayPlan.getEveningEvent().getImage().getUrl())
+                    .into(holder.ivEveningImage);
 
+            holder.cvEvening.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Fragment fragment = new EventDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("event", dayPlan.getEveningEvent());
+                    fragment.setArguments(bundle);
+
+                    MainActivity.fragmentManager.beginTransaction()
+                            .replace(R.id.flContainer, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        }
         addEditClickListeners(holder, dayPlan);
     }
 
-    private void addEditClickListeners(ViewHolder holder, final DayPlan currDayPlan) {
+    private void addEditClickListeners(final ViewHolder holder, final DayPlan currDayPlan) {
 
         holder.ivEditMorningEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO MAKE EVENT EDITABLE
-                Toast.makeText(context, "Edit morning event", Toast.LENGTH_LONG).show();
-                sendDialog("morning", currDayPlan); // Prompts user with options for editing an event
+                currHolder = holder;
+                promptUser(String.valueOf(R.string.morning_event), currDayPlan);
             }
         });
 
         holder.ivEditAfternoonEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO MAKE EVENT EDITABLE
-                Toast.makeText(context, "Edit afternoon event", Toast.LENGTH_LONG).show();
-                sendDialog("afternoon", currDayPlan);
+                currHolder = holder;
+                promptUser(String.valueOf(R.string.afternoon_event), currDayPlan);
             }
         });
 
         holder.ivEditEveningEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO MAKE EVENT EDITABLE
-                Toast.makeText(context, "Edit evening event", Toast.LENGTH_LONG).show();
-                sendDialog("evening", currDayPlan);
+                currHolder = holder;
+                promptUser(String.valueOf(R.string.evening_event), currDayPlan);
             }
         });
     }
 
-    private void sendDialog(String timeOfDay, DayPlan currDayPlan) {
+    // Prompts user with options for editing an event
+    // Passes the dayPlan and time of day so that the return data
+    // can include this information and use it to edit the arraylist of events
+    private void promptUser(String timeOfDay, DayPlan currDayPlan) {
         FragmentManager fragmentManager = MainActivity.fragmentManager;
         EditEventDialogFragment editEventDialogFragment = EditEventDialogFragment.newInstance(timeOfDay, currDayPlan);
         editEventDialogFragment.setListener(DayPlanEditableAdapter.this);
@@ -180,15 +176,33 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
 
     // This is called when the dialog is completed and the results have been passed
     @Override
-    public void returnData(String inputText, String timeOfDay, DayPlan curDayPlan) {
+    public void returnData(String action, String timeOfDay, DayPlan currDayPlan) {
+        if (action.contentEquals(context.getString(R.string.cancel))) {
+            // Do nothing
+        } else if (action.contentEquals(context.getString(R.string.remove_event))) {
+            // Removes event from the DayPlan
+            removeEvent(timeOfDay, currDayPlan);
+            notifyDataSetChanged();
+            Toast.makeText(context, "Successfully removed event", Toast.LENGTH_SHORT).show();
+        } else if (action.contentEquals(context.getString(R.string.regenerate_event))) {
+            // TODO Remove event from the DayPlan and replace it with a new one
+        }
 
-        if (timeOfDay.contentEquals("morning")) {
-            Toast.makeText(context, inputText + " " + timeOfDay + " " + curDayPlan.getMorningEvent().getName(), Toast.LENGTH_LONG).show();
-        } else if (timeOfDay.contentEquals("afternoon")) {
-            Toast.makeText(context, inputText + " " + timeOfDay + " " + curDayPlan.getAfternoonEvent().getName(), Toast.LENGTH_LONG).show();
+    }
 
-        } else {
-            Toast.makeText(context, inputText + " " + timeOfDay + " " + curDayPlan.getEveningEvent().getName(), Toast.LENGTH_LONG).show();
+    private void removeEvent(String timeOfDay, DayPlan currDayPlan) {
+        if (timeOfDay.contentEquals(String.valueOf(R.string.morning_event))) {
+            useEmptyEvent(currHolder.tvMorningName, currHolder.ivMorningImage);
+            currHolder.cvMorning.setOnClickListener(null);
+            currDayPlan.removeMorningEvent();
+        } else if (timeOfDay.contentEquals(String.valueOf(R.string.afternoon_event))) {
+            useEmptyEvent(currHolder.tvAfternoonName, currHolder.ivAfternoonImage);
+            currHolder.cvAfternoon.setOnClickListener(null);
+            currDayPlan.removeAfternoonEvent();
+        } else if (timeOfDay.contentEquals(String.valueOf(R.string.evening_event))) {
+            useEmptyEvent(currHolder.tvEveningName, currHolder.ivEveningImage);
+            currHolder.cvEvening.setOnClickListener(null);
+            currDayPlan.removeEveningEvent();
         }
     }
 
@@ -198,7 +212,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         return dayPlans.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvDayTitle;
         private CardView cvMorning;
