@@ -51,6 +51,4 @@ public class User extends ParseUser implements Parcelable {
     }
 
     public ParseRelation<Achievement> getAchievementRelation () { return getRelation(KEY_ACHIEVEMENT);}
-
-
 }
