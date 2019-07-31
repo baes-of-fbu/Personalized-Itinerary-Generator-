@@ -86,4 +86,6 @@ public class User extends ParseUser implements Parcelable {
     public void setHomeState (String homeState) {
         put(KEY_HOMESTATE, homeState);
     }
+
+
 }
