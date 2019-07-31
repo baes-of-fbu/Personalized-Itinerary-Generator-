@@ -11,21 +11,12 @@ import com.parse.ParseUser;
 public class User extends ParseUser implements Parcelable {
 
     // Instance Variables
-    private static final String KEY_FAVORITES = "favorites";
     private static final String KEY_BIO = "bio";
     private static final String KEY_IMAGE ="profileImage";
     private static final String KEY_HOMESTATE = "homeState";
     private  static final String KEY_ACHIEVEMENT = "achievement";
 
     // Getters and setters
-    public Number getFavorites() {
-        return  getNumber(KEY_FAVORITES);
-    }
-
-    public void setFavorites(Number favorites) {
-        put(KEY_FAVORITES, favorites);
-    }
-
     public String getBio() {
         return  getString(KEY_BIO);
     }
