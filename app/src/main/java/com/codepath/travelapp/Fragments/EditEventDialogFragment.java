@@ -20,10 +20,9 @@ import com.codepath.travelapp.R;
 
 public class EditEventDialogFragment extends DialogFragment {
 
-    private TextView tvEditEvent;
-    private TextView tvCancelEvent;
-    private TextView tvDeleteEvent;
-    private String actionToReturn;
+    private TextView tvRegenerateEvent;
+    private TextView tvCancelEdit;
+    private TextView tvRemoveEvent;
     private String timeOfDay;
     private DayPlan currDayPlan;
 
@@ -58,7 +57,7 @@ public class EditEventDialogFragment extends DialogFragment {
         Display display = window.getWindowManager().getDefaultDisplay();
         display.getSize(size);
         // Set the width of the dialog proportional to 75% of the screen width
-        window.setLayout((int) (size.x * 0.6), WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setLayout((int) (size.x * 0.9), WindowManager.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
         // Call super onResume after sizing
         super.onResume();
@@ -69,10 +68,9 @@ public class EditEventDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvEditEvent = view.findViewById(R.id.tvEditEvent);
-        tvCancelEvent = view.findViewById(R.id.tvCancelEvent);
-        tvDeleteEvent = view.findViewById(R.id.tvDeleteEvent);
-        actionToReturn = "";
+        tvRegenerateEvent = view.findViewById(R.id.tvRegenerateEvent);
+        tvCancelEdit = view.findViewById(R.id.tvCancelEdit);
+        tvRemoveEvent = view.findViewById(R.id.tvRemoveEvent);
         addOnClickListeners();
     }
 
@@ -88,28 +86,26 @@ public class EditEventDialogFragment extends DialogFragment {
     }
 
     private void addOnClickListeners() {
-        tvEditEvent.setOnClickListener(new View.OnClickListener() {
+        tvRegenerateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionToReturn = getString(R.string.edit);
-                mListener.returnData(actionToReturn, timeOfDay, currDayPlan);
+                mListener.returnData(getString(R.string.regenerate_event), timeOfDay, currDayPlan);
                 dismiss();
             }
         });
 
-        tvCancelEvent.setOnClickListener(new View.OnClickListener() {
+        tvCancelEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.returnData(actionToReturn, timeOfDay, currDayPlan);
+                mListener.returnData(getString(R.string.cancel), timeOfDay, currDayPlan);
                 dismiss();
             }
         });
 
-        tvDeleteEvent.setOnClickListener(new View.OnClickListener() {
+        tvRemoveEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionToReturn = getString(R.string.delete);
-                mListener.returnData(actionToReturn, timeOfDay, currDayPlan);
+                mListener.returnData(getString(R.string.remove_event), timeOfDay, currDayPlan);
                 dismiss();
             }
         });
