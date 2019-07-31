@@ -53,7 +53,7 @@ public class EditTripFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_edit_trip,container, false);
+        return inflater.inflate(R.layout.fragment_edit_trip, container, false);
     }
 
     @Override
@@ -86,8 +86,6 @@ public class EditTripFragment extends Fragment {
         dayPlans = bundle.getParcelableArrayList("dayPlans");
 
         etEditTripName.setText(tripName);
-
-
 
         // Populate DayPlans
         DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans);

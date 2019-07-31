@@ -12,10 +12,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Fragments.EditEventDialogFragment;
 import com.codepath.travelapp.Fragments.EventDetailsFragment;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.R;
@@ -23,7 +25,7 @@ import com.parse.ParseException;
 
 import java.util.ArrayList;
 
-public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditableAdapter.ViewHolder> {
+public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditableAdapter.ViewHolder> implements EditEventDialogFragment.Listener {
 
     private Context context;
     private ArrayList<DayPlan> dayPlans;
@@ -48,9 +50,15 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
 
         //Set the views
         holder.tvDayTitle.setText(dayPlan.getDate().toString());
-        try { // Try/catch needed to handle except for '.fetchIfNeeded()'
-            if (dayPlan.getMorningEvent() != null) {
-                holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
+       // try { // Try/catch needed to handle except for '.fetchIfNeeded()'
+            if (dayPlan.getMorningEvent() == null) {
+                useEmptyEvent(holder.tvMorningName, holder.ivMorningImage);
+            } else {
+                try {
+                    holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 Glide.with(context)
                         .load(dayPlan.getMorningEvent().getImage().getUrl())
                         .into(holder.ivMorningImage);
@@ -69,19 +77,16 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                                 .commit();
                     }
                 });
-                holder.ivEditMorningEvent.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO MAKE EVENT EDITABLE
-                        Toast.makeText(context, "Edit morning event", Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else {
-                useEmptyEvent(holder.tvMorningName, holder.ivMorningImage);
             }
 
-            if (dayPlan.getAfternoonEvent() != null) {
+            if (dayPlan.getAfternoonEvent() == null) {
+                useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage);
+            } else {
+                try {
                 holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 Glide.with(context)
                         .load(dayPlan.getAfternoonEvent().getImage().getUrl())
                         .into(holder.ivAfternoonImage);
@@ -100,20 +105,16 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                                 .commit();
                     }
                 });
-
-                holder.ivEditAfternoonEvent.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO MAKE EVENT EDITABLE
-                        Toast.makeText(context, "Edit afternoon event", Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else {
-                useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage);
             }
 
-            if (dayPlan.getEveningEvent() != null) {
+            if (dayPlan.getEveningEvent() == null) {
+                useEmptyEvent(holder.tvEveningName, holder.ivEveningImage);
+            } else {
+                try {
                 holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 Glide.with(context)
                         .load(dayPlan.getEveningEvent().getImage().getUrl())
                         .into(holder.ivEveningImage);
@@ -132,19 +133,62 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                                 .commit();
                     }
                 });
-
-                holder.ivEditEveningEvent.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO MAKE EVENT EDITABLE
-                        Toast.makeText(context, "Edit evening event", Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else {
-                useEmptyEvent(holder.tvEveningName, holder.ivEveningImage);
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
+       // } catch (ParseException e) {
+       //     e.printStackTrace();
+       // }
+
+        addEditClickListeners(holder, dayPlan);
+    }
+
+    private void addEditClickListeners(ViewHolder holder, final DayPlan currDayPlan) {
+
+        holder.ivEditMorningEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO MAKE EVENT EDITABLE
+                Toast.makeText(context, "Edit morning event", Toast.LENGTH_LONG).show();
+                sendDialog("morning", currDayPlan); // Prompts user with options for editing an event
+            }
+        });
+
+        holder.ivEditAfternoonEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO MAKE EVENT EDITABLE
+                Toast.makeText(context, "Edit afternoon event", Toast.LENGTH_LONG).show();
+                sendDialog("afternoon", currDayPlan);
+            }
+        });
+
+        holder.ivEditEveningEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO MAKE EVENT EDITABLE
+                Toast.makeText(context, "Edit evening event", Toast.LENGTH_LONG).show();
+                sendDialog("evening", currDayPlan);
+            }
+        });
+    }
+
+    private void sendDialog(String timeOfDay, DayPlan currDayPlan) {
+        FragmentManager fragmentManager = MainActivity.fragmentManager;
+        EditEventDialogFragment editEventDialogFragment = EditEventDialogFragment.newInstance(timeOfDay, currDayPlan);
+        editEventDialogFragment.setListener(DayPlanEditableAdapter.this);
+        editEventDialogFragment.show(fragmentManager, "fragment_edit_event_options");
+    }
+
+    // This is called when the dialog is completed and the results have been passed
+    @Override
+    public void returnData(String inputText, String timeOfDay, DayPlan curDayPlan) {
+
+        if (timeOfDay.contentEquals("morning")) {
+            Toast.makeText(context, inputText + " " + timeOfDay + " " + curDayPlan.getMorningEvent().getName(), Toast.LENGTH_LONG).show();
+        } else if (timeOfDay.contentEquals("afternoon")) {
+            Toast.makeText(context, inputText + " " + timeOfDay + " " + curDayPlan.getAfternoonEvent().getName(), Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(context, inputText + " " + timeOfDay + " " + curDayPlan.getEveningEvent().getName(), Toast.LENGTH_LONG).show();
         }
     }
 
