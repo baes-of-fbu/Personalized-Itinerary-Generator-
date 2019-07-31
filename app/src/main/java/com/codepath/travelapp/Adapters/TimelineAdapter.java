@@ -71,7 +71,26 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());
-        holder.tvTags.setText(R.string.tag); //TODO populate this field with actual list of tags
+        holder.tvTags.setText(R.string.tags); //TODO populate this field with actual list of tags
+
+        // Load trip owner profile image
+        if (trip.getOwner().get("profileImage") != null) {
+            ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+            assert image != null;
+            Glide.with(context)
+                    .load(image.getUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(holder.ivProfileImage);
+        }
+
+        // Load trip cover photo
+        if (trip.getImage() != null) {
+            ParseFile image = trip.getImage();
+            assert image != null;
+            Glide.with(context)
+                    .load(image.getUrl())
+                    .into(holder.ivTripImage);
+        }
 
         /*
          * Trip does not store the complete City object, so a Parse query must be made to get the
@@ -92,25 +111,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 }
             }
         });
-
-        // Load trip owner profile image
-        if (trip.getOwner().get("profileImage") != null) {
-            ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
-            assert image != null;
-            Glide.with(context)
-                    .load(image.getUrl())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(holder.ivProfileImage);
-        }
-
-        // Load trip cover photo
-        if (trip.getImage() != null) {
-            ParseFile image = trip.getImage();
-            assert image != null;
-            Glide.with(context)
-                    .load(image.getUrl())
-                    .into(holder.ivTripImage);
-        }
 
         // Send a Parse Query to get "likes" Relation
         trip.getLikes().getQuery().findInBackground(new FindCallback<User>() {
@@ -155,6 +155,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 holder.tvNumLikes.setText(Integer.toString(numLikes[0]));
             }
         });
+
+        // Send a Parse Query to get "saved" relation
+        //TODO
+
+        // Set onClickListener to Save icon to reflect whether or not the current user has saved the trip
+        //TODO
+
+        // Send a Parse Query to get "comments"
+        //TODO
+
+        // Set onClickListener to prompt the current user to write a comment for a trip
+        //TODO
 
         // Sends a bundle to ProfileFragment when username is clicked
         holder.tvUsername.setOnClickListener(new View.OnClickListener() {
@@ -221,6 +233,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         private TextView tvCityName;
         private TextView tvNumLikes;
         private ImageButton ibLike;
+        private ImageButton ibComment;
+        private ImageButton ibSave;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -235,6 +249,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             tvCityName = itemView.findViewById(R.id.tvCityName);
             tvNumLikes = itemView.findViewById(R.id.tvNumLikes);
             ibLike = itemView.findViewById(R.id.ibLike);
+            ibComment = itemView.findViewById(R.id.ibComment);
+            ibSave = itemView.findViewById(R.id.ibSave);
 
             itemView.setOnClickListener(this);
         }

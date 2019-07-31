@@ -21,8 +21,8 @@ public class Trip extends ParseObject implements Serializable {
     private static final String KEY_NUMDAYS = "numDays";
     public static final String KEY_STARTDATE = "startDate";
     public static final String KEY_ENDDATE = "endDate";
-    private static final String KEY_ISFAVORITED = "isFavorited";
     private static final String KEY_LIKES = "likes";
+    private static final String KEY_SAVED = "saved";
 
     // Getters and setters
     public String getName() {
@@ -89,15 +89,11 @@ public class Trip extends ParseObject implements Serializable {
         put(KEY_ENDDATE, date);
     }
 
-    public Boolean isFavorited() {
-        return getBoolean(KEY_ISFAVORITED);
-    }
-
-    public void setFavorited(Boolean bool) {
-        put(KEY_ISFAVORITED, bool);
-    }
-
     public ParseRelation<User> getLikes() {
         return getRelation(KEY_LIKES);
+    }
+
+    public ParseRelation<User> getSaved() {
+        return getRelation(KEY_SAVED);
     }
 }
