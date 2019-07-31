@@ -74,6 +74,7 @@
     <string name="budget">Trip Budget</string>
     <string name="city">City</string>
     <string name="event_name">Event Name</string>
+    <string name="empty_slot">Empty slot</string>
     <string name="days">Days</string>
     <string name="budget_bold">Budget</string>
     <string name="cost">Cost</string>

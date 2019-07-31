@@ -77,7 +77,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                     }
                 });
             } else {
-                // TODO place holder
+                useEmptyEvent(holder.tvMorningName, holder.ivMorningImage);
             }
 
             if (dayPlan.getAfternoonEvent() != null) {
@@ -109,7 +109,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                     }
                 });
             } else {
-                // TODO place holder
+                useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage);
             }
 
             if (dayPlan.getEveningEvent() != null) {
@@ -141,7 +141,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                     }
                 });
             } else {
-                // TODO place holder
+                useEmptyEvent(holder.tvEveningName, holder.ivEveningImage);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -188,4 +188,8 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         }
     }
 
+    public void useEmptyEvent(TextView tvEventName, ImageView ivEventImage) {
+        tvEventName.setText(R.string.empty_slot);
+        ivEventImage.setImageResource(R.drawable.emptyevent);
+    }
 }
