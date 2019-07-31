@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#FF0DBE</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="LightSkyBlue">#CA87CEFA</color>
     <color name="signUpTransparent">#CAF1F6F8</color>
+    <color name="pink">#FE90a5</color>
 </resources>

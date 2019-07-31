@@ -56,7 +56,7 @@ import me.relex.circleindicator.CircleIndicator2;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 
-public class TripReviewFragment extends Fragment implements EditDialogFragment.EditTripDialogListener {
+public class TripReviewFragment extends Fragment implements EditTripDialogFragment.EditTripDialogListener {
 
     private String tripName;
     private City city;
@@ -74,7 +74,7 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_trip_review,container, false);
+        return inflater.inflate(R.layout.fragment_trip_review, container, false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -225,9 +225,9 @@ public class TripReviewFragment extends Fragment implements EditDialogFragment.E
 //                        .addToBackStack(null)
 //                        .commit();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
-                EditDialogFragment editTripDialogFragment = EditDialogFragment.newInstance();
+                EditTripDialogFragment editTripDialogFragment = EditTripDialogFragment.newInstance();
                 editTripDialogFragment.setTargetFragment(TripReviewFragment.this, 300);
-                editTripDialogFragment.show(fragmentManager, "fragment_editdialog_options");
+                editTripDialogFragment.show(fragmentManager, "fragment_edit_trip_options");
             }
         });
 

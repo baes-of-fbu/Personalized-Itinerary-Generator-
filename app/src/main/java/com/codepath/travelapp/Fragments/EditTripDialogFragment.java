@@ -17,7 +17,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.codepath.travelapp.R;
 
-public class EditDialogFragment extends DialogFragment {
+public class EditTripDialogFragment extends DialogFragment {
 
     private TextView tvEdit;
     private TextView tvSaveForLater;
@@ -25,13 +25,13 @@ public class EditDialogFragment extends DialogFragment {
     private TextView tvDelete;
     private String actionToReturn;
 
-    public EditDialogFragment() {
+    public EditTripDialogFragment() {
         // Empty constructor is required for DialogFragment
     }
 
     // TODO REMOVE PARAMETERS
-    public static EditDialogFragment newInstance() {
-        EditDialogFragment fragment = new EditDialogFragment();
+    public static EditTripDialogFragment newInstance() {
+        EditTripDialogFragment fragment = new EditTripDialogFragment();
         return fragment;
     }
 
