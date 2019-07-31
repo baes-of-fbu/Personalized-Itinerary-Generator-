@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +29,6 @@ import com.codepath.travelapp.Adapters.CurrentTripAdapter;
 import com.codepath.travelapp.Adapters.PreviousTripAdapter;
 import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
 import com.codepath.travelapp.Models.Achievement;
-import com.codepath.travelapp.Models.Event;
-import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
@@ -305,23 +302,28 @@ public class ProfileFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void updateFollowCnt(final TextView tvFollowersCount, TextView tvFollowingCount) {
-        final int followers;
-        int following;
+    private void updateFollowCnt(final TextView tvFollowersCount, final TextView tvFollowingCount) {
+        final int[] followers = {0};
+        final int[] following = {0};
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
+        query.include("from");
+        query.include("to");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> followList, ParseException e) {
                 if (e == null) {
                     for (int i = 0; i < followList.size(); i++) {
-
+                        if (((User) followList.get(i).get("to")).getUsername().equals(userProfile.getUsername())) {
+                            followers[0]++;
+                        } else if (((User) followList.get(i).get("from")).getUsername().equals(userProfile.getUsername())) {
+                            following[0]++;
+                        }
                     }
+                    tvFollowersCount.setText(Integer.toString(followers[0]));
+                    tvFollowingCount.setText(Integer.toString(following[0]));
                 }
             }
         });
-
-//        tvFollowersCount.setText(Integer.toString(followList.size()));
-//        tvFollowingCount.setText(Integer.toString(profileFollowing.size()));
     }
 
     @SuppressLint("ClickableViewAccessibility")

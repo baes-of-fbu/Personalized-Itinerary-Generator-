@@ -145,6 +145,53 @@
             app:layout_constraintTop_toTopOf="parent"
             card_view:srcCompat="@drawable/ic_location_on_black_24dp" />
 
+        <ImageButton
+            android:id="@+id/ibLike"
+            android:layout_width="@dimen/post_btn_size"
+            android:layout_height="@dimen/post_btn_size"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivTripImage"
+            card_view:srcCompat="@drawable/ufi_heart" />
+
+        <ImageButton
+            android:id="@+id/ibComment"
+            android:layout_width="@dimen/post_btn_size"
+            android:layout_height="@dimen/post_btn_size"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ibLike"
+            app:layout_constraintTop_toBottomOf="@+id/ivTripImage"
+            card_view:srcCompat="@drawable/ufi_comment" />
+
+        <ImageButton
+            android:id="@+id/ibSave"
+            android:layout_width="@dimen/post_btn_size"
+            android:layout_height="@dimen/post_btn_size"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:tint="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/ibComment"
+            app:layout_constraintTop_toBottomOf="@+id/ivTripImage"
+            app:layout_constraintVertical_bias="0.0"
+            card_view:srcCompat="@drawable/ufi_save" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
