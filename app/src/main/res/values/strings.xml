@@ -101,4 +101,5 @@
     <string name="cancel">Cancel</string>
     <string name="selected_categories">Selected Categories</string>
     <string name="remaining">Remaining</string>
+    <string name="tag">Tag</string>
 </resources>

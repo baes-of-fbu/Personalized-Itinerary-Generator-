@@ -1,5 +1,6 @@
 package com.codepath.travelapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -70,8 +71,50 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());
+        holder.tvTags.setText(R.string.tag); //TODO populate this field with actual list of tags
 
+        /*
+         * Trip does not store the complete City object, so a Parse query must be made to get the
+         * object, allowing access to city.getName() and city.getState()
+         */
+        String cityId = trip.getCity().getObjectId();
+        ParseQuery<City> cityQuery = new ParseQuery<>(City.class);
+        cityQuery.whereEqualTo(City.KEY_OBJECT_ID, cityId);
+        cityQuery.findInBackground(new FindCallback<City>() {
+            @Override
+            public void done(List<City> objects, ParseException e) {
+                if (e == null) {
+                    city = objects.get(0);
+                    String cityStateString = city.getName() + ", " + city.getState();
+                    holder.tvCityName.setText(cityStateString);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // Load trip owner profile image
+        if (trip.getOwner().get("profileImage") != null) {
+            ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+            assert image != null;
+            Glide.with(context)
+                    .load(image.getUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(holder.ivProfileImage);
+        }
+
+        // Load trip cover photo
+        if (trip.getImage() != null) {
+            ParseFile image = trip.getImage();
+            assert image != null;
+            Glide.with(context)
+                    .load(image.getUrl())
+                    .into(holder.ivTripImage);
+        }
+
+        // Send a Parse Query to get "likes" Relation
         trip.getLikes().getQuery().findInBackground(new FindCallback<User>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void done(List<User> objects, ParseException e) {
                 if (e == null) {
@@ -81,75 +124,38 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                         }
                     }
                     if (likedCurrent[0]) {
-                        holder.ibLike.setImageResource(heart_filled);
-                        holder.ibLike.setColorFilter(Color.rgb(255, 0,0 ));
+                        setActiveLikeIcon(holder);
                     } else {
-                        holder.ibLike.setImageResource(ufi_heart);
-                        holder.ibLike.setColorFilter(Color.BLACK);
+                        setInactiveLikeIcon(holder);
                     }
                     numLikes[0] = objects.size();
                     holder.tvNumLikes.setText(Integer.toString(numLikes[0]));
+                } else {
+                    e.printStackTrace();
                 }
             }
         });
 
-        // Trip does not store the complete City object, so a Parse
-        // query must be made to get the object, allowing access to
-        // city.getName() and city.getState()
-        String cityId = trip.getCity().getObjectId();
-        ParseQuery<City> cityQuery = new ParseQuery<City>(City.class);
-        cityQuery.whereEqualTo(City.KEY_OBJECT_ID, cityId);
-        cityQuery.findInBackground(new FindCallback<City>() {
-            @Override
-            public void done(List<City> objects, ParseException e) {
-                if (e == null) {
-                    city = objects.get(0);
-                    String cityStateString = city.getName() + ", " + city.getState();
-                    holder.tvCityName.setText(cityStateString);
-                }
-            }
-        });
-
-
-
-        if (trip.getOwner().get("profileImage") != null) {
-            ParseFile image = (ParseFile) trip.getOwner().get("profileImage"); // TODO CHANGE TO USER, NOT PARSEUSER
-            assert image != null;
-            Glide.with(context)
-                    .load(image.getUrl())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(holder.ivProfileImage);
-        }
-
-        if (trip.getImage() != null) {
-            ParseFile image = trip.getImage();
-            assert image != null;
-            Glide.with(context)
-                    .load(image.getUrl())
-                    .into(holder.ivTripImage);
-        }
-
+        // Set onClickListener to Like icon to reflect whether or not the current user has liked a trip
         holder.ibLike.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
                 if (likedCurrent[0]) {
                     trip.getLikes().remove((User) ParseUser.getCurrentUser());
-                    trip.saveInBackground();
                     numLikes[0]--;
-                    holder.ibLike.setImageResource(ufi_heart);
-                    holder.ibLike.setColorFilter(Color.BLACK);
-                    likedCurrent[0] = false;
+                    setInactiveLikeIcon(holder);
                 } else {
                     trip.getLikes().add((User) ParseUser.getCurrentUser());
-                    trip.saveInBackground();
                     numLikes[0]++;
-                    holder.ibLike.setImageResource(heart_filled);
-                    holder.ibLike.setColorFilter(Color.rgb(255, 0,0 ));
-                    likedCurrent[0] = true;
+                    setActiveLikeIcon(holder);
                 }
+                likedCurrent[0] = !likedCurrent[0];
+                trip.saveInBackground();
                 holder.tvNumLikes.setText(Integer.toString(numLikes[0]));
             }
         });
+
         // Sends a bundle to ProfileFragment when username is clicked
         holder.tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +172,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                         .commit();
             }
         });
+
+        // Opens city location in Maps application
         holder.tvCityName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,6 +187,21 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 }
             }
         });
+    }
+
+    private void setInactiveLikeIcon(@NonNull ViewHolder holder) {
+        holder.ibLike.setImageResource(ufi_heart);
+        holder.ibLike.setColorFilter(Color.BLACK);
+    }
+
+    private void setActiveLikeIcon(@NonNull ViewHolder holder) {
+        holder.ibLike.setImageResource(heart_filled);
+        holder.ibLike.setColorFilter(Color.rgb(255, 0,0 ));
+    }
+
+    private String geoPointToString(String geoPoint) {
+        String temp = geoPoint.substring(geoPoint.indexOf('[') + 1, geoPoint.length() - 1);
+        return "geo:" + temp;
     }
 
     // Returns total count of trips
@@ -241,14 +264,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
     public void addAll(List<Trip> list) {
         trips.addAll(list);
         notifyDataSetChanged();
     }
-    private String geoPointToString(String geoPoint) {
-        String temp = geoPoint.substring(geoPoint.indexOf('[') + 1, geoPoint.length() - 1);
-        return "geo:" + temp;
-    }
-
 }
