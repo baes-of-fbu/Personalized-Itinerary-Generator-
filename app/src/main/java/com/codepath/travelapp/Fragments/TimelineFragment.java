@@ -47,25 +47,24 @@ public class TimelineFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView rvTrips = view.findViewById(R.id.rvTrips);
 
-        // create the upcomingTripAdapter
+        // create the upcomingTripAdapter and set the layout manager on the recycler view
         ArrayList<Trip> mTrips = new ArrayList<>();
-        // create the data source
         adapter = new TimelineAdapter(mTrips);
-        // set the layout manager on the recycler view
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvTrips.setLayoutManager(linearLayoutManager);
         rvTrips.setAdapter(adapter);
 
+        // Set up the scroll listener and add it to RecyclerView
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                loadNextDataFromApi(page);
             }
         };
-        // Adds the scroll listener to RecyclerView
         rvTrips.addOnScrollListener(scrollListener);
 
         queryPosts();
+
         // Swipe Container/ refresh code
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -75,7 +74,6 @@ public class TimelineFragment extends Fragment {
                 queryPosts();
             }
         });
-
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -86,10 +84,10 @@ public class TimelineFragment extends Fragment {
         rvTrips.addItemDecoration(divider);
     }
 
+    // Query all trips and add them to the adapter to populate the Timeline
     private void queryPosts() {
         adapter.clear();
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-
         tripQuery.setLimit(page_size);
         tripQuery.include(Trip.KEY_OWNER);
         tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
@@ -97,24 +95,26 @@ public class TimelineFragment extends Fragment {
             @Override
             public void done(List<Trip> trips, ParseException e) {
                 swipeContainer.setRefreshing(false);
-                if (e != null) {
+                if (e == null) {
+                    adapter.addAll(trips);
+                } else {
                     Log.e(TAG,"Error");
                     e.printStackTrace();
-                    return;
                 }
-                adapter.addAll(trips);
             }
         });
     }
 
     // Append the next page of data into the adapter
-    // This method probably sends out a network request and appends new data items to your adapter.
     private void loadNextDataFromApi(int offset) {
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
         tripQuery.include(Trip.KEY_OWNER);
-        if(loadMore) { // True when there are potentially more posts to load
+
+        // True is there are more posts to load
+        if(loadMore) {
             tripQuery.setSkip(offset*page_size);
         }
+
         tripQuery.setLimit(page_size);
         tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
         tripQuery.findInBackground(new FindCallback<Trip>() {
