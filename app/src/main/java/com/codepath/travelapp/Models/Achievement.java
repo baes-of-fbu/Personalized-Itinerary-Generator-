@@ -10,7 +10,7 @@ import com.parse.ParseRelation;
 
 import static android.provider.Settings.System.getString;
 
-@ParseClassName("Achievment")
+@ParseClassName("Achievement")
 public class Achievement extends ParseObject implements Parcelable {
     // Instance variables
     private static final String KEY_NAME = "name";

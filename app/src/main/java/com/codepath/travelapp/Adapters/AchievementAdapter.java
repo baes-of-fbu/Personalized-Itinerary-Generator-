@@ -1,6 +1,7 @@
 package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -31,19 +33,20 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         View view = LayoutInflater.from(context).inflate(R.layout.item_achievment, parent, false);
         return new ViewHolder(view);
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull AchievementAdapter.ViewHolder holder, int position) {
         // Get an achievement
-        final Achievement achievement = achievements.get(position);
-        holder.tvAchievment.setText(achievement.getName());
+        Achievement achievement = achievements.get(position);
+
+        holder.tvAchievement.setText(achievement.getName());
 
         if (achievement.getImage() != null) {
             ParseFile image = achievement.getImage();
             assert image != null;
             Glide.with(context)
                     .load(image.getUrl())
-                    .into(holder.ivAchievment);
+                    .into(holder.ivAchievement);
         }
 
     }
@@ -52,13 +55,13 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
     public int getItemCount() { return achievements.size(); }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvAchievment;
-        private ImageView ivAchievment;
+        private TextView tvAchievement;
+        private ImageView ivAchievement;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             //Find views that will be populated
-            tvAchievment = itemView.findViewById(R.id.tvAchievement);
-            ivAchievment = itemView.findViewById(R.id.ivAchievement);
+            tvAchievement = itemView.findViewById(R.id.tvAchievement);
+            ivAchievement = itemView.findViewById(R.id.ivAchievement);
         }
     }
     public void clear() {
