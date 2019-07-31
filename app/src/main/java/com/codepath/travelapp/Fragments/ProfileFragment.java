@@ -49,6 +49,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 import static com.parse.ParseUser.getCurrentUser;
 
@@ -182,11 +184,21 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    private void queryAchievements(ParseUser user) {
-
-        // Create queries for each achievement
-        //for (int i  = 0; i = achievementAdapter)
+    private void queryAchievements(User user) {
+        ParseQuery<Achievement> achievementQuery = user.getAchievementRelation().getQuery();
+        achievementQuery.findInBackground(new FindCallback<Achievement>() {
+            @Override
+            public void done(List<Achievement> achievements, ParseException e) {
+                if (e == null) {
+                    Log.e(TAG,"Error");
+                    return;
+                }
+                Toast.makeText(getContext(),"Query works", LENGTH_LONG).show();
+                achievementAdapter.addAll(achievements);
+            }
+        });
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -276,13 +288,14 @@ public class ProfileFragment extends Fragment {
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);
         queryCurrentPosts(userProfile);
+        queryAchievements(userProfile);
 
 
         // Set onClick listener for follow/currentFollowing button
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "HELLO", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "HELLO", LENGTH_SHORT).show();
                 if (following.containsKey(userProfile.getUsername())) {
                     following.get(userProfile.getUsername()).deleteInBackground();
                     following.remove(userProfile.getUsername());

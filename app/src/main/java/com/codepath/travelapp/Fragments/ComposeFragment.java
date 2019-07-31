@@ -193,7 +193,6 @@ public class ComposeFragment extends Fragment {
                     // Creates a new query for the events in the city
                     allAvailableEvents = new ArrayList<>();
                     List<ParseQuery<Event>> queries = new ArrayList<>();
-
                     // Creates queries for each tag
                     for (int i = 0; i < selectedTags.size(); i++) {
                         Tag tag = selectedTags.get(i);
