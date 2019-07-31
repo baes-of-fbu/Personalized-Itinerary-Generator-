@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,9 +25,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Adapters.AchievementAdapter;
 import com.codepath.travelapp.Adapters.CurrentTripAdapter;
 import com.codepath.travelapp.Adapters.PreviousTripAdapter;
 import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
+import com.codepath.travelapp.Models.Achievement;
+import com.codepath.travelapp.Models.Event;
+import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
@@ -53,6 +58,7 @@ public class ProfileFragment extends Fragment {
     private UpcomingTripAdapter upcomingTripAdapter;
     private PreviousTripAdapter previousTripAdapter;
     private CurrentTripAdapter currentTripAdapter;
+    private AchievementAdapter achievementAdapter;
 //    private Fragment sidebarFragment; TODO check if needed
 
     private int pageSize = 10;
@@ -88,25 +94,26 @@ public class ProfileFragment extends Fragment {
                         return;
                     }
                     userProfile = (User) objects.get(0);
+                    userCurrent = (User) getCurrentUser();
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
+                    query.whereEqualTo("from", ParseUser.getCurrentUser());
+                    query.include("to");
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        public void done(List<ParseObject> followList, ParseException e) {
+                            if (e == null) {
+                                for (int i = 0; i < followList.size(); i++) {
+                                    following.put(((User) followList.get(i).get("to")).getUsername(), followList.get(i));
+                                }
+                                FillInLayout(view);
+                                SideSwipe(view);
+                            }
+                        }
+                    });
                 }
             });
         }
 
-        userCurrent = (User) getCurrentUser();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
-        query.whereEqualTo("from", ParseUser.getCurrentUser());
-        query.include("to");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> followList, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < followList.size(); i++) {
-                        following.put(((User) followList.get(i).get("to")).getUsername(), followList.get(i));
-                    }
-                    FillInLayout(view);
-                    SideSwipe(view);
-                }
-            }
-        });
+
     }
 
     private void queryUpcomingPosts(ParseUser user) {
@@ -175,6 +182,11 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+    private void queryAchievements(ParseUser user) {
+
+        // Create queries for each achievement
+        //for (int i  = 0; i = achievementAdapter)
+    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -187,6 +199,7 @@ public class ProfileFragment extends Fragment {
         RecyclerView rvUpcoming = view.findViewById(R.id.rvUpcoming);
         RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);
         RecyclerView rvCurrent = view.findViewById(R.id.rvCurrent);
+        RecyclerView rvAchievements = view.findViewById(R.id.rvAchievements);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
         TextView tvBio = view.findViewById(R.id.tvBio);
@@ -239,14 +252,17 @@ public class ProfileFragment extends Fragment {
         ArrayList<Trip> upcomingTrips = new ArrayList<>();
         final ArrayList<Trip> previousTrips = new ArrayList<>();
         ArrayList<Trip> currentTrips = new ArrayList<>();
+        ArrayList<Achievement> achievements = new ArrayList<>();
         //create the data source
         upcomingTripAdapter = new UpcomingTripAdapter(upcomingTrips);
         previousTripAdapter = new PreviousTripAdapter(previousTrips);
         currentTripAdapter = new CurrentTripAdapter(currentTrips);
+        achievementAdapter = new AchievementAdapter(achievements);
         // initialize the linear layout manager
         LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL,false);
         LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL, false);
+        LinearLayoutManager achievementLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL, false);
         // set the layout manager on the recycler view
         rvUpcoming.setLayoutManager(upcomingLayoutManager);
         rvPrevious.setLayoutManager(previousLayoutManager);
@@ -255,6 +271,7 @@ public class ProfileFragment extends Fragment {
         rvUpcoming.setAdapter(upcomingTripAdapter);
         rvPrevious.setAdapter(previousTripAdapter);
         rvCurrent.setAdapter(currentTripAdapter);
+        rvAchievements.setAdapter(achievementAdapter);
         // query posts for each view
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);

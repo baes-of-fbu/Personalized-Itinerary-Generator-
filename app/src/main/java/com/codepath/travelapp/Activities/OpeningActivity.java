@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -40,7 +43,10 @@ public class OpeningActivity extends AppCompatActivity {
                 ImageView imageView = new ImageView(OpeningActivity.this);
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-                return new ImageView(OpeningActivity.this);
+//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                imageView.setLayoutParams(params);
+
+                return imageView;
             }
         });
 
@@ -92,7 +98,7 @@ public class OpeningActivity extends AppCompatActivity {
                 });
             }
 
-        }, 0, 2500);
+        }, 0, 5000);
 
     }
 
