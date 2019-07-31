@@ -98,7 +98,7 @@ public class Trip extends ParseObject implements Serializable {
         return getRelation(KEY_SAVED);
     }
 
-    public ParseRelation<User> getComments() {
+    public ParseRelation<Comment> getComments() {
         return getRelation(KEY_COMMENTS);
     }
 }
