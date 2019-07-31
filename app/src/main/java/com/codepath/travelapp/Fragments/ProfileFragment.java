@@ -34,11 +34,13 @@ import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,7 +60,6 @@ public class ProfileFragment extends Fragment {
     private PreviousTripAdapter previousTripAdapter;
     private CurrentTripAdapter currentTripAdapter;
     private AchievementAdapter achievementAdapter;
-//    private Fragment sidebarFragment; TODO check if needed
 
     private int pageSize = 10;
 
@@ -137,7 +138,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void queryPreviousPosts(ParseUser user) {
+    private void queryPreviousPosts(final User user) {
         previousTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
@@ -155,6 +156,27 @@ public class ProfileFragment extends Fragment {
                     return;
                 }
                 previousTripAdapter.addAll(trips);
+                if (trips.size() > 5) {
+                    ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
+                    achievementQuery.whereEqualTo("name", "Adventurer");
+                    achievementQuery.findInBackground(new FindCallback<Achievement>() {
+                        @Override
+                        public void done(final List<Achievement> objects, ParseException e) {
+                            if (e == null) {
+                                user.getAchievementRelation().add(objects.get((0)));
+                                user.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            queryAchievements();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                }
             }
         });
     }
@@ -181,17 +203,19 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    private void queryAchievements(User user) {
-        ParseQuery<Achievement> achievementQuery = user.getAchievementRelation().getQuery();
-        achievementQuery.findInBackground(new FindCallback<Achievement>() {
+    private void queryAchievements() {
+
+        ParseQuery<Achievement> achievementParseQuery = userProfile.getAchievementRelation().getQuery();
+        achievementParseQuery.findInBackground(new FindCallback<Achievement>() {
             @Override
             public void done(List<Achievement> achievements, ParseException e) {
                 if (e == null) {
+                    Log.d(TAG, "The query was successful");
+                    achievementAdapter.addAll(achievements);
+                }else {
                     Log.e(TAG,"Error");
-                    return;
+                    e.printStackTrace();
                 }
-                Toast.makeText(getContext(),"Query works", LENGTH_LONG).show();
-                achievementAdapter.addAll(achievements);
             }
         });
     }
@@ -259,7 +283,7 @@ public class ProfileFragment extends Fragment {
 
         //create the upcomingTripAdapter
         ArrayList<Trip> upcomingTrips = new ArrayList<>();
-        final ArrayList<Trip> previousTrips = new ArrayList<>();
+        ArrayList<Trip> previousTrips = new ArrayList<>();
         ArrayList<Trip> currentTrips = new ArrayList<>();
         ArrayList<Achievement> achievements = new ArrayList<>();
         //create the data source
@@ -276,6 +300,7 @@ public class ProfileFragment extends Fragment {
         rvUpcoming.setLayoutManager(upcomingLayoutManager);
         rvPrevious.setLayoutManager(previousLayoutManager);
         rvCurrent.setLayoutManager(currentLayoutManager);
+        rvAchievements.setLayoutManager(achievementLayoutManager);
         // set the adapters
         rvUpcoming.setAdapter(upcomingTripAdapter);
         rvPrevious.setAdapter(previousTripAdapter);
@@ -285,7 +310,7 @@ public class ProfileFragment extends Fragment {
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);
         queryCurrentPosts(userProfile);
-        queryAchievements(userProfile);
+
 
 
         // Set onClick listener for follow/currentFollowing button
@@ -358,4 +383,5 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
 }

@@ -15,7 +15,7 @@ public class User extends ParseUser implements Parcelable {
     private static final String KEY_BIO = "bio";
     private static final String KEY_IMAGE ="profileImage";
     private static final String KEY_HOMESTATE = "homeState";
-    private  static final String KEY_ACHIEVEMENT = "acievement";
+    private  static final String KEY_ACHIEVEMENT = "achievement";
 
     // Getters and setters
     public Number getFavorites() {
