@@ -1,5 +1,6 @@
 package com.codepath.travelapp.Fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -47,6 +48,7 @@ public class CommentDialogFragment extends DialogFragment {
 
     private CommentAdapter adapter;
     private Trip trip;
+    private List<Comment> mComments;
 
     public CommentDialogFragment() {
     }
@@ -85,6 +87,8 @@ public class CommentDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mComments = new ArrayList<>();
+
         tvTripName = view.findViewById(R.id.tvTripName);
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         etNewComment = view.findViewById(R.id.etNewComment);
@@ -93,8 +97,8 @@ public class CommentDialogFragment extends DialogFragment {
 
         tvTripName.setText(trip.getName());
 
-        if (trip.getOwner().get("profileImage") != null) {
-            ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+        if (ParseUser.getCurrentUser().get("profileImage") != null) {
+            ParseFile image = (ParseFile) ParseUser.getCurrentUser().get("profileImage");
             assert image != null;
             if (getContext() != null) {
                 Glide.with(getContext())
@@ -104,22 +108,13 @@ public class CommentDialogFragment extends DialogFragment {
             }
         }
 
-        ArrayList<Comment> mComments = new ArrayList<>();
+        final ArrayList<Comment> mComments = new ArrayList<>();
         adapter = new CommentAdapter(mComments);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvComments.setLayoutManager(linearLayoutManager);
         rvComments.setAdapter(adapter);
 
-        trip.getComments().getQuery().findInBackground(new FindCallback<Comment>() {
-            @Override
-            public void done(List<Comment> objects, ParseException e) {
-                if (e == null) {
-                    adapter.addAll(objects);
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        });
+        populateComments();
 
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,15 +129,41 @@ public class CommentDialogFragment extends DialogFragment {
                         public void done(ParseException e) {
                             if (e == null) {
                                 trip.getComments().add(comment);
-                                trip.saveInBackground();
+                                trip.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        populateComments();
+                                    }
+                                });
                             } else {
                                 e.printStackTrace();
                             }
                         }
                     });
                     etNewComment.setText("");
+                    populateComments();
                 } else {
                     Toast.makeText(getContext(), "Please input a comment", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void populateComments() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Adding your comment...");
+        progressDialog.setTitle("Please wait");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        trip.getComments().getQuery().orderByAscending("createdAt").findInBackground(new FindCallback<Comment>() {
+            @Override
+            public void done(List<Comment> objects, ParseException e) {
+                if (e == null) {
+                    adapter.clear();
+                    adapter.addAll(objects);
+                    progressDialog.hide();
+                } else {
+                    e.printStackTrace();
                 }
             }
         });
