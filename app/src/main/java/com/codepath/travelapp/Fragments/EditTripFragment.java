@@ -22,6 +22,7 @@ import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Adapters.DayPlanEditableAdapter;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
+import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.R;
 import com.parse.ParseFile;
@@ -43,6 +44,7 @@ public class EditTripFragment extends Fragment {
     private int budget;
     private int numDays;
     private int tripCost;
+    private ArrayList<Event> allAvailableEvents;
     private ArrayList<Tag> tags;
     private ArrayList<DayPlan> dayPlans;
 
@@ -82,13 +84,14 @@ public class EditTripFragment extends Fragment {
         numDays = bundle.getInt("number_days");
         budget = bundle.getInt("budget");
         tripCost = bundle.getInt("trip_cost");
+        allAvailableEvents = bundle.getParcelableArrayList("available_events");
         tags = bundle.getParcelableArrayList("selected_tags");
         dayPlans = bundle.getParcelableArrayList("dayPlans");
 
         etEditTripName.setText(tripName);
 
         // Populate DayPlans
-        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans);
+        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans, allAvailableEvents);
         rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         rvSchedule.setAdapter(dayPlanEditableAdapterAdapter);
 
@@ -136,11 +139,32 @@ public class EditTripFragment extends Fragment {
     private void save() {
         Fragment fragment = new TripReviewFragment();
         bundle.putString("trip_name", etEditTripName.getText().toString());
+        tripCost = getTripCost();
+        bundle.putInt("trip_cost", tripCost);
+        bundle.putParcelableArrayList("dayPlans", dayPlans);
+        bundle.putParcelableArrayList("available_event", allAvailableEvents);
         fragment.setArguments(bundle);
         MainActivity.fragmentManager.beginTransaction()
                 .replace(R.id.flContainer, fragment)
                 .addToBackStack(null)
                 .commit();
         Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
+    }
+
+    private int getTripCost() {
+        int runningCost = 0;
+        for (int i = 0; i < dayPlans.size(); i++) {
+            DayPlan currday = dayPlans.get(i);
+            if (currday.getMorningEvent() != null) {
+                runningCost += (int) currday.getMorningEvent().getCost();
+            }
+            if (currday.getAfternoonEvent() != null) {
+                runningCost += (int) currday.getAfternoonEvent().getCost();
+            }
+            if (currday.getEveningEvent() != null) {
+                runningCost += (int) currday.getEveningEvent().getCost();
+            }
+        }
+        return runningCost;
     }
 }

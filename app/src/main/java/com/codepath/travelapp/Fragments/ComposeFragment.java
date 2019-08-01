@@ -278,7 +278,7 @@ public class ComposeFragment extends Fragment {
         tripCost = budget - runningBudget;
     }
 
-    private Event getEvent(String timeOfDay, int runningBudget) {
+    public Event getEvent(String timeOfDay, int runningBudget) {
         Event randomEvent;
         ArrayList<Event> alreadyChecked = new ArrayList<>();
 
@@ -340,6 +340,7 @@ public class ComposeFragment extends Fragment {
         bundle.putParcelableArrayList("selected_tags", selectedTags);
         bundle.putParcelable("city", city);
         bundle.putParcelableArrayList("dayPlans", dayPlans);
+        bundle.putParcelableArrayList("available_events", allAvailableEvents);
         fragment.setArguments(bundle);
         MainActivity.fragmentManager.beginTransaction()
                 .replace(R.id.flContainer, fragment)

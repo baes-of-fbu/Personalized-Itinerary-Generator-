@@ -33,6 +33,7 @@ import com.codepath.travelapp.GravitySnapHelper;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.CityImages;
 import com.codepath.travelapp.Models.DayPlan;
+import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
@@ -66,6 +67,7 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
     private int tripCost;
     private int numDays;
     private ArrayList<Tag> tags;
+    private ArrayList<Event> allAvailableEvents;
     private ArrayList<DayPlan> dayPlans;
     private ParseFile image;
     private Bundle bundle;
@@ -100,6 +102,7 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
         numDays = bundle.getInt("number_days");
         budget = bundle.getInt("budget");
         tripCost = bundle.getInt("trip_cost");
+        allAvailableEvents = bundle.getParcelableArrayList("available_events");
         tags = bundle.getParcelableArrayList("selected_tags");
         dayPlans = bundle.getParcelableArrayList("dayPlans");
 

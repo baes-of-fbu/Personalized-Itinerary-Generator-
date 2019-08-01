@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.R;
 
 public class EditEventDialogFragment extends DialogFragment {
@@ -23,29 +22,20 @@ public class EditEventDialogFragment extends DialogFragment {
     private TextView tvRegenerateEvent;
     private TextView tvCancelEdit;
     private TextView tvRemoveEvent;
-    private String timeOfDay;
-    private DayPlan currDayPlan;
 
     public EditEventDialogFragment() {
         // Empty constructor is required for DialogFragment
     }
 
     // TODO REMOVE PARAMETERS
-    public static EditEventDialogFragment newInstance(String timeOfDay, DayPlan currDayPlan) {
+    public static EditEventDialogFragment newInstance() {
         EditEventDialogFragment fragment = new EditEventDialogFragment();
-        Bundle data = new Bundle();
-        data.putString("timeOfDay", timeOfDay);
-        data.putParcelable("currDayPlan", currDayPlan);
-        fragment.setArguments(data);
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
-        timeOfDay = bundle.getString("timeOfDay");
-        currDayPlan = bundle.getParcelable("currDayPlan");
         return inflater.inflate(R.layout.fragment_edit_event_dialog, container, false);
     }
 
@@ -82,14 +72,14 @@ public class EditEventDialogFragment extends DialogFragment {
     }
 
     public interface Listener {
-        void returnData(String result, String timeOfDay, DayPlan currDayPlan);
+        void returnData(String result);
     }
 
     private void addOnClickListeners() {
         tvRegenerateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.returnData(getString(R.string.regenerate_event), timeOfDay, currDayPlan);
+                mListener.returnData(getString(R.string.regenerate_event));
                 dismiss();
             }
         });
@@ -97,7 +87,7 @@ public class EditEventDialogFragment extends DialogFragment {
         tvCancelEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.returnData(getString(R.string.cancel), timeOfDay, currDayPlan);
+                mListener.returnData(getString(R.string.cancel));
                 dismiss();
             }
         });
@@ -105,7 +95,7 @@ public class EditEventDialogFragment extends DialogFragment {
         tvRemoveEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.returnData(getString(R.string.remove_event), timeOfDay, currDayPlan);
+                mListener.returnData(getString(R.string.remove_event));
                 dismiss();
             }
         });
