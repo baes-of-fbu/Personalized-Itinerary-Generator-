@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Models.Comment;
 import com.codepath.travelapp.R;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 
 import java.util.ArrayList;
@@ -41,13 +42,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         holder.tvComment.setText(comment.getComment());
 
-        if (comment.getUser().getProfileImage() != null) {
-            ParseFile image = comment.getUser().getProfileImage();
-            assert image != null;
-            Glide.with(context)
-                    .load(image.getUrl())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(holder.ivProfileImage);
+        try {
+            if (comment.getUser().fetchIfNeeded().get("profileImage") != null) {
+                ParseFile image = (ParseFile) comment.getUser().get("profileImage");
+                assert image != null;
+                Glide.with(context)
+                        .load(image.getUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(holder.ivProfileImage);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -61,7 +66,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         private TextView tvComment;
         private ImageView ivProfileImage;
 
-        ViewHolder (View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             tvComment = itemView.findViewById(R.id.tvComment);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);

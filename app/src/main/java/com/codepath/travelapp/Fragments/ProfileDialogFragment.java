@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
-import static com.parse.ParseUser.getCurrentUser;
 
 public class ProfileDialogFragment extends DialogFragment {
 
