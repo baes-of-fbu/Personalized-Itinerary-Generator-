@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 import static com.parse.ParseUser.getCurrentUser;
 
@@ -101,7 +99,7 @@ public class ProfileFragment extends Fragment {
                         public void done(List<ParseObject> followList, ParseException e) {
                             if (e == null) {
                                 for (int i = 0; i < followList.size(); i++) {
-                                    following.put(((User) followList.get(i).get("to")).getUsername(), followList.get(i));
+                                    following.put(followList.get(i).getString("toId"), followList.get(i));
                                 }
                                 FillInLayout(view);
                                 SideSwipe(view);
@@ -111,8 +109,6 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
-
-
     }
 
     private void queryUpcomingPosts(ParseUser user) {
@@ -245,7 +241,6 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile, menu);
@@ -270,11 +265,11 @@ public class ProfileFragment extends Fragment {
         TextView tvFollowers = view.findViewById(R.id.tvFollowers);
         TextView tvFollowing = view.findViewById(R.id.tvFollowing);
 
-        if (userProfile.getUsername().equals(userCurrent.getUsername())) {
+        if (userProfile.getObjectId().equals(userCurrent.getObjectId())) {
             btnFollowingStatus.setVisibility(View.GONE);
         } else {
             btnFollowingStatus.setVisibility(View.VISIBLE);
-            if (following.containsKey(userProfile.getUsername())) {
+            if (following.containsKey(userProfile.getObjectId())) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
                 btnFollowingStatus.setText(getString(R.string.following));
             }
@@ -291,6 +286,7 @@ public class ProfileFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
+
         updateFollowCnt(tvFollowersCount, tvFollowingCount);
 
         tvFollowers.setOnClickListener(new View.OnClickListener() {
@@ -348,24 +344,32 @@ public class ProfileFragment extends Fragment {
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "HELLO", LENGTH_SHORT).show();
-                if (following.containsKey(userProfile.getUsername())) {
-                    following.get(userProfile.getUsername()).deleteInBackground();
-                    following.remove(userProfile.getUsername());
+                if (following.containsKey(userProfile.getObjectId())) {
+                    following.get(userProfile.getObjectId()).deleteInBackground();
+                    following.remove(userProfile.getObjectId());
 
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
+                    updateFollowCnt(tvFollowersCount, tvFollowingCount);
                 } else {
-                    ParseObject follow = new ParseObject("Follow");
+                    final ParseObject follow = new ParseObject("Follow");
                     follow.put("from", userCurrent);
-                    follow.put("to", userProfile);
-                    follow.saveInBackground();
-                    following.put(userProfile.getUsername(), follow);
+                    follow.put("toId", userProfile.getObjectId());
+                    follow.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                following.put(userProfile.getObjectId(), follow);
 
-                    btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
-                    btnFollowingStatus.setText(getString(R.string.following));
+                                btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
+                                btnFollowingStatus.setText(getString(R.string.following));
+                                updateFollowCnt(tvFollowersCount, tvFollowingCount);
+                            } else {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
-                updateFollowCnt(tvFollowersCount, tvFollowingCount);
             }
         });
     }
@@ -377,12 +381,12 @@ public class ProfileFragment extends Fragment {
 
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
         query.include("from");
-        query.include("to");
+        query.include("toId");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> followList, ParseException e) {
                 if (e == null) {
                     for (int i = 0; i < followList.size(); i++) {
-                        if (((User) followList.get(i).get("to")).getUsername().equals(userProfile.getUsername())) {
+                        if ((followList.get(i).getString("toId")).equals(userProfile.getObjectId())) {
                             followers[0]++;
                         } else if (((User) followList.get(i).get("from")).getUsername().equals(userProfile.getUsername())) {
                             following[0]++;
