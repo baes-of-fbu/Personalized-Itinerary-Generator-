@@ -34,7 +34,6 @@ import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -48,7 +47,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 import static com.parse.ParseUser.getCurrentUser;
@@ -60,6 +58,7 @@ public class ProfileFragment extends Fragment {
     private PreviousTripAdapter previousTripAdapter;
     private CurrentTripAdapter currentTripAdapter;
     private AchievementAdapter achievementAdapter;
+    private PreviousTripAdapter savedTripAdapter;
 
     private int pageSize = 10;
 
@@ -71,7 +70,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_profile,container, false);
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     @Override
@@ -129,7 +128,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void done(List<Trip> trips, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG,"Error");
+                    Log.e(TAG, "Error");
                     e.printStackTrace();
                     return;
                 }
@@ -146,7 +145,7 @@ public class ProfileFragment extends Fragment {
         tripQuery.include(Trip.KEY_OWNER);
         tripQuery.whereLessThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
         tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addAscendingOrder(Trip.KEY_ENDDATE);
+        tripQuery.addDescendingOrder(Trip.KEY_ENDDATE);
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
@@ -157,7 +156,7 @@ public class ProfileFragment extends Fragment {
                 }
                 previousTripAdapter.addAll(trips);
                 ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
-                if (trips.size() > 5){
+                if (trips.size() > 5) {
                     achievementQuery.whereEqualTo("name", "Adventurer");
                 }
                 if (trips.size() > 0) {
@@ -198,7 +197,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void done(List<Trip> trips, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG,"Error");
+                    Log.e(TAG, "Error");
                     e.printStackTrace();
                     return;
                 }
@@ -206,6 +205,30 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+    private void querySaved(final ParseUser user) {
+        savedTripAdapter.clear();
+        final List<Trip> mTrips = new ArrayList<>();
+
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("SavedTrip");
+        query.include("user");
+        query.include("trip");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> savedList, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < savedList.size(); i++) {
+                        if (((User) savedList.get(i).get("user")).getObjectId().equals(user.getObjectId())) {
+                            mTrips.add((Trip) savedList.get(i).get("trip"));
+                        }
+                    }
+                    savedTripAdapter.addAll(mTrips);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void queryAchievements() {
         ParseQuery<Achievement> achievementParseQuery = userProfile.getAchievementRelation().getQuery();
         achievementParseQuery.findInBackground(new FindCallback<Achievement>() {
@@ -214,8 +237,8 @@ public class ProfileFragment extends Fragment {
                 if (e == null) {
                     Log.d(TAG, "The query was successful");
                     achievementAdapter.addAll(achievements);
-                }else {
-                    Log.e(TAG,"Error");
+                } else {
+                    Log.e(TAG, "Error");
                     e.printStackTrace();
                 }
             }
@@ -234,6 +257,7 @@ public class ProfileFragment extends Fragment {
         RecyclerView rvUpcoming = view.findViewById(R.id.rvUpcoming);
         RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);
         RecyclerView rvCurrent = view.findViewById(R.id.rvCurrent);
+        RecyclerView rvSaved = view.findViewById(R.id.rvSaved);
         RecyclerView rvAchievements = view.findViewById(R.id.rvAchievements);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
@@ -287,32 +311,37 @@ public class ProfileFragment extends Fragment {
         ArrayList<Trip> upcomingTrips = new ArrayList<>();
         ArrayList<Trip> previousTrips = new ArrayList<>();
         ArrayList<Trip> currentTrips = new ArrayList<>();
+        ArrayList<Trip> savedTrips = new ArrayList<>();
         ArrayList<Achievement> achievements = new ArrayList<>();
         //create the data source
         upcomingTripAdapter = new UpcomingTripAdapter(upcomingTrips);
         previousTripAdapter = new PreviousTripAdapter(previousTrips);
         currentTripAdapter = new CurrentTripAdapter(currentTrips);
+        savedTripAdapter = new PreviousTripAdapter(savedTrips);
         achievementAdapter = new AchievementAdapter(achievements);
         // initialize the linear layout manager
         LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL,false);
-        LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL, false);
-        LinearLayoutManager achievementLayoutManager = new LinearLayoutManager(getContext(),HORIZONTAL, false);
+        LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        LinearLayoutManager savedLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        LinearLayoutManager achievementLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         // set the layout manager on the recycler view
         rvUpcoming.setLayoutManager(upcomingLayoutManager);
         rvPrevious.setLayoutManager(previousLayoutManager);
         rvCurrent.setLayoutManager(currentLayoutManager);
+        rvSaved.setLayoutManager(savedLayoutManager);
         rvAchievements.setLayoutManager(achievementLayoutManager);
         // set the adapters
         rvUpcoming.setAdapter(upcomingTripAdapter);
         rvPrevious.setAdapter(previousTripAdapter);
         rvCurrent.setAdapter(currentTripAdapter);
+        rvSaved.setAdapter(savedTripAdapter);
         rvAchievements.setAdapter(achievementAdapter);
         // query posts for each view
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);
         queryCurrentPosts(userProfile);
-
+        querySaved(userProfile);
 
 
         // Set onClick listener for follow/currentFollowing button
@@ -367,7 +396,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void SideSwipe (View view) {
+    private void SideSwipe(View view) {
         ConstraintLayout clProfile = view.findViewById(R.id.clProfile);
         clProfile.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override

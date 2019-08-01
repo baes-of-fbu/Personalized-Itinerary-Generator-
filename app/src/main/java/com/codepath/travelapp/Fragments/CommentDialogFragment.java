@@ -48,7 +48,6 @@ public class CommentDialogFragment extends DialogFragment {
 
     private CommentAdapter adapter;
     private Trip trip;
-    private List<Comment> mComments;
 
     public CommentDialogFragment() {
     }
@@ -86,8 +85,6 @@ public class CommentDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mComments = new ArrayList<>();
 
         tvTripName = view.findViewById(R.id.tvTripName);
         ivProfileImage = view.findViewById(R.id.ivProfileImage);

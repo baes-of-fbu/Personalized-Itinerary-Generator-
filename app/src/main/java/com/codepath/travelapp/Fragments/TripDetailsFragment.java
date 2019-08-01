@@ -110,7 +110,11 @@ public class TripDetailsFragment extends Fragment {
 
         if (trip != null) {
             tvTripName.setText(trip.getName());
-            tvUsername.setText(trip.getOwner().getUsername());
+            try {
+                tvUsername.setText(trip.getOwner().fetchIfNeeded().getString("username"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             String travelWindow = trip.getStartDate() + " - " + trip.getEndDate();
             tvTravelDates.setText(travelWindow);

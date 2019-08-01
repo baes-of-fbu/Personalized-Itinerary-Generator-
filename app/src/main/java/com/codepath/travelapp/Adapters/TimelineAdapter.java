@@ -32,6 +32,7 @@ import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -67,6 +68,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
         final Trip trip = trips.get(position);
+        final ParseObject[] savedObject = new ParseObject[1];
         final boolean[] savedCurrent = {false};
         final boolean[] likedCurrent = {false};
         final int[] numLikes = {0};
@@ -162,13 +164,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         });
 
         // Send a Parse Query to get "saved" relation
-        trip.getSaved().getQuery().findInBackground(new FindCallback<User>() {
-            @Override
-            public void done(List<User> objects, ParseException e) {
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("SavedTrip");
+        query.include("user");
+        query.include("trip");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> savedList, ParseException e) {
                 if (e == null) {
-                    for (int i = 0; i < objects.size(); i++) {
-                        if (objects.get(i).getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
-                            savedCurrent[0] = true;
+                    for (int i = 0; i < savedList.size(); i++) {
+                        if (((User) savedList.get(i).get("user")).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                            if (((Trip) savedList.get(i).get("trip")).getObjectId().equals(trip.getObjectId())) {
+                                savedObject[0] = savedList.get(i);
+                                savedCurrent[0] = true;
+                                break;
+                            }
                         }
                     }
                     if (savedCurrent[0]) {
@@ -187,16 +195,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 if (savedCurrent[0]) {
-                    trip.getSaved().remove((User) ParseUser.getCurrentUser());
+                    savedObject[0].deleteInBackground();
                     setInactiveSaveIcon(holder);
                 } else {
-                    trip.getSaved().add((User) ParseUser.getCurrentUser());
+                    ParseObject save = new ParseObject("SavedTrip");
+                    save.put("trip", trip);
+                    save.put("user", ParseUser.getCurrentUser());
+                    save.saveInBackground();
                     setActiveSaveIcon(holder);
                 }
                 savedCurrent[0] = !savedCurrent[0];
-                trip.saveInBackground();
             }
         });
+
 
         // Set onClickListener to prompt the current user to write a comment for a trip
         holder.ibComment.setOnClickListener(new View.OnClickListener() {
