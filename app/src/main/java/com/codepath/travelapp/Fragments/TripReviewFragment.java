@@ -244,8 +244,8 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
             Fragment fragment = new EditTripFragment();
             fragment.setArguments(bundle);
             MainActivity.fragmentManager.beginTransaction()
-                    .replace(R.id.flContainer, fragment)
-                    .addToBackStack(null)
+                    .replace(R.id.flContainer, fragment, "editTrip")
+                    .addToBackStack("editTrip")
                     .commit();
         }
 

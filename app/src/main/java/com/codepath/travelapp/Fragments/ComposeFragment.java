@@ -342,6 +342,7 @@ public class ComposeFragment extends Fragment {
         bundle.putParcelableArrayList("dayPlans", dayPlans);
         bundle.putParcelableArrayList("available_events", allAvailableEvents);
         fragment.setArguments(bundle);
+
         MainActivity.fragmentManager.beginTransaction()
                 .replace(R.id.flContainer, fragment)
                 .addToBackStack(null)

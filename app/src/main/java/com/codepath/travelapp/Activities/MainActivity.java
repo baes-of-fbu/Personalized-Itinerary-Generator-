@@ -20,6 +20,8 @@ import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
+
     private final String APP_TAG = "MainActivity";
     public static FragmentManager fragmentManager;
     public static BottomNavigationView bottomNavigationView;
@@ -41,44 +43,58 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // Pop off everything up to and including the current tab
+                fragmentManager.popBackStack(BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new TimelineFragment();
                         toolbar.setVisibility(View.VISIBLE);
-                        Log.d(APP_TAG, "Opening timeline fragment");
                         break;
                     case R.id.action_compose:
                         fragment = new ComposeFragment();
                         toolbar.setVisibility(View.GONE);
-                        Log.d(APP_TAG, "Opening compose fragment");
                         break;
                     case R.id.action_profile:
                         fragment = new ProfileFragment();
+
+
                         Bundle userBundle = new Bundle();
                         userBundle.putString("username",  ParseUser.getCurrentUser().getUsername());
                         fragment.setArguments(userBundle);
+
+
                         toolbar.setVisibility(View.VISIBLE);
-                        Log.d(APP_TAG, "Opening profile fragment");
-                        MainActivity.fragmentManager.beginTransaction()
-                                .replace(R.id.flContainer, fragment)
-                                .addToBackStack(null)
-                                .commit();
+
+
                         break;
                     default:
                         fragment = new TimelineFragment();
                         Log.d(APP_TAG, "Opening timeline fragment");
                         break;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment, BACK_STACK_ROOT_TAG)
+                        .addToBackStack(BACK_STACK_ROOT_TAG)
+                        .commit();
                 return true;
             }
         });
     }
 
-    // This disables the back button on the phone
-//    @Override
-//    public void onBackPressed() {
-//        // Disables the back button
-//    }
+    @Override
+    public void onBackPressed(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 1) {
+            Log.i("MainActivity", "popping backstack");
+            fm.popBackStack();
+        } else if (fm.getBackStackEntryCount() == 1) {
+            // Do Nothing
+        } else {
+            Log.i("MainActivity", "nothing on backstack, calling super");
+            super.onBackPressed();
+        }
+    }
 }

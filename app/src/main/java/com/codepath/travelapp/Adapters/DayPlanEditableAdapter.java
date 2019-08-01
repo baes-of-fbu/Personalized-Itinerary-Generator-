@@ -72,6 +72,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         if (dayPlan.getMorningEvent() == null) {
             // Fills morning card view with empty event and removes onClickListener
             useEmptyEvent(holder.tvMorningName, holder.ivMorningImage, holder.tvMorningPrice);
+            holder.cvMorning.setOnClickListener(null);
         } else {
 
             // Try/catch needed for .fetchIfNeeded()
@@ -116,6 +117,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         if (dayPlan.getAfternoonEvent() == null) {
             // Fills afternoon card view with empty event and removes onClickListener
             useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage, holder.tvAfternoonPrice);
+            holder.cvAfternoon.setOnClickListener(null);
         } else {
 
             // Try/catch needed for .fetchIfNeeded()
@@ -160,6 +162,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         if (dayPlan.getEveningEvent() == null) {
             // Fills evening card view with empty event and removes onClickListener
             useEmptyEvent(holder.tvEveningName, holder.ivEveningImage, holder.tvEveningPrice);
+            holder.cvEvening.setOnClickListener(null);
         } else {
 
             // Try/catch needed for .fetchIfNeeded()
@@ -254,7 +257,6 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         } else if (action.contentEquals(removeEvent)) {
             // Removes event from the DayPlan
             removeEvent();
-            notifyDataSetChanged();
         } else if (action.contentEquals(reGenerateEvent)) {
             // Removes event and regenerates schedule
             removeEvent();

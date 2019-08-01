@@ -49,6 +49,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
         if (dayPlan.getMorningEvent() == null) {
             // Fills morning card view with empty event and removes onClickListener
             useEmptyEvent(holder.tvMorningName, holder.ivMorningImage, holder.tvMorningEventCost);
+            holder.cvMorning.setOnClickListener(null);
         } else {
 
             // Try/catch needed for .fetchIfNeeded()
@@ -93,6 +94,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
         if (dayPlan.getAfternoonEvent() == null) {
             // Fills afternoon card view with empty event and removes onClickListener
             useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage, holder.tvAfternoonEventCost);
+            holder.cvAfternoon.setOnClickListener(null);
         } else {
 
             // Try/catch needed for .fetchIfNeeded()
@@ -137,6 +139,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
         if (dayPlan.getEveningEvent() == null) {
             // Fills evening card view with empty event and removes onClickListener
             useEmptyEvent(holder.tvEveningName, holder.ivEveningImage, holder.tvEveningEventCost);
+            holder.cvEvening.setOnClickListener(null);
         } else {
 
             // Try/catch needed for .fetchIfNeeded()

@@ -88,6 +88,7 @@ public class EditTripFragment extends Fragment {
         tags = bundle.getParcelableArrayList("selected_tags");
         allAvailableEvents = bundle.getParcelableArrayList("available_events");
         dayPlans = bundle.getParcelableArrayList("dayPlans");
+
         // Stores the original array lists, which are returned if the user does not click 'save'
         originalAllAvailableEvents = bundle.getParcelableArrayList("available_events");
         originalDayPlans = bundle.getParcelableArrayList("dayPlans");
@@ -118,6 +119,8 @@ public class EditTripFragment extends Fragment {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 Fragment fragment = new TripReviewFragment();
+                                bundle.putParcelableArrayList("available_events", originalAllAvailableEvents);
+                                bundle.putParcelableArrayList("dayPlans", originalDayPlans);
                                 fragment.setArguments(bundle);
                                 MainActivity.fragmentManager.beginTransaction()
                                         .replace(R.id.flContainer, fragment)
