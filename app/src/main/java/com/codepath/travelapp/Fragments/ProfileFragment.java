@@ -151,32 +151,35 @@ public class ProfileFragment extends Fragment {
             @Override
             public void done(List<Trip> trips, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG,"Error");
+                    Log.e(TAG, "Error");
                     e.printStackTrace();
                     return;
                 }
                 previousTripAdapter.addAll(trips);
-                if (trips.size() > 5) {
-                    ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
+                ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
+                if (trips.size() > 5){
                     achievementQuery.whereEqualTo("name", "Adventurer");
-                    achievementQuery.findInBackground(new FindCallback<Achievement>() {
-                        @Override
-                        public void done(final List<Achievement> objects, ParseException e) {
-                            if (e == null) {
-                                user.getAchievementRelation().add(objects.get((0)));
-                                user.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e == null) {
-                                            queryAchievements();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
-
                 }
+                if (trips.size() > 0) {
+                    achievementQuery.whereEqualTo("name", "Backpacker");
+                }
+
+                achievementQuery.findInBackground(new FindCallback<Achievement>() {
+                    @Override
+                    public void done(final List<Achievement> objects, ParseException e) {
+                        if (e == null) {
+                            user.getAchievementRelation().add(objects.get(0));
+                            user.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        queryAchievements();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
     }
@@ -204,7 +207,6 @@ public class ProfileFragment extends Fragment {
         });
     }
     private void queryAchievements() {
-
         ParseQuery<Achievement> achievementParseQuery = userProfile.getAchievementRelation().getQuery();
         achievementParseQuery.findInBackground(new FindCallback<Achievement>() {
             @Override

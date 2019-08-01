@@ -70,10 +70,10 @@ public class SidebarFragment extends Fragment {
                 userBundle.putString("username", getCurrentUser().getUsername());
                 fragment.setArguments(userBundle);
 
-//                MainActivity.fragmentManager.beginTransaction()
-//                        .replace(R.id.flContainer, fragment)
-//                        .addToBackStack(null)
-//                        .commit();
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }
