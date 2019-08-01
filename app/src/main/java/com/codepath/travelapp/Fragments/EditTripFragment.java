@@ -44,12 +44,13 @@ public class EditTripFragment extends Fragment {
     private int budget;
     private int numDays;
     private int tripCost;
-    private ArrayList<Event> allAvailableEvents;
     private ArrayList<Tag> tags;
+    private ArrayList<Event> allAvailableEvents;
+    private ArrayList<Event> originalAllAvailableEvents;
     private ArrayList<DayPlan> dayPlans;
+    private ArrayList<DayPlan> originalDayPlans;
 
     private Bundle bundle;
-
     private ParseFile image;
 
     @Nullable
@@ -84,9 +85,12 @@ public class EditTripFragment extends Fragment {
         numDays = bundle.getInt("number_days");
         budget = bundle.getInt("budget");
         tripCost = bundle.getInt("trip_cost");
-        allAvailableEvents = bundle.getParcelableArrayList("available_events");
         tags = bundle.getParcelableArrayList("selected_tags");
+        allAvailableEvents = bundle.getParcelableArrayList("available_events");
         dayPlans = bundle.getParcelableArrayList("dayPlans");
+        // Stores the original array lists, which are returned if the user does not click 'save'
+        originalAllAvailableEvents = bundle.getParcelableArrayList("available_events");
+        originalDayPlans = bundle.getParcelableArrayList("dayPlans");
 
         etEditTripName.setText(tripName);
 

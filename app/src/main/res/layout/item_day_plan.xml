@@ -50,11 +50,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:inputType="textMultiLine"
                     android:padding="5dp"
                     android:text="@string/event_name"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tvMorningTime"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/ivMorningImage"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -75,21 +76,24 @@
                     android:id="@+id/tvMorningTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:padding="5dp"
                     android:text="9am - 11am "
-                    app:layout_constraintBottom_toBottomOf="@+id/tvMorningName"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/tvMorningName"
+                    app:layout_constraintEnd_toStartOf="@+id/tvMorningEventCost"
                     app:layout_constraintTop_toTopOf="@+id/tvMorningName" />
+
+                <TextView
+                    android:id="@+id/tvMorningEventCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="$0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        <androidx.cardview.widget.CardView
             android:id="@+id/cvAfternoon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,8 +106,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cvMorning"
-            card_view:cardCornerRadius="@dimen/card_corner_radius"
-            card_view:cardElevation="@dimen/card_elevation">
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -114,11 +118,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:inputType="textMultiLine"
                     android:padding="5dp"
                     android:text="@string/event_name"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tvAfternoonTime"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/ivAfternoonImage"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -135,25 +140,28 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvAfternoonName" />
 
-            <TextView
-                android:id="@+id/tvAfternoonTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:padding="5dp"
-                android:text="2pm - 4pm"
-                app:layout_constraintBottom_toBottomOf="@+id/tvAfternoonName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/tvAfternoonName"
-                app:layout_constraintTop_toTopOf="@+id/tvAfternoonName" />
+                <TextView
+                    android:id="@+id/tvAfternoonTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:padding="5dp"
+                    android:text="2pm - 4pm"
+                    app:layout_constraintEnd_toStartOf="@+id/tvAfternoonEventCost"
+                    app:layout_constraintTop_toTopOf="@+id/tvAfternoonName" />
+
+                <TextView
+                    android:id="@+id/tvAfternoonEventCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="$0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        <androidx.cardview.widget.CardView
             android:id="@+id/cvEvening"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -166,8 +174,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cvAfternoon"
-            card_view:cardCornerRadius="@dimen/card_corner_radius"
-            card_view:cardElevation="@dimen/card_elevation">
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -178,11 +186,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:inputType="textMultiLine"
                     android:padding="5dp"
                     android:text="@string/event_name"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tvEveningTime"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/ivEveningImage"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -203,15 +212,20 @@
                     android:id="@+id/tvEveningTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:padding="5dp"
                     android:text="6pm - 8pm"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvEveningName"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/tvEveningName"
+                    app:layout_constraintEnd_toStartOf="@+id/tvEveningEventCost"
                     app:layout_constraintTop_toTopOf="@+id/tvEveningName" />
+
+                <TextView
+                    android:id="@+id/tvEveningEventCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="$0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -67,21 +67,36 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     public void onBindViewHolder(@NonNull DayPlanEditableAdapter.ViewHolder holder, int position) {
         // Get the current day
         final DayPlan dayPlan = dayPlans.get(position);
-
-        //Set the views
         holder.tvDayTitle.setText(dayPlan.getDate().toString());
+
         if (dayPlan.getMorningEvent() == null) {
-            useEmptyEvent(holder.tvMorningName, holder.ivMorningImage);
+            // Fills morning card view with empty event and removes onClickListener
+            useEmptyEvent(holder.tvMorningName, holder.ivMorningImage, holder.tvMorningPrice);
         } else {
+
+            // Try/catch needed for .fetchIfNeeded()
             try {
                 holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
+            // Adds morning event cost
+            int cost = (int) dayPlan.getMorningEvent().getCost();
+            if (cost == 0) {
+                holder.tvMorningPrice.setText(context.getResources().getString(R.string.free));
+                holder.tvMorningPrice.setTextColor(context.getResources().getColor(R.color.LightSkyBlue));
+            } else {
+                holder.tvMorningPrice.setText(String.format("$%s", String.valueOf(cost)));
+                holder.tvMorningPrice.setTextColor(context.getResources().getColor(R.color.black));
+            }
+
+            // Adds morning event image
             Glide.with(context)
                     .load(dayPlan.getMorningEvent().getImage().getUrl())
                     .into(holder.ivMorningImage);
 
+            // Adds listener to morning card view
             holder.cvMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -99,17 +114,33 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         }
 
         if (dayPlan.getAfternoonEvent() == null) {
-            useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage);
+            // Fills afternoon card view with empty event and removes onClickListener
+            useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage, holder.tvAfternoonPrice);
         } else {
+
+            // Try/catch needed for .fetchIfNeeded()
             try {
-            holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
+                holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
+            // Adds afternoon event cost
+            int cost = (int) dayPlan.getAfternoonEvent().getCost();
+            if (cost == 0) {
+                holder.tvAfternoonPrice.setText(context.getResources().getString(R.string.free));
+                holder.tvAfternoonPrice.setTextColor(context.getResources().getColor(R.color.LightSkyBlue));
+            } else {
+                holder.tvAfternoonPrice.setText(String.format("$%s", String.valueOf(cost)));
+                holder.tvAfternoonPrice.setTextColor(context.getResources().getColor(R.color.black));
+            }
+
+            // Adds afternoon event image
             Glide.with(context)
                     .load(dayPlan.getAfternoonEvent().getImage().getUrl())
                     .into(holder.ivAfternoonImage);
 
+            // Adds listener to afternoon card view
             holder.cvAfternoon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -127,17 +158,33 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         }
 
         if (dayPlan.getEveningEvent() == null) {
-            useEmptyEvent(holder.tvEveningName, holder.ivEveningImage);
+            // Fills evening card view with empty event and removes onClickListener
+            useEmptyEvent(holder.tvEveningName, holder.ivEveningImage, holder.tvEveningPrice);
         } else {
+
+            // Try/catch needed for .fetchIfNeeded()
             try {
-            holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
+                holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
+            // Adds evening event cost
+            int cost = (int) dayPlan.getEveningEvent().getCost();
+            if (cost == 0) {
+                holder.tvEveningPrice.setText(context.getResources().getString(R.string.free));
+                holder.tvEveningPrice.setTextColor(context.getResources().getColor(R.color.LightSkyBlue));
+            } else {
+                holder.tvEveningPrice.setText(String.format("$%s", String.valueOf(cost)));
+                holder.tvEveningPrice.setTextColor(context.getResources().getColor(R.color.black));
+            }
+
+            // Adds evening event image
             Glide.with(context)
                     .load(dayPlan.getEveningEvent().getImage().getUrl())
                     .into(holder.ivEveningImage);
 
+            // Adds listener to evening card view
             holder.cvEvening.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -209,31 +256,31 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
             removeEvent();
             notifyDataSetChanged();
         } else if (action.contentEquals(reGenerateEvent)) {
+            // Removes event and regenerates schedule
             removeEvent();
             generateEvent();
         }
-
     }
 
     private void removeEvent() {
         if (timeOfDay.contentEquals(morningEvent)) {
             if (currDayPlan.getMorningEvent() != null) {
                 allAvailableEvents.add(currDayPlan.getMorningEvent());
-                useEmptyEvent(currHolder.tvMorningName, currHolder.ivMorningImage);
+                useEmptyEvent(currHolder.tvMorningName, currHolder.ivMorningImage, currHolder.tvMorningPrice);
                 currHolder.cvMorning.setOnClickListener(null);
                 currDayPlan.removeMorningEvent();
             }
         } else if (timeOfDay.contentEquals(afternoonEvent)) {
             if (currDayPlan.getAfternoonEvent() != null) {
                 allAvailableEvents.add(currDayPlan.getAfternoonEvent());
-                useEmptyEvent(currHolder.tvAfternoonName, currHolder.ivAfternoonImage);
+                useEmptyEvent(currHolder.tvAfternoonName, currHolder.ivAfternoonImage, currHolder.tvAfternoonPrice);
                 currHolder.cvAfternoon.setOnClickListener(null);
                 currDayPlan.removeAfternoonEvent();
             }
         } else if (timeOfDay.contentEquals(eveningEvent)) {
             if (currDayPlan.getEveningEvent() != null) {
                 allAvailableEvents.add(currDayPlan.getEveningEvent());
-                useEmptyEvent(currHolder.tvEveningName, currHolder.ivEveningImage);
+                useEmptyEvent(currHolder.tvEveningName, currHolder.ivEveningImage, currHolder.tvEveningPrice);
                 currHolder.cvEvening.setOnClickListener(null);
                 currDayPlan.removeEveningEvent();
             }
@@ -272,6 +319,9 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         private ImageView ivEditMorningEvent;
         private ImageView ivEditAfternoonEvent;
         private ImageView ivEditEveningEvent;
+        private TextView tvMorningPrice;
+        private TextView tvAfternoonPrice;
+        private TextView tvEveningPrice;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -288,11 +338,15 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
             ivEditMorningEvent = itemView.findViewById(R.id.ivEditMorningEvent);
             ivEditAfternoonEvent = itemView.findViewById(R.id.ivEditAfternoonEvent);
             ivEditEveningEvent = itemView.findViewById(R.id.ivEditEveningEvent);
+            tvMorningPrice = itemView.findViewById(R.id.tvMorningPrice);
+            tvAfternoonPrice = itemView.findViewById(R.id.tvAfternoonPrice);
+            tvEveningPrice = itemView.findViewById(R.id.tvEveningPrice);
         }
     }
 
-    public void useEmptyEvent(TextView tvEventName, ImageView ivEventImage) {
+    public void useEmptyEvent(TextView tvEventName, ImageView ivEventImage, TextView tvEventPrice) {
         tvEventName.setText(R.string.empty_slot);
         ivEventImage.setImageResource(R.drawable.emptyevent);
+        tvEventPrice.setText("");
     }
 }
