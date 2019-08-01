@@ -1,13 +1,19 @@
 package com.codepath.travelapp.Fragments;
 
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,10 +26,13 @@ import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Adapters.CommentAdapter;
 import com.codepath.travelapp.Models.Comment;
 import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +51,34 @@ public class CommentDialogFragment extends DialogFragment {
     public CommentDialogFragment() {
     }
 
+    public static CommentDialogFragment newInstance(Trip trip) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("trip", trip);
+        CommentDialogFragment fragment = new CommentDialogFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         trip = bundle.getParcelable("trip");
         return inflater.inflate(R.layout.fragment_comment_dialog, container, false);
+    }
+
+    public void onResume() {
+        // Store access variables for window and blank point
+        Window window = getDialog().getWindow();
+        Point size = new Point();
+        // Store dimensions of the screen in `size`
+        Display display = window.getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        // Set the width of the dialog proportional to 75% of the screen width
+        window.setLayout((size.x), WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        // Call super onResume after sizing
+        super.onResume();
     }
 
     @Override
@@ -93,8 +124,26 @@ public class CommentDialogFragment extends DialogFragment {
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Comment comment = new Comment();
-                comment.setComment(etNewComment.getText().toString());
+                String text = etNewComment.getText().toString();
+                if (text.length() > 0) {
+                    final Comment comment = new Comment();
+                    comment.setComment(text);
+                    comment.setUser((User) ParseUser.getCurrentUser());
+                    comment.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                trip.getComments().add(comment);
+                                trip.saveInBackground();
+                            } else {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    etNewComment.setText("");
+                } else {
+                    Toast.makeText(getContext(), "Please input a comment", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

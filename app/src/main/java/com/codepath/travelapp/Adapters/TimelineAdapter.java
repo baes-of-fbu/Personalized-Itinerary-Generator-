@@ -16,11 +16,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Fragments.CommentDialogFragment;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TripDetailsFragment;
 import com.codepath.travelapp.Models.City;
@@ -200,10 +202,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.ibComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Send a Parse Query to get "comments"
-                //TODO
-
-                // open a dialogue fragment with a list of previous comments and an edit text to add your own comment
+                Fragment fragment = new CommentDialogFragment();
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance(trip);
+                commentDialogFragment.show(fragmentManager, "fragment_comment_dialog");
             }
         });
 
@@ -214,7 +216,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 username = (String) holder.tvUsername.getText();
                 Fragment fragment = new ProfileFragment();
                 Bundle userBundle = new Bundle();
-                userBundle.putString("username",  username);
+                userBundle.putString("username", username);
                 fragment.setArguments(userBundle);
 
                 MainActivity.fragmentManager.beginTransaction()
@@ -231,7 +233,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 String location = geoPointToString((Objects.requireNonNull(city.get("location"))).toString());
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
-                String data = String.format("%s?q=%s", location,city.getName());
+                String data = String.format("%s?q=%s", location, city.getName());
                 intent.setData(Uri.parse(data));
                 if (intent.resolveActivity(context.getPackageManager()) != null) {
                     context.startActivity(intent);
@@ -247,7 +249,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
     private void setActiveLikeIcon(@NonNull ViewHolder holder) {
         holder.ibLike.setImageResource(heart_filled);
-        holder.ibLike.setColorFilter(Color.rgb(255, 0,0 ));
+        holder.ibLike.setColorFilter(Color.rgb(255, 0, 0));
     }
 
     private void setInactiveSaveIcon(@NonNull ViewHolder holder) {
