@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -298,7 +299,10 @@ public class ProfileFragment extends Fragment {
         tvFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO open dialogue to show list of following and can click on a different user and go to their profile
+                // TODO open dialogue to show list of following and can click on a different user and go to their profile from list
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                ListDialogFragment listDialogFragment = new ListDialogFragment().newInstance(getFromList(), "Following");
+                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
         });
 
@@ -376,27 +380,8 @@ public class ProfileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void updateFollowCnt(final TextView tvFollowersCount, final TextView tvFollowingCount) {
-        final int[] followers = {0};
-        final int[] following = {0};
-
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
-        query.include("from");
-        query.include("toId");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> followList, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < followList.size(); i++) {
-                        if ((followList.get(i).getString("toId")).equals(userProfile.getObjectId())) {
-                            followers[0]++;
-                        } else if (((User) followList.get(i).get("from")).getUsername().equals(userProfile.getUsername())) {
-                            following[0]++;
-                        }
-                    }
-                    tvFollowersCount.setText(Integer.toString(followers[0]));
-                    tvFollowingCount.setText(Integer.toString(following[0]));
-                }
-            }
-        });
+        tvFollowersCount.setText(Integer.toString(getToList().size()));
+        tvFollowingCount.setText(Integer.toString(getFromList().size()));
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -419,4 +404,24 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    private ArrayList<User> getFromList() {
+        ArrayList<User> users = new ArrayList<>();
+        for (ParseObject follow : following.values()) {
+            if (((User) follow.get("from")).getObjectId().equals(userProfile.getObjectId())) {
+                users.add((User) follow.get("from"));
+            }
+        }
+        return users;
+    }
+
+    private ArrayList<String> getToList() {
+        final ArrayList<String> objectIds = new ArrayList<>();
+
+        for (ParseObject follow : following.values()) {
+            if ((follow.getString("toId").equals(userProfile.getObjectId()))) {
+                objectIds.add(follow.getString("toId"));
+            }
+        }
+        return objectIds;
+    }
 }
