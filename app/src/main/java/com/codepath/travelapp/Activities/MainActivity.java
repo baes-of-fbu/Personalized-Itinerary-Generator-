@@ -20,7 +20,7 @@ import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
+    public static final String BACK_STACK_ROOT_TAG = "root_fragment";
 
     private final String APP_TAG = "MainActivity";
     public static FragmentManager fragmentManager;

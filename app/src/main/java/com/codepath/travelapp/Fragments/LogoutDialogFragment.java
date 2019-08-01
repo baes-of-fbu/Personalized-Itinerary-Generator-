@@ -15,13 +15,12 @@ import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.codepath.travelapp.Activities.LoginActivity;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.R;
 import com.parse.ParseUser;
-
-import static com.parse.ParseUser.getCurrentUser;
 
 public class LogoutDialogFragment extends DialogFragment {
     private Button okBtn;
@@ -69,8 +68,12 @@ public class LogoutDialogFragment extends DialogFragment {
                 ParseUser.logOut();
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 if (currentUser == null) {
+                    // Pop off everything up to and including the current tab
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.popBackStack(MainActivity.BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     Intent intent = new Intent(getContext(), LoginActivity.class);
                     startActivity(intent);
+                    getActivity().finish();
                     Log.d("SidebarFragment", "User successfully logged out!");
                 } else {
                     Log.d("SidebarFragment", "Logout failure.");
