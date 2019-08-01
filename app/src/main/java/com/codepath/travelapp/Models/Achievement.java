@@ -8,10 +8,12 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 
+import java.io.Serializable;
+
 import static android.provider.Settings.System.getString;
 
 @ParseClassName("Achievement")
-public class Achievement extends ParseObject implements Parcelable {
+public class Achievement extends ParseObject implements Serializable {
     // Instance variables
     private static final String KEY_NAME = "name";
     private static final String KEY_IMAGE = "image";

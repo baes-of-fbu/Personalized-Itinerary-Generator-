@@ -13,6 +13,10 @@ public class Comment extends ParseObject {
         return (User) getParseUser(KEY_USER);
     }
 
+    public void setUser(User user) {
+        put(KEY_USER, user);
+    }
+
     public String getComment() {
         return getString(KEY_COMMENT);
     }
