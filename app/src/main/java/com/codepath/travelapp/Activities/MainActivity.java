@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import com.codepath.travelapp.Fragments.ComposeFragment;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TimelineFragment;
+import com.codepath.travelapp.Fragments.UserExploreFragment;
 import com.codepath.travelapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
@@ -68,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
                         toolbar.setVisibility(View.VISIBLE);
 
 
+                        break;
+                    case R.id.action_explore:
+                        fragment = new UserExploreFragment();
                         break;
                     default:
                         fragment = new TimelineFragment();
