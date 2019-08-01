@@ -1,7 +1,6 @@
 package com.codepath.travelapp.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
