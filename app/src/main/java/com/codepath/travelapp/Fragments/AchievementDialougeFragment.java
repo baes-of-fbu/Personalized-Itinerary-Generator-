@@ -52,11 +52,12 @@ public class AchievementDialougeFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
-        final Achievement achievement = (Achievement) bundle.getSerializable("Achievement");
+        final Achievement achievement = (Achievement) bundle.getSerializable("achievement");
         TextView tvTitle = view.findViewById(R.id.tvTitle);
         TextView tvDescription = view.findViewById(R.id.tvDescription);
         if (achievement != null) {
             tvTitle.setText(achievement.getName());
+            tvDescription.setText(achievement.getDescription());
         }
 
     }
