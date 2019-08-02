@@ -76,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvDays" />
 
         <TextView
-            android:id="@+id/tvTripBudget"
+            android:id="@+id/tvTripCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -87,12 +87,12 @@
             app:layout_constraintTop_toTopOf="@+id/tvTripDates" />
 
         <TextView
-            android:id="@+id/tvBudget"
+            android:id="@+id/tvCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cost"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/tvTripBudget"
+            app:layout_constraintStart_toStartOf="@+id/tvTripCost"
             app:layout_constraintTop_toTopOf="@+id/tvDays" />
 
         <ImageView
@@ -104,7 +104,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTripBudget"
+            app:layout_constraintTop_toBottomOf="@+id/tvTripCost"
             card_view:srcCompat="@color/LightSkyBlue" />
 
         <TextView

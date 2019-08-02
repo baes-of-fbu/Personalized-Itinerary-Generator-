@@ -80,7 +80,7 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             // Find the views that will be populated
-            tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
+            tvTripBudget = itemView.findViewById(R.id.tvTripCost);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
             tvStatus = itemView.findViewById(R.id.tvStatus);

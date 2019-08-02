@@ -73,8 +73,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         final boolean[] likedCurrent = {false};
         final int[] numLikes = {0};
 
-        final String[] budgetString = {"$" + trip.getCost().toString()};
-        holder.tvTripBudget.setText(budgetString[0]);
+        final String[] costString = {"$" + trip.getCost().toString()};
+        holder.tvTripCost.setText(costString[0]);
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());
@@ -278,7 +278,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView tvTripBudget;
+        private TextView tvTripCost;
         private TextView tvTripDates;
         private ImageView ivTripImage;
         private TextView tvTripName;
@@ -294,7 +294,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             super(itemView);
             // Finds views that will be populated
             tvTripDates = itemView.findViewById(R.id.tvTripDates);
-            tvTripBudget = itemView.findViewById(R.id.tvTripBudget);
+            tvTripCost = itemView.findViewById(R.id.tvTripCost);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
             tvUsername = itemView.findViewById(R.id.tvUsername);
