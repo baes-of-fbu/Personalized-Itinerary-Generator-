@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.R;
 
@@ -34,6 +35,7 @@ public class EventDetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainActivity.bottomNavigationView.setVisibility(View.GONE);
         return inflater.inflate(R.layout.fragment_event_details, container, false);
     }
 

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Adapters.TimelineAdapter;
 import com.codepath.travelapp.EndlessRecyclerViewScrollListener;
 import com.codepath.travelapp.Models.Trip;
@@ -40,6 +41,7 @@ public class TimelineFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
 

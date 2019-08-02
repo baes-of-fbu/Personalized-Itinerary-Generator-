@@ -12,10 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.codepath.travelapp.Fragments.ComposeFragment;
-import com.codepath.travelapp.Fragments.ExpolreFragment;
+import com.codepath.travelapp.Fragments.ExploreFragment;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TimelineFragment;
-import com.codepath.travelapp.Fragments.UserExploreFragment;
 import com.codepath.travelapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     case R.id.action_explore:
-                        fragment = new ExpolreFragment();
+                        fragment = new ExploreFragment();
                         break;
                     default:
                         fragment = new TimelineFragment();
