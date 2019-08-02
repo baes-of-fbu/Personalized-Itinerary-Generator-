@@ -9,5 +9,5 @@
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="grid_margin">4dp</dimen>
     <dimen name="cell_margin">16dp</dimen>
-    <dimen name="post_btn_size">30dp</dimen>
+    <dimen name="post_btn_size">20dp</dimen>
 </resources>

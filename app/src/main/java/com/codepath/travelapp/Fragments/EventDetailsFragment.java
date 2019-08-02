@@ -58,7 +58,8 @@ public class EventDetailsFragment extends Fragment {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
             toolbar.setTitle(event.getName());
 
-            tvCost.setText(event.getCost().toString());
+            String cost = "$" + event.getCost().toString();
+            tvCost.setText(cost);
             rbRating.setRating(event.getRating().floatValue());
 
             SpannableString address = new SpannableString(event.getAddress());
