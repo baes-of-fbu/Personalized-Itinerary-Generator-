@@ -78,7 +78,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());
-        holder.tvTags.setText(R.string.tags); //TODO populate this field with actual list of tags
 
         // Load trip owner profile image
         if (trip.getOwner().get("profileImage") != null) {
@@ -285,7 +284,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         private TextView tvTripName;
         private TextView tvUsername;
         private ImageView ivProfileImage;
-        private TextView tvTags;
         private TextView tvCityName;
         private TextView tvNumLikes;
         private ImageButton ibLike;
@@ -301,7 +299,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
-            tvTags = itemView.findViewById(R.id.tvTags);
             tvCityName = itemView.findViewById(R.id.tvCityName);
             tvNumLikes = itemView.findViewById(R.id.tvNumLikes);
             ibLike = itemView.findViewById(R.id.ibLike);
