@@ -71,12 +71,19 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
     private ArrayList<DayPlan> dayPlans;
     private ParseFile image;
     private Bundle bundle;
+    private DayPlanAdapter dayPlanAdapter;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_trip_review, container, false);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        dayPlanAdapter.notifyDataSetChanged();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -165,7 +172,7 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
         });
 
         // Populate DayPlans
-        DayPlanAdapter dayPlanAdapter = new DayPlanAdapter(dayPlans);
+        dayPlanAdapter = new DayPlanAdapter(dayPlans);
         rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         rvSchedule.setAdapter(dayPlanAdapter);
 
@@ -220,12 +227,6 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Fragment fragment = new TimelineFragment();
-                // TODO remove the button and use the three dots in the corner instead
-//                MainActivity.fragmentManager.beginTransaction()
-//                        .replace(R.id.flContainer, fragment)
-//                        .addToBackStack(null)
-//                        .commit();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
                 EditTripDialogFragment editTripDialogFragment = EditTripDialogFragment.newInstance();
                 editTripDialogFragment.setTargetFragment(TripReviewFragment.this, 300);
@@ -244,8 +245,7 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
             Fragment fragment = new EditTripFragment();
             fragment.setArguments(bundle);
             MainActivity.fragmentManager.beginTransaction()
-                    .replace(R.id.flContainer, fragment, "editTrip")
-                    .addToBackStack("editTrip")
+                    .add(R.id.flContainer, fragment)
                     .commit();
         }
 
@@ -262,7 +262,6 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
             MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);
             MainActivity.fragmentManager.beginTransaction()
                     .replace(R.id.flContainer, fragment)
-                    .addToBackStack(null)
                     .commit();
         }
 
