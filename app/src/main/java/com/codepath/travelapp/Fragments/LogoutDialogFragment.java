@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.codepath.travelapp.Activities.LoginActivity;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Activities.OpeningActivity;
 import com.codepath.travelapp.R;
 import com.parse.ParseUser;
 
@@ -71,7 +72,7 @@ public class LogoutDialogFragment extends DialogFragment {
                     // Pop off everything up to and including the current tab
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.popBackStack(MainActivity.BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    Intent intent = new Intent(getContext(), OpeningActivity.class);
                     startActivity(intent);
                     getActivity().finish();
                     Log.d("SidebarFragment", "User successfully logged out!");

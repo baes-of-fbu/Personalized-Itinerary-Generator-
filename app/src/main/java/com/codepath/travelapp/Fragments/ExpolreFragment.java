@@ -31,7 +31,7 @@ public class ExpolreFragment extends Fragment {
 
         ViewPager viewPager = view.findViewById(R.id.viewPager);
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-        viewPager.setAdapter((new ViewPagerAdapter(myContext.getSupportFragmentManager())));
+        viewPager.setAdapter((new ViewPagerAdapter(getChildFragmentManager())));
         tabLayout.setupWithViewPager(viewPager);
     }
     @Override

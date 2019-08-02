@@ -2,11 +2,13 @@ package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -17,6 +19,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Fragments.ProfileFragment;
+import com.codepath.travelapp.Fragments.TripDetailsFragment;
+import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 
@@ -27,9 +31,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context context;
     private List<User> users;
-    private CardView cvUser;
 
-    public UserAdapter(ArrayList<User> users){ this.users = users;}
+    public UserAdapter(ArrayList<User> users) {
+        this.users = users;
+    }
 
     @NonNull
     @Override
@@ -49,7 +54,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 .load(user.getProfileImage().getUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.ivImage);
-   }
+
+    }
 
     @Override
     public int getItemCount() {
@@ -60,12 +66,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         users.clear();
         notifyDataSetChanged();
     }
+
     public void addAll(List<User> list) {
         users.addAll(list);
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView ivImage;
         private TextView tvFullName;
         private TextView tvBio;
@@ -77,19 +84,21 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             tvBio = itemView.findViewById(R.id.tvBio);
             tvHomestate = itemView.findViewById(R.id.tvHomeState);
             tvFullName = itemView.findViewById(R.id.tvUsername);
-
-
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
+            // Sends a bundle to TripDetailsFragment when trip item is clicked
+            Log.d("Adapter", "item clicked");
+            Toast.makeText(context, "Card was clicked", Toast.LENGTH_SHORT).show();
             final User user = users.get(getAdapterPosition());
             if (user != null) {
                 Fragment fragment = new ProfileFragment();
 
-                Bundle userBundle = new Bundle();
-                userBundle.putString("user", user.getUsername());
-                fragment.setArguments(userBundle);
+                Bundle bundle = new Bundle();
+                bundle.putString("username", user.getUsername());
+                fragment.setArguments(bundle);
 
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)
@@ -98,5 +107,4 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }
         }
     }
-
 }

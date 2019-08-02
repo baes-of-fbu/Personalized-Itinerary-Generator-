@@ -176,10 +176,10 @@ public class ProfileFragment extends Fragment {
                 }
                 previousTripAdapter.addAll(trips);
                 ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
-                if (trips.size() > 5) {
+                if (trips.size() > 6) {
                     achievementQuery.whereEqualTo("name", "Adventurer");
                 }
-                if (trips.size() > 0) {
+                if (trips.size() > 1) {
                     achievementQuery.whereEqualTo("name", "Backpacker");
                 }
 

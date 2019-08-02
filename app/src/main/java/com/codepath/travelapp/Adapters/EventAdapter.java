@@ -2,11 +2,13 @@ package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Fragments.EventDetailsFragment;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.Event;
@@ -49,7 +52,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Event event = events.get(position);
         holder.tvName.setText(event.getName());
-        holder.tvBudget.setText("$" + event.getCost().toString());
+        holder.tvBudget.setText(event.getCost().toString());
         Glide.with(context)
                 .load(event.getImage().getUrl())
                 .apply(RequestOptions.circleCropTransform())
@@ -85,19 +88,38 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tvName;
         TextView tvBudget;
         TextView tvCity;
         ImageView ivEvent;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
             tvBudget = itemView.findViewById(R.id.tvBudget);
             tvCity = itemView.findViewById(R.id.tvCity);
             ivEvent = itemView.findViewById(R.id.ivEvent);
+            itemView.setOnClickListener(this);
         }
 
-    }
+        @Override
+        public void onClick(View view) {
+            Log.d("Adapter", "item clicked");
+            Toast.makeText(context, "Card was clicked", Toast.LENGTH_SHORT).show();
+            final Event event = events.get(getAdapterPosition());
+            if (event != null) {
+                Fragment fragment = new EventDetailsFragment();
 
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("event", event);
+                fragment.setArguments(bundle);
+
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        }
+    }
 }
