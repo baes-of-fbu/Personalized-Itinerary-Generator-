@@ -6,27 +6,27 @@
     android:layout_height="match_parent">
 
 
-            <TextView
-                android:id="@+id/tvEventName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/place_holder"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbEventDetails"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/ivCoverPhoto"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:cropToPadding="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvEventName"
-                tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivCoverPhoto"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:cropToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tbEventDetails"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -160,6 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:paddingEnd="5dp"
                 android:text="..."
                 android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -172,4 +173,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

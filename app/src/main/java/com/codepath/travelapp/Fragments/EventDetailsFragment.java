@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -28,25 +29,25 @@ public class EventDetailsFragment extends Fragment {
     private String location;
     private Event event;
     private TextView tvWebsite;
+    private Toolbar toolbar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_event_details,container, false);
+        return inflater.inflate(R.layout.fragment_event_details, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView tvEventName = view.findViewById(R.id.tvEventName);
         ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         TextView tvCost = view.findViewById(R.id.tvCost);
         RatingBar rbRating = view.findViewById(R.id.rbRating);
         tvAddress = view.findViewById(R.id.tvAddress);
         TextView tvDescription = view.findViewById(R.id.tvDescription);
         tvWebsite = view.findViewById(R.id.tvWebsite);
-
+        toolbar = view.findViewById(R.id.tbEventDetails);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -54,7 +55,9 @@ public class EventDetailsFragment extends Fragment {
         }
 
         if (event != null) {
-            tvEventName.setText(event.getName());
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+            toolbar.setTitle(event.getName());
+
             tvCost.setText(event.getCost().toString());
             rbRating.setRating(event.getRating().floatValue());
 
@@ -95,6 +98,13 @@ public class EventDetailsFragment extends Fragment {
                 if (browserIntent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
                     startActivity(browserIntent);
                 }
+            }
+        });
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
     }
