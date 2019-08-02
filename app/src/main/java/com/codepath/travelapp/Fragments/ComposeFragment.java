@@ -345,7 +345,6 @@ public class ComposeFragment extends Fragment {
 
         MainActivity.fragmentManager.beginTransaction()
                 .replace(R.id.flContainer, fragment)
-                .addToBackStack(null)
                 .commit();
     }
 

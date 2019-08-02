@@ -90,8 +90,32 @@ public class EditTripFragment extends Fragment {
         dayPlans = bundle.getParcelableArrayList("dayPlans");
 
         // Stores the original array lists, which are returned if the user does not click 'save'
-        originalAllAvailableEvents = bundle.getParcelableArrayList("available_events");
-        originalDayPlans = bundle.getParcelableArrayList("dayPlans");
+        originalAllAvailableEvents = new ArrayList<Event>();
+        originalAllAvailableEvents.addAll(allAvailableEvents);
+        originalDayPlans = new ArrayList<DayPlan>();
+
+        // Iterates through each dayPlan
+        for (int i = 0; i < dayPlans.size(); i++) {
+            DayPlan originalDayPlan = new DayPlan();
+            DayPlan currDayPlan = dayPlans.get(i);
+
+            // Saves the DayPlan date and trip
+            originalDayPlan.setDate(currDayPlan.getDate());
+
+            // Saves a copy of each event with in the day plan
+            if (currDayPlan.getMorningEvent() != null) {
+                originalDayPlan.setMorningEvent(currDayPlan.getMorningEvent());
+            }
+            if (currDayPlan.getAfternoonEvent() != null) {
+                originalDayPlan.setAfternoonEvent(currDayPlan.getAfternoonEvent());
+            }
+            if (currDayPlan.getEveningEvent() != null) {
+                originalDayPlan.setEveningEvent(currDayPlan.getEveningEvent());
+            }
+
+            // Saves the copy of the Original DayPlan
+            originalDayPlans.add(originalDayPlan);
+        }
 
         etEditTripName.setText(tripName);
 
@@ -118,13 +142,14 @@ public class EditTripFragment extends Fragment {
                         .setTitle("Are you sure you want to return without saving?")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+                                // Reset to the previous state and return to editTrip Fragment
                                 Fragment fragment = new TripReviewFragment();
+                                // Overwrites pre-existing "available_events" and "dayPlans" in the bundle
                                 bundle.putParcelableArrayList("available_events", originalAllAvailableEvents);
                                 bundle.putParcelableArrayList("dayPlans", originalDayPlans);
                                 fragment.setArguments(bundle);
                                 MainActivity.fragmentManager.beginTransaction()
                                         .replace(R.id.flContainer, fragment)
-                                        .addToBackStack(null)
                                         .commit();
                             }
                         })
@@ -153,7 +178,6 @@ public class EditTripFragment extends Fragment {
         fragment.setArguments(bundle);
         MainActivity.fragmentManager.beginTransaction()
                 .replace(R.id.flContainer, fragment)
-                .addToBackStack(null)
                 .commit();
         Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
     }
