@@ -231,7 +231,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             }
         });
 
-        // Opens city location in Maps application
+        // Opens city location in Maps application TODO copy this code and apply it to the pin icon
         holder.tvCityName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
