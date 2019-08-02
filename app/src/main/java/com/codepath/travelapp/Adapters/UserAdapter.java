@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,24 +23,24 @@ import com.codepath.travelapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserGridAdapter extends RecyclerView.Adapter<UserGridAdapter.ViewHolder> {
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context context;
     private List<User> users;
-    private ArrayList<User> selectedUsers;
+    private CardView cvUser;
 
-    public UserGridAdapter(ArrayList<User> users){ this.users = users;}
+    public UserAdapter(ArrayList<User> users){ this.users = users;}
 
     @NonNull
     @Override
-    public UserGridAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.item_user, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_explore_user, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UserGridAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserAdapter.ViewHolder holder, int position) {
         User user = users.get(position);
         holder.tvBio.setText(user.getBio());
         holder.tvHomestate.setText(user.getHomeState());
@@ -87,9 +87,9 @@ public class UserGridAdapter extends RecyclerView.Adapter<UserGridAdapter.ViewHo
             if (user != null) {
                 Fragment fragment = new ProfileFragment();
 
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("User", user);
-                fragment.setArguments(bundle);
+                Bundle userBundle = new Bundle();
+                userBundle.putString("user", user.getUsername());
+                fragment.setArguments(userBundle);
 
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)
