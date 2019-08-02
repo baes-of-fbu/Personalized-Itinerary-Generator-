@@ -90,7 +90,7 @@
             android:id="@+id/tvBudget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/budget_bold"
+            android:text="@string/cost"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/tvTripBudget"
             app:layout_constraintTop_toTopOf="@+id/tvDays" />

@@ -73,7 +73,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         final boolean[] likedCurrent = {false};
         final int[] numLikes = {0};
 
-        final String[] budgetString = {"$" + trip.getBudget().toString()};
+        final String[] budgetString = {"$" + trip.getCost().toString()};
         holder.tvTripBudget.setText(budgetString[0]);
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());

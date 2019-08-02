@@ -198,6 +198,7 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
                 trip.setNumDays(numDays);
                 trip.setBudget(budget);
                 trip.setImage(image);
+                trip.setCost(tripCost);
                 trip.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
