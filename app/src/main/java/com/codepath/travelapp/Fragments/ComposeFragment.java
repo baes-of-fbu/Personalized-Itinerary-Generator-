@@ -148,7 +148,7 @@ public class ComposeFragment extends Fragment {
                 tripName = etTripName.getText().toString();
                 startDate = etStartDate.getText().toString();
                 endDate = etEndDate.getText().toString();
-                budget = Integer.parseInt(etBudget.getText().toString());
+
                 cityName = spCity.getSelectedItem().toString();
 
                 // Checks to prevent incorrect user input
@@ -166,13 +166,16 @@ public class ComposeFragment extends Fragment {
                         Toast.makeText(getContext(), "Start date has already passed", Toast.LENGTH_SHORT).show();
                     } else if (etBudget.getText().toString().length() == 0) {
                         Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
-                    } else if (budget <= 0) {
-                        Toast.makeText(getContext(), "Minimum budget is $0.", Toast.LENGTH_LONG).show();
-                    } else if (cityName.contains("Select city")) {
-                        Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
                     } else {
-                        selectedTags = adapter.getSelectedTags();
-                        generateSchedule(cityName);
+                        budget = Integer.parseInt(etBudget.getText().toString());
+                        if (budget <= 0) {
+                            Toast.makeText(getContext(), "Minimum budget is $0.", Toast.LENGTH_LONG).show();
+                        } else if (cityName.contains("Select city")) {
+                            Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
+                        } else {
+                            selectedTags = adapter.getSelectedTags();
+                            generateSchedule(cityName);
+                        }
                     }
                 }
             }
@@ -323,9 +326,10 @@ public class ComposeFragment extends Fragment {
             return event.isAvailableMorning();
         } else if (timeOfDay.contentEquals(KEY_AFTERNOON)) {
             return event.isAvailableAfternoon();
-        } else {
+        } else if (timeOfDay.contentEquals(KEY_EVENING)) {
             return event.isAvailableEvening();
         }
+        return false;
     }
 
     // Checks if the cost of an event is within the budget
