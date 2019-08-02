@@ -128,6 +128,7 @@ public class EditTripFragment extends Fragment {
         toolbar = view.findViewById(R.id.tbEditProfile);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("Edit Trip");
+
         etEditTripName.setText(tripName);
         tvTravelDates.setText(String.format("%s - %s", startDate, endDate));
         tvDays.setText(String.valueOf(numDays));
@@ -145,7 +146,7 @@ public class EditTripFragment extends Fragment {
         }
 
         // Populate DayPlans
-        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans, allAvailableEvents, budget, remainingMoney);
+        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans, allAvailableEvents, budget, remainingMoney, tvTripCost, tvRemainingBudget);
         rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         rvSchedule.setAdapter(dayPlanEditableAdapterAdapter);
 
