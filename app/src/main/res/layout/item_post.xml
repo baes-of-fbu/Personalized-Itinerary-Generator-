@@ -1,6 +1,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cvRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -57,43 +58,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/days"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTripName" />
+            app:layout_constraintEnd_toStartOf="@+id/tvCost"
+            app:layout_constraintHorizontal_bias="0.995"
+            app:layout_constraintStart_toEndOf="@+id/tvTripName"
+            app:layout_constraintTop_toTopOf="@+id/tvCost" />
 
         <TextView
             android:id="@+id/tvTripDates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:text="@string/place_holder"
             android:textColor="#3A3A3A"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tvDays"
+            app:layout_constraintStart_toStartOf="@+id/tvDays"
             app:layout_constraintTop_toBottomOf="@+id/tvDays" />
 
         <TextView
             android:id="@+id/tvTripCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
             android:text="@string/place_holder"
             android:textColor="#3A3A3A"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/tvTripDates"
-            app:layout_constraintTop_toTopOf="@+id/tvTripDates" />
+            app:layout_constraintEnd_toEndOf="@+id/tvCost"
+            app:layout_constraintStart_toStartOf="@+id/tvCost"
+            app:layout_constraintTop_toBottomOf="@+id/tvCost" />
 
         <TextView
             android:id="@+id/tvCost"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginEnd="12dp"
             android:text="@string/cost"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/tvTripCost"
-            app:layout_constraintTop_toTopOf="@+id/tvDays" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTripName" />
 
         <ImageView
             android:id="@+id/ivTripImage"
@@ -211,6 +216,16 @@
             android:text="@string/users"
             app:layout_constraintStart_toEndOf="@+id/tvNumLikes"
             app:layout_constraintTop_toTopOf="@+id/tvNumLikes" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Time stamp "
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/tvTripName"
+            app:layout_constraintTop_toBottomOf="@+id/tvTripName" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

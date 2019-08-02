@@ -2,6 +2,7 @@ package com.codepath.travelapp.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +62,9 @@ public class TripDetailsFragment extends Fragment {
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
+        TextView tvCost = view.findViewById(R.id.tvCost);
+        TextView tvCityState = view.findViewById(R.id.tvCityState);
+        ImageView ivPin = view.findViewById(R.id.ivPin);
         final RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
         ImageView ivShare = view.findViewById(R.id.ivShare);
 
@@ -120,8 +124,17 @@ public class TripDetailsFragment extends Fragment {
             tvTravelDates.setText(travelWindow);
             tvDays.setText(trip.getNumDays().toString());
 
+            String costString = "$" + trip.getCost();
+            tvCost.setText(costString);
+
             String budgetString = "$" + trip.getBudget();
             tvBudget.setText(budgetString);
+
+            try {
+                tvCityState.setText(String.format("%s, %s", trip.getCity().fetchIfNeeded().getString("name"), trip.getCity().getState()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(trip.getImage().getUrl())
@@ -132,6 +145,20 @@ public class TripDetailsFragment extends Fragment {
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
+
+            tvCityState.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openMaps(trip);
+                }
+            });
+
+            ivPin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openMaps(trip);
+                }
+            });
         }
 
         progressDialog.hide();
@@ -181,5 +208,21 @@ public class TripDetailsFragment extends Fragment {
         CircleIndicator2 indicator = view.findViewById(R.id.indicator);
         indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
         adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+    }
+
+    private void openMaps(Trip trip) {
+        String location = geoPointToString((Objects.requireNonNull(trip.getCity().get("location"))).toString());
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        String data = String.format("%s?q=%s", location, trip.getCity().getName());
+        intent.setData(Uri.parse(data));
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            getContext().startActivity(intent);
+        }
+    }
+
+    private String geoPointToString(String geoPoint) {
+        String temp = geoPoint.substring(geoPoint.indexOf('[') + 1, geoPoint.length() - 1);
+        return "geo:" + temp;
     }
 }

@@ -78,9 +78,11 @@
     <string name="days">Days</string>
     <string name="budget_bold">Budget</string>
     <string name="cost">Cost</string>
+    <string name="cost_bold">Cost: </string>
     <string name="rating">Rating: </string>
     <string name="address">Address: </string>
     <string name="description">Description: </string>
+    <string name="website">Website: </string>
     <string name="schedule">Schedule</string>
     <string name="dollar_sign">$</string>
     <string name="place_holder">…</string>
