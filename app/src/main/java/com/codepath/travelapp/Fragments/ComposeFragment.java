@@ -232,8 +232,13 @@ public class ComposeFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void createDayPlans() {
+
+        // shuffleEvents() clears the allAvailableEvents array
+        // and returns a new shuffled list of events
+        allAvailableEvents.addAll(shuffleEvents());
         dayPlans = new ArrayList<>();
         int runningBudget = budget;
+
         // Loop through each day
         for (int day = 0; day < numDays; day++) {
             // Create a DayPlan for each day in the Trip and assign it the appropriate calendar Date
@@ -247,8 +252,6 @@ public class ComposeFragment extends Fragment {
                 allAvailableEvents.remove(morningEvent);
                 runningBudget -= (int) morningEvent.getCost();
                 tempDay.setMorningEvent(morningEvent);
-            } else {
-                // TODO ADD RECOMMENDED EVENT
             }
 
             // Picks afternoon event and updates budget
@@ -257,8 +260,6 @@ public class ComposeFragment extends Fragment {
                 allAvailableEvents.remove(afternoonEvent);
                 runningBudget -= (int) afternoonEvent.getCost();
                 tempDay.setAfternoonEvent(afternoonEvent);
-            } else {
-                // TODO ADD RECOMMENDED EVENT
             }
 
             // Picks evening event and updates budget
@@ -267,8 +268,6 @@ public class ComposeFragment extends Fragment {
                 allAvailableEvents.remove(eveningEvent);
                 runningBudget -= (int) eveningEvent.getCost();
                 tempDay.setEveningEvent(eveningEvent);
-            } else {
-                // TODO ADD RECOMMENDED EVENT
             }
 
             tempDay.saveInBackground();
@@ -278,26 +277,35 @@ public class ComposeFragment extends Fragment {
         tripCost = budget - runningBudget;
     }
 
-    public Event getEvent(String timeOfDay, int runningBudget) {
-        Event randomEvent;
-        ArrayList<Event> alreadyChecked = new ArrayList<>();
-
-        while (true) {
-            randomEvent = getRandomElement(allAvailableEvents);
-
-            if (alreadyChecked.size() == allAvailableEvents.size() || randomEvent == null) {
-                // Returns null if no event was found
-                return null;
-            } else if (!alreadyChecked.contains(randomEvent)) {
-                alreadyChecked.add(randomEvent);
-                if (isEventAvailable(randomEvent, timeOfDay)) {
-                    if (isEventWithinBudget(randomEvent, runningBudget)) {
-                        // Returns the event if it's available and within our budget
-                        return randomEvent;
-                    }
-                }
+    private Event getEvent(String timeOfDay, int runningBudget) {
+        int numEvents = allAvailableEvents.size();
+        // Loops through each event
+        for (int i = 0; i < numEvents; i++) {
+            Event event = allAvailableEvents.get(i);
+            if (isEventAvailable(event, timeOfDay) && isEventWithinBudget(event, runningBudget)) {
+                // Returns event if it is available and within budget
+                return event;
             }
         }
+        // Returns null if no event was found
+        return null;
+    }
+
+    // Events are shuffled so that each trip that is made can have a unique order of events
+    private ArrayList<Event> shuffleEvents() {
+        int numEvents = allAvailableEvents.size();
+        ArrayList<Event> shuffledEvents = new ArrayList<>();
+        // Loops through every event
+        for (int i = 0; i < numEvents; i++) {
+            // Selects a random event
+            Event event = getRandomElement(allAvailableEvents);
+            // Adds the random event to the shuffledEvents list
+            shuffledEvents.add(event);
+            // Removes the event from allAvailableEvents
+            allAvailableEvents.remove(event);
+        }
+        // Returns a new shuffled list of events
+        return shuffledEvents;
     }
 
     // Returns a random event from a list of events
