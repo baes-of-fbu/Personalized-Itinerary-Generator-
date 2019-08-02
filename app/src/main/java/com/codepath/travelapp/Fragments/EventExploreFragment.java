@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.travelapp.Adapters.EventAdapter;
-import com.codepath.travelapp.Adapters.UserAdapter;
 import com.codepath.travelapp.Models.Event;
-import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;

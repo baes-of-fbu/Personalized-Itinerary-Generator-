@@ -78,6 +78,7 @@ public class ComposeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_compose,container, false);
     }
 
@@ -358,6 +359,7 @@ public class ComposeFragment extends Fragment {
         MainActivity.fragmentManager.beginTransaction()
                 .replace(R.id.flContainer, fragment)
                 .commit();
+        MainActivity.bottomNavigationView.setVisibility(View.GONE);
     }
 
     // Opens a calendar and fills textView with selected date

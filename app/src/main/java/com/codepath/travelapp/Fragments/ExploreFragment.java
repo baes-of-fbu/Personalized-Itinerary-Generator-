@@ -12,16 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Adapters.ViewPagerAdapter;
 import com.codepath.travelapp.R;
 import com.google.android.material.tabs.TabLayout;
 
-public class ExpolreFragment extends Fragment {
+public class ExploreFragment extends Fragment {
     private FragmentActivity myContext;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_explore, container, false);
     }
 
