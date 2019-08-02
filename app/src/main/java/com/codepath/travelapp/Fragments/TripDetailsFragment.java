@@ -145,6 +145,20 @@ public class TripDetailsFragment extends Fragment {
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
+
+            tvCityState.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openMaps(trip);
+                }
+            });
+
+            ivPin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openMaps(trip);
+                }
+            });
         }
 
         progressDialog.hide();
@@ -186,20 +200,6 @@ public class TripDetailsFragment extends Fragment {
                 shareIntent.setType("text/plain");
 //                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(shareIntent, "Share Trip"));
-            }
-        });
-
-        tvCityState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMaps(trip);
-            }
-        });
-
-        ivPin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMaps(trip);
             }
         });
     }

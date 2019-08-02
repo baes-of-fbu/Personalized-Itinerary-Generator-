@@ -219,10 +219,20 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 username = (String) holder.tvUsername.getText();
-                Fragment fragment = new ProfileFragment();
-                Bundle userBundle = new Bundle();
-                userBundle.putString("username", username);
-                fragment.setArguments(userBundle);
+
+                Fragment fragment;
+                if (username.equals(ParseUser.getCurrentUser().getUsername())) {
+                    fragment = new ProfileFragment();
+                    Bundle finalBundle = new Bundle();
+                    finalBundle.putString("username", User.getCurrentUser().getUsername());
+                    fragment.setArguments(finalBundle);
+                    MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_profile);
+                } else {
+                    fragment = new ProfileFragment();
+                    Bundle userBundle = new Bundle();
+                    userBundle.putString("username", username);
+                    fragment.setArguments(userBundle);
+                }
 
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)
