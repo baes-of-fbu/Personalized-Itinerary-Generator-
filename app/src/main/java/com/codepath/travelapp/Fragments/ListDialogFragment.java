@@ -17,7 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.codepath.travelapp.Adapters.CommentAdapter;
+import com.codepath.travelapp.Adapters.UserGridAdapter;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 
@@ -28,7 +28,7 @@ public class ListDialogFragment extends DialogFragment {
     private TextView tvListName;
     private RecyclerView rvUsers;
 
-    private CommentAdapter adapter;
+    private UserGridAdapter adapter;
     private ArrayList<User> users;
     private String listName;
 
@@ -76,7 +76,7 @@ public class ListDialogFragment extends DialogFragment {
 
         tvListName.setText(listName);
 
-        //adapter = new CommentAdapter(users);
+        adapter = new UserGridAdapter(users);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvUsers.setLayoutManager(linearLayoutManager);
         rvUsers.setAdapter(adapter);

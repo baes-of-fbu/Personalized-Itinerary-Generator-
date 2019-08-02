@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -61,9 +62,10 @@ public class ProfileFragment extends Fragment {
     private int pageSize = 10;
 
     private User userProfile;
-    private User userCurrent;
     private Map<String, ParseObject> following;
-    private Map<String, ParseObject> follwers;
+    private Map<User, ParseObject> followers;
+
+    private User userCurrent;
 
     @Nullable
     @Override
@@ -77,7 +79,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         following = new HashMap<>();
-        follwers = new HashMap<>();
+        followers = new HashMap<>();
 
         Bundle userBundle = getArguments();
         if (userBundle != null) {
@@ -114,7 +116,11 @@ public class ProfileFragment extends Fragment {
                             if (e == null) {
                                 for (int i = 0; i < followList.size(); i++) {
                                     if (followList.get(i).getString("toId").equals(userProfile.getObjectId())) {
-                                        follwers.put(((User) followList.get(i).get("from")).getObjectId(), followList.get(i));
+                                        if (((User) followList.get(i).get("from")).getObjectId().equals(userCurrent.getObjectId())) {
+                                            followers.put(userCurrent, followList.get(i));
+                                        } else {
+                                            followers.put(((User) followList.get(i).get("from")), followList.get(i));
+                                        }
                                     } else if (((User) followList.get(i).get("from")).getObjectId().equals(userProfile.getObjectId())) {
                                         following.put(followList.get(i).getString("toId"), followList.get(i));
                                     }
@@ -287,7 +293,7 @@ public class ProfileFragment extends Fragment {
             btnFollowingStatus.setVisibility(View.GONE);
         } else {
             btnFollowingStatus.setVisibility(View.VISIBLE);
-            if (follwers.containsKey(userCurrent.getObjectId())) {
+            if (followers.containsKey(userCurrent)) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
                 btnFollowingStatus.setText(getString(R.string.following));
             }
@@ -310,15 +316,16 @@ public class ProfileFragment extends Fragment {
         tvFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO open dialogue to show list of followers and can click on a different user and go to their profile
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                ListDialogFragment listDialogFragment = new ListDialogFragment().newInstance(getFromList(), "Followers");
+                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
         });
         tvFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                // TODO open dialogue to show list of following and can click on a different user and go to their profile from list
 //                FragmentManager fragmentManager = MainActivity.fragmentManager;
-//                ListDialogFragment listDialogFragment = new ListDialogFragment().newInstance(getFromList(), "Following");
+//                ListDialogFragment listDialogFragment = new ListDialogFragment().newInstance(getToList(), "Following");
 //                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
         });
@@ -365,9 +372,9 @@ public class ProfileFragment extends Fragment {
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (follwers.containsKey(userCurrent.getObjectId())) {
-                    follwers.get(userCurrent.getObjectId()).deleteInBackground();
-                    follwers.remove(userCurrent.getObjectId());
+                if (followers.containsKey(userCurrent)) {
+                    followers.get(userCurrent).deleteInBackground();
+                    followers.remove(userCurrent);
 
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
@@ -380,7 +387,7 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
-                                follwers.put(userCurrent.getObjectId(), follow);
+                                followers.put(userCurrent, follow);
 
                                 btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
                                 btnFollowingStatus.setText(getString(R.string.following));
@@ -421,8 +428,8 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private ArrayList<String> getFromList() {
-        return new ArrayList<>(follwers.keySet());
+    private ArrayList<User> getFromList() {
+        return new ArrayList<>(followers.keySet());
     }
 
     private ArrayList<String> getToList() {
