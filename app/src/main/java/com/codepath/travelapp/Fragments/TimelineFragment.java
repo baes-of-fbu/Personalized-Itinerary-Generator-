@@ -127,6 +127,7 @@ public class TimelineFragment extends Fragment {
                         loadMore = false;
                     } else {
                         loadMore = true;
+                        adapter.clear();
                         adapter.addAll(objects);
                     }
                 } else {
