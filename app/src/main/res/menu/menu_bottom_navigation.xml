@@ -9,13 +9,17 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/action_explore"
-        android:icon="@android:drawable/ic_menu_compass"
+        android:icon="@android:drawable/ic_menu_mylocation"
         android:title="Explore"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_compose"
         android:icon="@drawable/ic_add_circle_outline_24px"
         android:title="New Trip"
+        app:showAsAction="always" />
+    <item
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="Item"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_profile"
