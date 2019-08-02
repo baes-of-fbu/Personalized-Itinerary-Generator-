@@ -241,20 +241,30 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             }
         });
 
-        // Opens city location in Maps application TODO copy this code and apply it to the pin icon
+        // Opens city location in Maps application
         holder.tvCityName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String location = geoPointToString((Objects.requireNonNull(city.get("location"))).toString());
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                String data = String.format("%s?q=%s", location, city.getName());
-                intent.setData(Uri.parse(data));
-                if (intent.resolveActivity(context.getPackageManager()) != null) {
-                    context.startActivity(intent);
-                }
+                openMaps();
             }
         });
+        holder.ivPin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMaps();
+            }
+        });
+    }
+
+    private void openMaps() {
+        String location = geoPointToString((Objects.requireNonNull(city.get("location"))).toString());
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        String data = String.format("%s?q=%s", location, city.getName());
+        intent.setData(Uri.parse(data));
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        }
     }
 
     private void setInactiveLikeIcon(@NonNull ViewHolder holder) {
@@ -295,6 +305,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         private TextView tvUsername;
         private ImageView ivProfileImage;
         private TextView tvCityName;
+        private ImageView ivPin;
         private TextView tvNumLikes;
         private ImageButton ibLike;
         private ImageButton ibComment;
@@ -310,6 +321,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvCityName = itemView.findViewById(R.id.tvCityName);
+            ivPin = itemView.findViewById(R.id.ivLocationPin);
             tvNumLikes = itemView.findViewById(R.id.tvNumLikes);
             ibLike = itemView.findViewById(R.id.ibLike);
             ibComment = itemView.findViewById(R.id.ibComment);
