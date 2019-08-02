@@ -323,9 +323,10 @@ public class ComposeFragment extends Fragment {
             return event.isAvailableMorning();
         } else if (timeOfDay.contentEquals(KEY_AFTERNOON)) {
             return event.isAvailableAfternoon();
-        } else {
+        } else if (timeOfDay.contentEquals(KEY_EVENING)) {
             return event.isAvailableEvening();
         }
+        return false;
     }
 
     // Checks if the cost of an event is within the budget

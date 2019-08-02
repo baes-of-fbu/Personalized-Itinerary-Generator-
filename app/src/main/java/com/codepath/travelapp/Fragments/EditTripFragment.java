@@ -1,6 +1,7 @@
 package com.codepath.travelapp.Fragments;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,11 +44,15 @@ public class EditTripFragment extends Fragment {
     private String endDate;
     private int budget;
     private int numDays;
-    private int tripCost;
+
     private ArrayList<Tag> tags;
+
+    private int tripCost;
     private ArrayList<Event> allAvailableEvents;
-    private ArrayList<Event> originalAllAvailableEvents;
     private ArrayList<DayPlan> dayPlans;
+
+    private int originalTripCost;
+    private ArrayList<Event> originalAllAvailableEvents;
     private ArrayList<DayPlan> originalDayPlans;
 
     private Bundle bundle;
@@ -64,14 +69,14 @@ public class EditTripFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         etEditTripName = view.findViewById(R.id.etEditTripName);
+        TextView tvTravelDates = view.findViewById(R.id.tvTravelDatesEditFragment);
+        TextView tvDays = view.findViewById(R.id.tvDaysEditFragment);
+        TextView tvBudget = view.findViewById(R.id.tvBudgetEditFragment);
+        TextView tvTripCost = view.findViewById(R.id.tvCostEditFragment);
+        TextView tvRemainingBudget = view.findViewById(R.id.tvRemainingBudgetEditFragment);
+        TextView tvCityState = view.findViewById(R.id.tvCityStateEditFragment);
         saveBtn = view.findViewById(R.id.saveBtn);
         RecyclerView rvSchedule = view.findViewById(R.id.rvEditableSchedule);
-
-
-        toolbar = view.findViewById(R.id.tbEditProfile);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setTitle("Edit Trip");
-
 
         bundle = getArguments();
         if (bundle == null) {
@@ -117,10 +122,30 @@ public class EditTripFragment extends Fragment {
             originalDayPlans.add(originalDayPlan);
         }
 
+        originalTripCost = getTripCost(originalDayPlans);
+
+        // Fill in layout
+        toolbar = view.findViewById(R.id.tbEditProfile);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setTitle("Edit Trip");
         etEditTripName.setText(tripName);
+        tvTravelDates.setText(String.format("%s - %s", startDate, endDate));
+        tvDays.setText(String.valueOf(numDays));
+        tvBudget.setText(String.format("$%s", String.valueOf(budget)));
+        tvTripCost.setText(String.format("$%s", String.valueOf(tripCost)));
+        tvCityState.setText(String.format("%s, %s", city.getName(), city.getState()));
+
+        // Updates amount remaining
+        int remainingMoney = budget-tripCost;
+        tvRemainingBudget.setText(String.format("$%s", String.valueOf(remainingMoney)));
+        if (remainingMoney < 0) {
+            tvRemainingBudget.setTextColor(Color.RED);
+        } else if (remainingMoney > 0) {
+            tvRemainingBudget.setTextColor(getResources().getColor(R.color.LightSkyBlue));
+        }
 
         // Populate DayPlans
-        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans, allAvailableEvents);
+        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans, allAvailableEvents, budget, remainingMoney);
         rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         rvSchedule.setAdapter(dayPlanEditableAdapterAdapter);
 
@@ -147,6 +172,7 @@ public class EditTripFragment extends Fragment {
                                 // Overwrites pre-existing "available_events" and "dayPlans" in the bundle
                                 bundle.putParcelableArrayList("available_events", originalAllAvailableEvents);
                                 bundle.putParcelableArrayList("dayPlans", originalDayPlans);
+                                bundle.putInt("trip_cost", originalTripCost);
                                 fragment.setArguments(bundle);
                                 MainActivity.fragmentManager.beginTransaction()
                                         .replace(R.id.flContainer, fragment)
@@ -171,7 +197,7 @@ public class EditTripFragment extends Fragment {
     private void save() {
         Fragment fragment = new TripReviewFragment();
         bundle.putString("trip_name", etEditTripName.getText().toString());
-        tripCost = getTripCost();
+        tripCost = getTripCost(dayPlans);
         bundle.putInt("trip_cost", tripCost);
         bundle.putParcelableArrayList("dayPlans", dayPlans);
         bundle.putParcelableArrayList("available_event", allAvailableEvents);
@@ -182,10 +208,10 @@ public class EditTripFragment extends Fragment {
         Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
     }
 
-    private int getTripCost() {
+    private int getTripCost(ArrayList<DayPlan> dayPlansList) {
         int runningCost = 0;
-        for (int i = 0; i < dayPlans.size(); i++) {
-            DayPlan currday = dayPlans.get(i);
+        for (int i = 0; i < dayPlansList.size(); i++) {
+            DayPlan currday = dayPlansList.get(i);
             if (currday.getMorningEvent() != null) {
                 runningCost += (int) currday.getMorningEvent().getCost();
             }

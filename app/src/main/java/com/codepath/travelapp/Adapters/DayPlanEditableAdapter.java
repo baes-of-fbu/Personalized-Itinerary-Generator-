@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,6 +25,8 @@ import com.codepath.travelapp.R;
 import com.parse.ParseException;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditableAdapter.ViewHolder> implements EditEventDialogFragment.Listener {
 
@@ -40,11 +43,19 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     private String cancelEdit;
     private String removeEvent;
     private String reGenerateEvent;
+    private int budget;
+    private int remainingMoney;
+
+    private static final String KEY_MORNING = "morning";
+    private static final String KEY_AFTERNOON = "afternoon";
+    private static final String KEY_EVENING = "evening";
 
 
-    public DayPlanEditableAdapter(ArrayList<DayPlan> dayPlans, ArrayList<Event> allAvailableEvents) {
+    public DayPlanEditableAdapter(ArrayList<DayPlan> dayPlans, ArrayList<Event> allAvailableEvents, int budget, int remainingMoney) {
         this.dayPlans = dayPlans;
         this.allAvailableEvents = allAvailableEvents;
+        this.budget = budget;
+        this.remainingMoney = remainingMoney;
     }
 
     @NonNull
@@ -290,13 +301,91 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     }
 
     private void generateEvent() {
-        if (timeOfDay.contentEquals(morningEvent)) {
+        // shuffleEvents() clears the allAvailableEvents array
+        // and returns a new shuffled list of events
+        allAvailableEvents.addAll(shuffleEvents());
 
-        } else if (timeOfDay.contentEquals(afternoonEvent)) {
-
-        } else if (timeOfDay.contentEquals(eveningEvent)) {
-
+        Event event = getEvent();
+        if (event != null) {
+            allAvailableEvents.remove(event);
+            if (timeOfDay.contentEquals(morningEvent)) {
+                currDayPlan.setMorningEvent(event);
+                remainingMoney -= (int) event.getCost();
+                notifyDataSetChanged();
+            } else if (timeOfDay.contentEquals(afternoonEvent)) {
+                currDayPlan.setAfternoonEvent(event);
+                notifyDataSetChanged();
+            } else if (timeOfDay.contentEquals(eveningEvent)) {
+                currDayPlan.setEveningEvent(event);
+                notifyDataSetChanged();
+            }
+        } else {
+            AlertDialog dialog = new AlertDialog.Builder(context)
+                    .setTitle("No available events for this budget. Consider increasing budget")
+                    .setPositiveButton("OK", null)
+                    .setNegativeButton("Cancel", null)
+                    .create();
+            dialog.show();
         }
+    }
+
+    private Event getEvent() {
+        int numEvents = allAvailableEvents.size();
+        // Loops through each event
+        for (int i = 0; i < numEvents; i++) {
+            Event event = allAvailableEvents.get(i);
+            if (isEventAvailable(event, timeOfDay) && isEventWithinBudget(event, remainingMoney)) {
+                // TODO timeOfDay and remainingMoney are instance variables that don't HAVE to be passed in
+                // Returns event if it is available and within budget
+                return event;
+            }
+        }
+        // Returns null if no event was found
+        return null;
+    }
+
+    // Events are shuffled so that each trip that is made can have a unique order of events
+    private ArrayList<Event> shuffleEvents() {
+        int numEvents = allAvailableEvents.size();
+        ArrayList<Event> shuffledEvents = new ArrayList<>();
+        // Loops through every event
+        for (int i = 0; i < numEvents; i++) {
+            // Selects a random event
+            Event event = getRandomElement(allAvailableEvents);
+            // Adds the random event to the shuffledEvents list
+            shuffledEvents.add(event);
+            // Removes the event from allAvailableEvents
+            allAvailableEvents.remove(event);
+        }
+        // Returns a new shuffled list of events
+        return shuffledEvents;
+    }
+
+    // Returns a random event from a list of events
+    private Event getRandomElement(List<Event> list) {
+        Random rand = new Random();
+        if (list.size() == 0) {
+            return null;
+        }
+        return list.get(rand.nextInt(list.size()));
+    }
+
+    // Returns if the event is available during a given time of day
+    private Boolean isEventAvailable(Event event, String timeOfDay) { //TODO can we make this more generic?
+        if (timeOfDay.contentEquals(KEY_MORNING)) {
+            return event.isAvailableMorning();
+        } else if (timeOfDay.contentEquals(KEY_AFTERNOON)) {
+            return event.isAvailableAfternoon();
+        } else if (timeOfDay.contentEquals(KEY_EVENING)){
+            return event.isAvailableEvening();
+        }
+        return false;
+    }
+
+    // Checks if the cost of an event is within the budget
+    private Boolean isEventWithinBudget(Event event, int budget) {
+        int eventCost = (int) event.getCost();
+        return eventCost < budget;
     }
 
 

@@ -21,7 +21,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,6 +45,186 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clStatsEditFragment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etEditTripName">
+
+                <TextView
+                    android:id="@+id/tvTravelDatesEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/place_holder"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.026"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvDaysEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/place_holder"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvStringDaysEditFragment"
+                    app:layout_constraintStart_toStartOf="@+id/tvStringDaysEditFragment"
+                    app:layout_constraintTop_toBottomOf="@+id/tvStringDaysEditFragment" />
+
+                <TextView
+                    android:id="@+id/tvBudgetEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/dollar_sign"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvStringBudgetEditFragment"
+                    app:layout_constraintStart_toStartOf="@+id/tvStringBudgetEditFragment"
+                    app:layout_constraintTop_toBottomOf="@+id/tvStringBudgetEditFragment" />
+
+                <TextView
+                    android:id="@+id/tvStringBudgetEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/budget_bold"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/dividerEditTripFragment"
+                    app:layout_constraintStart_toEndOf="@+id/divider2EditTripFragment"
+                    app:layout_constraintTop_toTopOf="@+id/tvStringDaysEditFragment" />
+
+                <TextView
+                    android:id="@+id/tvStringDaysEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/days"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/divider2EditTripFragment"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTravelDatesEditFragment" />
+
+                <TextView
+                    android:id="@+id/tvCityStateEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/city"
+                    app:layout_constraintBottom_toBottomOf="@+id/ivPinEditFragment"
+                    app:layout_constraintEnd_toStartOf="@+id/ivPinEditFragment"
+                    app:layout_constraintTop_toTopOf="@+id/ivPinEditFragment" />
+
+                <ImageView
+                    android:id="@+id/ivPinEditFragment"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_location_on_black_24dp" />
+
+                <TextView
+                    android:id="@+id/tvTripCostEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/cost"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/divider3EditTripFragment"
+                    app:layout_constraintStart_toEndOf="@+id/dividerEditTripFragment"
+                    app:layout_constraintTop_toTopOf="@+id/tvStringDaysEditFragment" />
+
+                <TextView
+                    android:id="@+id/tvCostEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/dollar_sign"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvTripCostEditFragment"
+                    app:layout_constraintStart_toStartOf="@+id/tvTripCostEditFragment"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTripCostEditFragment" />
+
+                <TextView
+                    android:id="@+id/tvTripRemainingEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/remaining"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/divider3EditTripFragment"
+                    app:layout_constraintTop_toTopOf="@+id/tvStringDaysEditFragment" />
+
+                <TextView
+                    android:id="@+id/tvRemainingBudgetEditFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/dollar_sign"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvTripRemainingEditFragment"
+                    app:layout_constraintStart_toStartOf="@+id/tvTripRemainingEditFragment"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTripRemainingEditFragment" />
+
+                <View
+                    android:id="@+id/dividerEditTripFragment"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvBudgetEditFragment"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvStringBudgetEditFragment" />
+
+                <View
+                    android:id="@+id/divider2EditTripFragment"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toBottomOf="@+id/dividerEditTripFragment"
+                    app:layout_constraintEnd_toStartOf="@+id/dividerEditTripFragment"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/dividerEditTripFragment" />
+
+                <View
+                    android:id="@+id/divider3EditTripFragment"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toBottomOf="@+id/dividerEditTripFragment"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/dividerEditTripFragment"
+                    app:layout_constraintTop_toTopOf="@+id/dividerEditTripFragment" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
                 android:id="@+id/saveBtn"
@@ -70,7 +250,7 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etEditTripName" />
+                app:layout_constraintTop_toBottomOf="@id/clStatsEditFragment" />
 
             <me.relex.circleindicator.CircleIndicator2
                 android:id="@+id/indicatorEdit"
