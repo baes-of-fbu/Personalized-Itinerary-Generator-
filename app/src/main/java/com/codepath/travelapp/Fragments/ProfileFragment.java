@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -61,8 +62,10 @@ public class ProfileFragment extends Fragment {
     private int pageSize = 10;
 
     private User userProfile;
-    private User userCurrent;
     private Map<String, ParseObject> following;
+    private Map<User, ParseObject> followers;
+
+    private User userCurrent;
 
     @Nullable
     @Override
@@ -76,6 +79,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         following = new HashMap<>();
+        followers = new HashMap<>();
 
         Bundle userBundle = getArguments();
         if (userBundle != null) {
@@ -90,16 +94,36 @@ public class ProfileFragment extends Fragment {
                         e.printStackTrace();
                         return;
                     }
+
                     userProfile = (User) objects.get(0);
                     userCurrent = (User) getCurrentUser();
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
-                    query.whereEqualTo("from", ParseUser.getCurrentUser());
-                    query.include("to");
-                    query.findInBackground(new FindCallback<ParseObject>() {
+
+                    List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+
+                    ParseQuery<ParseObject> queryFrom = ParseQuery.getQuery("Follow");
+                    queryFrom.whereEqualTo("from", userProfile);
+                    queries.add(queryFrom);
+
+                    ParseQuery<ParseObject> queryTo = ParseQuery.getQuery("Follow");
+                    queryTo.whereEqualTo("toId", userProfile.getObjectId());
+                    queries.add(queryTo);
+
+                    ParseQuery<ParseObject> compoundQuery = ParseQuery.or(queries);
+                    compoundQuery.include("from");
+                    compoundQuery.include("toId");
+                    compoundQuery.findInBackground(new FindCallback<ParseObject>() {
                         public void done(List<ParseObject> followList, ParseException e) {
                             if (e == null) {
                                 for (int i = 0; i < followList.size(); i++) {
-                                    following.put(followList.get(i).getString("toId"), followList.get(i));
+                                    if (followList.get(i).getString("toId").equals(userProfile.getObjectId())) {
+                                        if (((User) followList.get(i).get("from")).getObjectId().equals(userCurrent.getObjectId())) {
+                                            followers.put(userCurrent, followList.get(i));
+                                        } else {
+                                            followers.put(((User) followList.get(i).get("from")), followList.get(i));
+                                        }
+                                    } else if (((User) followList.get(i).get("from")).getObjectId().equals(userProfile.getObjectId())) {
+                                        following.put(followList.get(i).getString("toId"), followList.get(i));
+                                    }
                                 }
                                 FillInLayout(view);
                                 SideSwipe(view);
@@ -269,7 +293,7 @@ public class ProfileFragment extends Fragment {
             btnFollowingStatus.setVisibility(View.GONE);
         } else {
             btnFollowingStatus.setVisibility(View.VISIBLE);
-            if (following.containsKey(userProfile.getObjectId())) {
+            if (followers.containsKey(userCurrent)) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
                 btnFollowingStatus.setText(getString(R.string.following));
             }
@@ -292,13 +316,17 @@ public class ProfileFragment extends Fragment {
         tvFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO open dialogue to show list of followers and can click on a different user and go to their profile
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                ListDialogFragment listDialogFragment = new ListDialogFragment().newInstance(getFromList(), "Followers");
+                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
         });
         tvFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO open dialogue to show list of following and can click on a different user and go to their profile
+//                FragmentManager fragmentManager = MainActivity.fragmentManager;
+//                ListDialogFragment listDialogFragment = new ListDialogFragment().newInstance(getToList(), "Following");
+//                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
         });
 
@@ -344,9 +372,9 @@ public class ProfileFragment extends Fragment {
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (following.containsKey(userProfile.getObjectId())) {
-                    following.get(userProfile.getObjectId()).deleteInBackground();
-                    following.remove(userProfile.getObjectId());
+                if (followers.containsKey(userCurrent)) {
+                    followers.get(userCurrent).deleteInBackground();
+                    followers.remove(userCurrent);
 
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
@@ -359,7 +387,7 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
-                                following.put(userProfile.getObjectId(), follow);
+                                followers.put(userCurrent, follow);
 
                                 btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
                                 btnFollowingStatus.setText(getString(R.string.following));
@@ -376,27 +404,8 @@ public class ProfileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void updateFollowCnt(final TextView tvFollowersCount, final TextView tvFollowingCount) {
-        final int[] followers = {0};
-        final int[] following = {0};
-
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Follow");
-        query.include("from");
-        query.include("toId");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> followList, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < followList.size(); i++) {
-                        if ((followList.get(i).getString("toId")).equals(userProfile.getObjectId())) {
-                            followers[0]++;
-                        } else if (((User) followList.get(i).get("from")).getUsername().equals(userProfile.getUsername())) {
-                            following[0]++;
-                        }
-                    }
-                    tvFollowersCount.setText(Integer.toString(followers[0]));
-                    tvFollowingCount.setText(Integer.toString(following[0]));
-                }
-            }
-        });
+        tvFollowersCount.setText(Integer.toString(getFromList().size()));
+        tvFollowingCount.setText(Integer.toString(getToList().size()));
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -419,4 +428,11 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    private ArrayList<User> getFromList() {
+        return new ArrayList<>(followers.keySet());
+    }
+
+    private ArrayList<String> getToList() {
+        return new ArrayList<>(following.keySet());
+    }
 }

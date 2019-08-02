@@ -165,21 +165,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
         // Send a Parse Query to get "saved" relation
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("SavedTrip");
-        query.include("user");
-        query.include("trip");
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.whereEqualTo("trip", trip);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> savedList, ParseException e) {
                 if (e == null) {
-                    for (int i = 0; i < savedList.size(); i++) {
-                        if (((User) savedList.get(i).get("user")).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                            if (((Trip) savedList.get(i).get("trip")).getObjectId().equals(trip.getObjectId())) {
-                                savedObject[0] = savedList.get(i);
-                                savedCurrent[0] = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (savedCurrent[0]) {
+                    if (savedList.size() == 1) {
+                        savedObject[0] = savedList.get(0);
+                        savedCurrent[0] = true;
                         setActiveSaveIcon(holder);
                     } else {
                         setInactiveSaveIcon(holder);
@@ -189,6 +182,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 }
             }
         });
+
 
         // Set onClickListener to Save icon to reflect whether or not the current user has saved the trip
         holder.ibSave.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +196,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                     save.put("trip", trip);
                     save.put("user", ParseUser.getCurrentUser());
                     save.saveInBackground();
+                    savedObject[0] = save;
                     setActiveSaveIcon(holder);
                 }
                 savedCurrent[0] = !savedCurrent[0];

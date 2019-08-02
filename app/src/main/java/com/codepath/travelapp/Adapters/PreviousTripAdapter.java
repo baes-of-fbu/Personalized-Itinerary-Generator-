@@ -24,7 +24,7 @@ import com.parse.ParseFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapter.ViewHolder>{
+public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Trip> trips;
 
@@ -44,22 +44,23 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
     public void onBindViewHolder(@NonNull PreviousTripAdapter.ViewHolder holder, int position) {
         //Get a trip
         Trip trip = trips.get(position);
+        if (trip != null) {
+            // Set the views for that trip
+            holder.tvTripBudget.setText("$" + trip.getBudget().toString());
+            holder.tvTripName.setText(trip.getName());
+            holder.tvTripBudget.setText(trip.getBudget().toString());
 
-        // Set the views for that trip
-        holder.tvTripBudget.setText("$" + trip.getBudget().toString());
-        holder.tvTripName.setText(trip.getName());
-        holder.tvTripBudget.setText(trip.getBudget().toString());
-
-        holder.ivBanner.setBackgroundColor(Color.argb(0, 255, 255, 255));
-        holder.tvStatus.setText("");
+            holder.ivBanner.setBackgroundColor(Color.argb(0, 255, 255, 255));
+            holder.tvStatus.setText("");
 
 
-        if (trip.get("image") != null) {
-            ParseFile image = (ParseFile) trip.get("image");
-            assert image != null;
-            Glide.with(context)
-                    .load(image.getUrl())
-                    .into(holder.ivTripImage);
+            if (trip.get("image") != null) {
+                ParseFile image = (ParseFile) trip.get("image");
+                assert image != null;
+                Glide.with(context)
+                        .load(image.getUrl())
+                        .into(holder.ivTripImage);
+            }
         }
     }
 
@@ -108,7 +109,7 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
         }
     }
 
-    public void clear(){
+    public void clear() {
         trips.clear();
         notifyDataSetChanged();
     }
