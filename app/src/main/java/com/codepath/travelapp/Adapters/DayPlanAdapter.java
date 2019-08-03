@@ -44,7 +44,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
     public void onBindViewHolder(@NonNull DayPlanAdapter.ViewHolder holder, int position) {
         // Get the current day
         final DayPlan dayPlan = dayPlans.get(position);
-        holder.tvDayTitle.setText(dayPlan.getDate().toString());
+        holder.tvDayTitle.setText(dayPlan.getDate().toString().substring(0,10));
 
         if (dayPlan.getMorningEvent() == null) {
             // Fills morning card view with empty event and removes onClickListener

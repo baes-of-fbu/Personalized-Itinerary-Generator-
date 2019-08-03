@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +37,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.codepath.travelapp.R.drawable.heart_filled;
@@ -78,6 +81,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.tvTripDates.setText(trip.getNumDays().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvUsername.setText(trip.getOwner().getUsername());
+        holder.tvTime.setText(getRelativeTimeAgo(trip.getCreatedAt().toString()));
 
         // Load trip owner profile image
         if (trip.getOwner().get("profileImage") != null) {
@@ -304,6 +308,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         private ImageButton ibLike;
         private ImageButton ibComment;
         private ImageButton ibSave;
+        private TextView tvTime;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -320,6 +325,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             ibLike = itemView.findViewById(R.id.ibLike);
             ibComment = itemView.findViewById(R.id.ibComment);
             ibSave = itemView.findViewById(R.id.ibSave);
+            tvTime = itemView.findViewById(R.id.tvTime);
 
             itemView.setOnClickListener(this);
         }
@@ -352,5 +358,21 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     public void addAll(List<Trip> list) {
         trips.addAll(list);
         notifyDataSetChanged();
+    }
+    public String getRelativeTimeAgo(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
     }
 }

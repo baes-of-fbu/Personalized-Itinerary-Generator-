@@ -31,6 +31,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -120,8 +121,13 @@ public class TripDetailsFragment extends Fragment {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            String travelWindow;
+            if(trip.getNumDays().intValue() != 1) {
+                travelWindow = trip.getStartDate().toString().substring(0, 10) + " - " + trip.getEndDate().toString().substring(0, 10);
+            }else {
+                travelWindow = trip.getStartDate().toString().substring(0, 10);
+            }
 
-            String travelWindow = trip.getStartDate() + " - " + trip.getEndDate();
             tvTravelDates.setText(travelWindow);
             tvDays.setText(trip.getNumDays().toString());
 
