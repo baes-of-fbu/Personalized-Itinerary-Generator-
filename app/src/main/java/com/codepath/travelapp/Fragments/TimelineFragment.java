@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -25,7 +24,6 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class TimelineFragment extends Fragment {
 
@@ -81,9 +79,6 @@ public class TimelineFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        RecyclerView.ItemDecoration divider = new DividerItemDecoration(Objects.requireNonNull(getContext()), DividerItemDecoration.VERTICAL);
-        rvTrips.addItemDecoration(divider);
     }
 
     // Query all trips and add them to the adapter to populate the Timeline
