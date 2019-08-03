@@ -7,7 +7,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private final String APP_TAG = "MainActivity";
     public static FragmentManager fragmentManager;
     public static BottomNavigationView bottomNavigationView;
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        toolbar = findViewById(R.id.toolbarMain);
         addOnClickListeners();
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         KeyboardVisibilityEvent.setEventListener(
@@ -66,11 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new TimelineFragment();
-                        toolbar.setVisibility(View.VISIBLE);
                         break;
                     case R.id.action_compose:
                         fragment = new ComposeFragment();
-                        toolbar.setVisibility(View.GONE);
                         break;
                     case R.id.action_profile:
                         fragment = new ProfileFragment();
@@ -79,9 +74,6 @@ public class MainActivity extends AppCompatActivity {
                         Bundle userBundle = new Bundle();
                         userBundle.putString("username",  ParseUser.getCurrentUser().getUsername());
                         fragment.setArguments(userBundle);
-
-
-                        toolbar.setVisibility(View.VISIBLE);
 
 
                         break;
