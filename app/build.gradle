@@ -51,4 +51,7 @@ dependencies {
 
     // Endless scroll
     implementation "android.arch.paging:runtime:1.0.1"
+
+    // Adds Keyboard listener
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 }
