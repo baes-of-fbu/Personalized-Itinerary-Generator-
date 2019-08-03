@@ -175,37 +175,43 @@ public class ProfileFragment extends Fragment {
                     return;
                 }
                 previousTripAdapter.addAll(trips);
-                ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
-                if (trips.size() > 0) {
-                    if (trips.size() > 5) {
-                        achievementQuery.whereEqualTo("name", "Adventurer");
-                    }
-                    if (trips.size() >= 1) {
-                        achievementQuery.whereEqualTo("name", "Backpacker");
-                    }
 
-                    achievementQuery.findInBackground(new FindCallback<Achievement>() {
-                        @Override
-                        public void done(final List<Achievement> objects, ParseException e) {
-                            if (e == null) {
-                                for (int i = 0; i < objects.size(); i++) {
-                                    user.getAchievementRelation().add(objects.get(i));
-                                }
-                                user.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e == null) {
-                                            queryAchievements();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
+                if(user.getUsername().equals(userCurrent.getUsername())){
+                    queryNewAchievements(trips, user);
                 }
-
             }
         });
+    }
+
+    private void queryNewAchievements(List<Trip> trips, final User user) {
+        ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
+        if (trips.size() > 0) {
+            if (trips.size() > 5) {
+                achievementQuery.whereEqualTo("name", "Adventurer");
+            }
+            if (trips.size() >= 1) {
+                achievementQuery.whereEqualTo("name", "Backpacker");
+            }
+
+            achievementQuery.findInBackground(new FindCallback<Achievement>() {
+                @Override
+                public void done(final List<Achievement> objects, ParseException e) {
+                    if (e == null) {
+                        for (int i = 0; i < objects.size(); i++) {
+                            user.getAchievementRelation().add(objects.get(i));
+                        }
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    achievementAdapter.addAll(objects);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
     }
 
     private void queryCurrentPosts(ParseUser user) {
@@ -371,6 +377,9 @@ public class ProfileFragment extends Fragment {
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);
         queryCurrentPosts(userProfile);
+        if(!userProfile.getUsername().equals(userCurrent.getUsername())) {
+            queryAchievements();
+        }
         querySaved(userProfile);
 
 
