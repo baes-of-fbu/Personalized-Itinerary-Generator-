@@ -19,6 +19,9 @@ import com.codepath.travelapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
 
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String BACK_STACK_ROOT_TAG = "root_fragment";
@@ -38,6 +41,18 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarMain);
         addOnClickListeners();
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+        KeyboardVisibilityEvent.setEventListener(
+                this,
+                new KeyboardVisibilityEventListener() {
+                    @Override
+                    public void onVisibilityChanged(boolean isOpen) {
+                        if(isOpen){
+                            bottomNavigationView.setVisibility(View.GONE);
+                        }else{
+                            bottomNavigationView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
     }
 
     private void addOnClickListeners() {

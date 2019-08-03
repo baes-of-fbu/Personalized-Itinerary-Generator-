@@ -13,14 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnGenerate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -48,10 +45,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="8"
+                android:focusable="false"
                 android:hint="@string/start_date"
                 android:importantForAutofill="no"
                 android:inputType="date"
-                android:focusable="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etTripName" />
 
@@ -63,13 +60,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="8"
-                android:hint="@string/end_date"
-                android:inputType="date"
                 android:focusable="false"
+                android:hint="@string/end_date"
+                android:importantForAutofill="no"
+                android:inputType="date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/etStartDate"
-                app:layout_constraintTop_toBottomOf="@+id/etTripName"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@+id/etTripName" />
 
             <EditText
                 android:id="@+id/etBudget"
@@ -79,10 +76,10 @@
                 android:layout_marginTop="8dp"
                 android:ems="8"
                 android:hint="@string/budget"
+                android:importantForAutofill="no"
                 android:inputType="numberDecimal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etStartDate"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@+id/etStartDate" />
 
             <Spinner
                 android:id="@+id/spCity"
@@ -105,22 +102,42 @@
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spCity" />
+                app:layout_constraintTop_toBottomOf="@+id/spCity">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <Button
+                android:id="@+id/btnGenerate"
+                android:layout_width="@dimen/login_btn_width"
+                android:layout_height="@dimen/login_btn_height"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rounded_btn"
+                android:text="@string/generate"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvTags" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/btnGenerate"
-        android:layout_width="@dimen/login_btn_width"
-        android:layout_height="@dimen/login_btn_height"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rounded_btn"
-        android:text="@string/generate"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/LightSkyBlue"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/compose_trip"
+        app:titleMargin="6dp"
+        app:titleTextColor="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvTripName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
+        android:text="@string/trip_name"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTripName"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -46,225 +62,184 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/indicator" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cvRoot"
+            <ImageView
+                android:id="@+id/ivCoverPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_marginTop="35dp"
-                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/ivCoverPhoto"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvTripName"
-                        tools:srcCompat="@tools:sample/avatars" />
-
-                    <TextView
-                        android:id="@+id/tvTripName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/trip_name"
-                        android:textColor="@color/black"
-                        android:textSize="25sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clStats"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/tvTravelDates"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.026"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivCoverPhoto" />
+
+            <TextView
+                android:id="@+id/tvDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/place_holder"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvStringDays"
+                app:layout_constraintStart_toStartOf="@+id/tvStringDays"
+                app:layout_constraintTop_toBottomOf="@+id/tvStringDays" />
+
+            <TextView
+                android:id="@+id/tvBudget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/dollar_sign"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvStringBudget"
+                app:layout_constraintStart_toStartOf="@+id/tvStringBudget"
+                app:layout_constraintTop_toBottomOf="@+id/tvStringBudget" />
+
+            <TextView
+                android:id="@+id/tvStringBudget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/budget_bold"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/divider"
+                app:layout_constraintStart_toEndOf="@+id/divider2"
+                app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
+
+            <TextView
+                android:id="@+id/tvStringDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/days"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/divider2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
+
+            <TextView
+                android:id="@+id/tvCityState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/city"
+                app:layout_constraintBottom_toBottomOf="@+id/ivPin"
+                app:layout_constraintEnd_toStartOf="@+id/ivPin"
+                app:layout_constraintTop_toTopOf="@+id/ivPin" />
+
+            <ImageView
+                android:id="@+id/ivPin"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivCoverPhoto"
+                app:srcCompat="@drawable/ic_location_on_black_24dp" />
+
+            <TextView
+                android:id="@+id/tvTripCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/cost"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/divider3"
+                app:layout_constraintStart_toEndOf="@+id/divider"
+                app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
+
+            <TextView
+                android:id="@+id/tvCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/dollar_sign"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvTripCost"
+                app:layout_constraintStart_toStartOf="@+id/tvTripCost"
+                app:layout_constraintTop_toBottomOf="@+id/tvTripCost" />
+
+            <TextView
+                android:id="@+id/tvTripRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/remaining"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/divider3"
+                app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
+
+            <TextView
+                android:id="@+id/tvRemainingBudget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/dollar_sign"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvTripRemaining"
+                app:layout_constraintStart_toStartOf="@+id/tvTripRemaining"
+                app:layout_constraintTop_toBottomOf="@+id/tvTripRemaining" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toBottomOf="@+id/tvBudget"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cvRoot">
+                app:layout_constraintTop_toTopOf="@+id/tvStringBudget" />
 
-                <TextView
-                    android:id="@+id/tvTravelDates"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/place_holder"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.026"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toBottomOf="@+id/divider"
+                app:layout_constraintEnd_toStartOf="@+id/divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/divider" />
 
-                <TextView
-                    android:id="@+id/tvDays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/place_holder"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="@+id/tvStringDays"
-                    app:layout_constraintStart_toStartOf="@+id/tvStringDays"
-                    app:layout_constraintTop_toBottomOf="@+id/tvStringDays" />
-
-                <TextView
-                    android:id="@+id/tvBudget"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/dollar_sign"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="@+id/tvStringBudget"
-                    app:layout_constraintStart_toStartOf="@+id/tvStringBudget"
-                    app:layout_constraintTop_toBottomOf="@+id/tvStringBudget" />
-
-                <TextView
-                    android:id="@+id/tvStringBudget"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/budget_bold"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/divider"
-                    app:layout_constraintStart_toEndOf="@+id/divider2"
-                    app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
-
-                <TextView
-                    android:id="@+id/tvStringDays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/days"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/divider2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravelDates" />
-
-                <TextView
-                    android:id="@+id/tvCityState"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/city"
-                    app:layout_constraintBottom_toBottomOf="@+id/ivPin"
-                    app:layout_constraintEnd_toStartOf="@+id/ivPin"
-                    app:layout_constraintTop_toTopOf="@+id/ivPin" />
-
-                <ImageView
-                    android:id="@+id/ivPin"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_location_on_black_24dp" />
-
-                <TextView
-                    android:id="@+id/tvTripCost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/cost"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/divider3"
-                    app:layout_constraintStart_toEndOf="@+id/divider"
-                    app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
-
-                <TextView
-                    android:id="@+id/tvCost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/dollar_sign"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="@+id/tvTripCost"
-                    app:layout_constraintStart_toStartOf="@+id/tvTripCost"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTripCost" />
-
-                <TextView
-                    android:id="@+id/tvTripRemaining"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/remaining"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/divider3"
-                    app:layout_constraintTop_toTopOf="@+id/tvStringDays" />
-
-                <TextView
-                    android:id="@+id/tvRemainingBudget"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/dollar_sign"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="@+id/tvTripRemaining"
-                    app:layout_constraintStart_toStartOf="@+id/tvTripRemaining"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTripRemaining" />
-
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="1dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@android:color/darker_gray"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvBudget"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tvStringBudget" />
-
-                <View
-                    android:id="@+id/divider2"
-                    android:layout_width="1dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@android:color/darker_gray"
-                    app:layout_constraintBottom_toBottomOf="@+id/divider"
-                    app:layout_constraintEnd_toStartOf="@+id/divider"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/divider" />
-
-                <View
-                    android:id="@+id/divider3"
-                    android:layout_width="1dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@android:color/darker_gray"
-                    app:layout_constraintBottom_toBottomOf="@+id/divider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/divider"
-                    app:layout_constraintTop_toTopOf="@+id/divider" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toBottomOf="@+id/divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/divider"
+                app:layout_constraintTop_toTopOf="@+id/divider" />
 
             <TextView
                 android:id="@+id/TagsTitle"
@@ -277,7 +252,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clStats" />
+                app:layout_constraintTop_toBottomOf="@id/divider" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTags"
@@ -315,5 +290,20 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="REVIEW"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/tvTripName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
