@@ -71,7 +71,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -291,13 +290,14 @@ public class ProfileFragment extends Fragment {
         final Button btnFollowingStatus = view.findViewById(R.id.btnFollowingStatus);
         final TextView tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
         final TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
-        TextView tvFavoritesCount = view.findViewById(R.id.tvFavoriteCount);
         TextView tvFollowers = view.findViewById(R.id.tvFollowers);
         TextView tvFollowing = view.findViewById(R.id.tvFollowing);
 
         if (userProfile.getObjectId().equals(userCurrent.getObjectId())) {
+            MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
             btnFollowingStatus.setVisibility(View.GONE);
         } else {
+            MainActivity.bottomNavigationView.setVisibility(View.GONE);
             btnFollowingStatus.setVisibility(View.VISIBLE);
             if (followers.containsKey(userCurrent)) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
