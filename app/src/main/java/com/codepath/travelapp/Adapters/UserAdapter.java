@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,8 +18,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Fragments.ProfileFragment;
-import com.codepath.travelapp.Fragments.TripDetailsFragment;
-import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 
@@ -83,7 +80,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             ivImage = itemView.findViewById(R.id.ivImage);
             tvBio = itemView.findViewById(R.id.tvBio);
             tvHomestate = itemView.findViewById(R.id.tvHomeState);
-            tvFullName = itemView.findViewById(R.id.tvUsername);
+            tvFullName = itemView.findViewById(R.id.tvFullName);
             itemView.setOnClickListener(this);
         }
 

@@ -290,6 +290,7 @@ public class ProfileFragment extends Fragment {
         RecyclerView rvSaved = view.findViewById(R.id.rvSaved);
         RecyclerView rvAchievements = view.findViewById(R.id.rvAchievements);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
+        TextView tvFullName = view.findViewById(R.id.tvFullName);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
         TextView tvBio = view.findViewById(R.id.tvBio);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
@@ -313,6 +314,7 @@ public class ProfileFragment extends Fragment {
 
         //Populate views in Profile Fragment
         tvUsername.setText(userProfile.getUsername());
+        tvFullName.setText(userProfile.getFullName());
         tvHometown.setText(userProfile.getHomeState());
         tvBio.setText(userProfile.getBio());
         if (userProfile.getProfileImage() != null && getContext() != null) {

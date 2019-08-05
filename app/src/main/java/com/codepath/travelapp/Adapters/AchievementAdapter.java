@@ -67,7 +67,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
     @Override
     public int getItemCount() { return achievements.size(); }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvAchievement;
         private ImageView ivAchievement;
         public ViewHolder(@NonNull View itemView) {
@@ -75,16 +75,25 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
             //Find views that will be populated
             tvAchievement = itemView.findViewById(R.id.tvAchievement);
             ivAchievement = itemView.findViewById(R.id.ivAchievement);
-            ivAchievement.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Achievement achievement = achievements.get(getAdapterPosition());
-                    FragmentManager fragmentManager = MainActivity.fragmentManager;
-                    AchievementDialougeFragment achievementDialougeFragment = AchievementDialougeFragment.newInstance(achievement);
-                    achievementDialougeFragment.show(fragmentManager, "fragment_edit_trip_options");
+//            ivAchievement.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Achievement achievement = achievements.get(getAdapterPosition());
+//                    FragmentManager fragmentManager = MainActivity.fragmentManager;
+//                    AchievementDialougeFragment achievementDialougeFragment = AchievementDialougeFragment.newInstance(achievement);
+//                    achievementDialougeFragment.show(fragmentManager, "fragment_edit_trip_options");
+//
+//                    }
+//            });
+            itemView.setOnClickListener(this);
+        }
 
-                    }
-            });
+        @Override
+        public void onClick(View view) {
+            Achievement achievement = achievements.get(getAdapterPosition());
+            FragmentManager fragmentManager = MainActivity.fragmentManager;
+            AchievementDialougeFragment achievementDialougeFragment = AchievementDialougeFragment.newInstance(achievement);
+            achievementDialougeFragment.show(fragmentManager, "fragment_edit_trip_options");
         }
     }
     public void clear() {

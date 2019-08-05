@@ -37,7 +37,7 @@ public class SidebarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView tvUsername = view.findViewById(R.id.tvUsername);
+        TextView tvUsername = view.findViewById(R.id.tvFullName);
         Button logoutBtn = view.findViewById(R.id.logout_btn);
         Button editBtn = view.findViewById(R.id.editBtn);
         LinearLayout llSidebar = view.findViewById(R.id.llSidebar);

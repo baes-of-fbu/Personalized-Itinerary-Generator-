@@ -31,7 +31,6 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -60,7 +59,7 @@ public class TripDetailsFragment extends Fragment {
         final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
-        final TextView tvUsername = view.findViewById(R.id.tvUsername);
+        final TextView tvUsername = view.findViewById(R.id.tvFullName);
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);

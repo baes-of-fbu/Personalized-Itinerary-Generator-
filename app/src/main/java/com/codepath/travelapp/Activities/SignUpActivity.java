@@ -40,6 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
     public final String APP_TAG = "SignUpActivity";
     private String username;
     private String password;
+    private String fullname;
     private String email;
     private String state;
     private String bio;
@@ -49,6 +50,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Button signUpBtn;
     private EditText etUsername;
     private EditText etPassword;
+    private EditText etFullName;
     private EditText etEmail;
     private Spinner spState;
     private ImageView ivBackBtn;
@@ -69,6 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBtn = findViewById(R.id.signUpBtn);
         etUsername =  findViewById(R.id.etSignUpUsername);
         etPassword = findViewById(R.id.etSignUpPassword);
+        etFullName = findViewById(R.id.etSignUpFullName);
         etEmail = findViewById(R.id.etSignUpEmail);
         spState = findViewById(R.id.spSelectState);
         ivBackBtn = findViewById(R.id.ivBackBtn);
@@ -109,6 +112,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 username = etUsername.getText().toString();
                 password = etPassword.getText().toString();
+                fullname = etFullName.getText().toString();
                 email = etEmail.getText().toString();
                 state = spState.getSelectedItem().toString();
                 bio = etBio.getText().toString();
@@ -134,7 +138,10 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (bio.length() == 0) {
                    Log.e(APP_TAG, "No bio");
                     Toast.makeText(getApplicationContext(), "Please enter a bio", Toast.LENGTH_SHORT).show();
-                }  else{
+                } else if (fullname.length() == 0) {
+                    Log.e(APP_TAG, "no fullname");
+                    Toast.makeText(context, "Please enter your fullname", Toast.LENGTH_SHORT).show();
+                }else {
                     signUp();
                 }
             }
@@ -191,6 +198,7 @@ public class SignUpActivity extends AppCompatActivity {
         user.setEmail(email);
         user.setBio(bio);
         user.setHomeState(state);
+        user.setFullName(fullname);
 //        user.setFollowers(0);
 //        user.setFollowing(0);
 //        user.setFavorites(0);

@@ -14,6 +14,7 @@ public class User extends ParseUser implements Parcelable {
     private static final String KEY_BIO = "bio";
     private static final String KEY_IMAGE ="profileImage";
     private static final String KEY_HOMESTATE = "homeState";
+    private static final String KEY_FULLNAME = "fullName";
     private  static final String KEY_ACHIEVEMENT = "achievement";
 
     // Getters and setters
@@ -39,6 +40,14 @@ public class User extends ParseUser implements Parcelable {
 
     public void setHomeState (String homeState) {
         put(KEY_HOMESTATE, homeState);
+    }
+
+    public String getFullName () {
+        return getString(KEY_FULLNAME);
+    }
+
+    public void setFullName(String fullname) {
+        put(KEY_FULLNAME, fullname);
     }
 
     public ParseRelation<Achievement> getAchievementRelation () { return getRelation(KEY_ACHIEVEMENT);}

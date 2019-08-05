@@ -317,7 +317,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             tvTripCost = itemView.findViewById(R.id.tvTripCost);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
-            tvUsername = itemView.findViewById(R.id.tvUsername);
+            tvUsername = itemView.findViewById(R.id.tvFullName);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvCityName = itemView.findViewById(R.id.tvCityName);
             ivPin = itemView.findViewById(R.id.ivLocationPin);
