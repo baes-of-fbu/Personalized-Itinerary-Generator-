@@ -44,14 +44,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull UserAdapter.ViewHolder holder, int position) {
         User user = users.get(position);
-        holder.tvBio.setText(user.getBio());
-        holder.tvHomestate.setText(user.getHomeState());
-        holder.tvFullName.setText(user.getUsername());
-        Glide.with(context)
-                .load(user.getProfileImage().getUrl())
-                .apply(RequestOptions.circleCropTransform())
-                .into(holder.ivImage);
-
+        if (user != null) {
+            holder.tvBio.setText(user.getBio());
+            holder.tvHomeState.setText(user.getHomeState());
+            holder.tvFullName.setText(user.getUsername());
+            Glide.with(context)
+                    .load(user.getProfileImage().getUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(holder.ivImage);
+        }
     }
 
     @Override
@@ -73,13 +74,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         private ImageView ivImage;
         private TextView tvFullName;
         private TextView tvBio;
-        private TextView tvHomestate;
+        private TextView tvHomeState;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.ivImage);
             tvBio = itemView.findViewById(R.id.tvBio);
-            tvHomestate = itemView.findViewById(R.id.tvHomeState);
+            tvHomeState = itemView.findViewById(R.id.tvHomeState);
             tvFullName = itemView.findViewById(R.id.tvFullName);
             itemView.setOnClickListener(this);
         }

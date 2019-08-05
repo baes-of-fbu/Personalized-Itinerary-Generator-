@@ -65,7 +65,7 @@ public class TimelineFragment extends Fragment {
         };
         rvTrips.addOnScrollListener(scrollListener);
 
-        queryPosts();
+        queryFollowingPosts();
 
         // Swipe Container/ refresh code
         swipeContainer = view.findViewById(R.id.swipeContainer);
@@ -73,7 +73,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void onRefresh() {
                 swipeContainer.setRefreshing(true);
-                queryPosts();
+                queryFollowingPosts();
             }
         });
         // Configure the refreshing colors
@@ -81,27 +81,6 @@ public class TimelineFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-    }
-
-    // Query all trips and add them to the adapter to populate the Timeline
-    private void queryPosts() {
-        adapter.clear();
-        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-        tripQuery.setLimit(page_size);
-        tripQuery.include(Trip.KEY_OWNER);
-        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
-        tripQuery.findInBackground(new FindCallback<Trip>() {
-            @Override
-            public void done(List<Trip> trips, ParseException e) {
-                swipeContainer.setRefreshing(false);
-                if (e == null) {
-                    adapter.addAll(trips);
-                } else {
-                    Log.e(TAG,"Error");
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private void queryFollowingPosts() { //TODO test this
@@ -140,6 +119,27 @@ public class TimelineFragment extends Fragment {
                             }
                         }
                     });
+                }
+            }
+        });
+    }
+
+    // Query all trips and add them to the adapter to populate the Timeline TODO remove this 
+    private void queryPosts() {
+        adapter.clear();
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
+        tripQuery.setLimit(page_size);
+        tripQuery.include(Trip.KEY_OWNER);
+        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+        tripQuery.findInBackground(new FindCallback<Trip>() {
+            @Override
+            public void done(List<Trip> trips, ParseException e) {
+                swipeContainer.setRefreshing(false);
+                if (e == null) {
+                    adapter.addAll(trips);
+                } else {
+                    Log.e(TAG,"Error");
+                    e.printStackTrace();
                 }
             }
         });

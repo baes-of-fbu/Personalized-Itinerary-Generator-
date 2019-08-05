@@ -233,7 +233,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 }
 
                 MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
+                        .add(R.id.flContainer, fragment)
                         .addToBackStack(null)
                         .commit();
             }

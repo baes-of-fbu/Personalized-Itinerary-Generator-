@@ -70,11 +70,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_profile:
                         fragment = new ProfileFragment();
 
-
                         Bundle userBundle = new Bundle();
                         userBundle.putString("username",  ParseUser.getCurrentUser().getUsername());
                         fragment.setArguments(userBundle);
-
 
                         break;
                     case R.id.action_explore:
@@ -99,12 +97,12 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed(){
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 1) {
-            Log.i("MainActivity", "popping backstack");
+            Log.i("MainActivity", "popping back stack");
             fm.popBackStack();
-        } else if (fm.getBackStackEntryCount() == 1) {
+        } else if (fm.getBackStackEntryCount() == 1) { //TODO change order to avoid having an empty if-statement
             // Do Nothing
         } else {
-            Log.i("MainActivity", "nothing on backstack, calling super");
+            Log.i("MainActivity", "nothing on back stack, calling super");
             super.onBackPressed();
         }
     }
