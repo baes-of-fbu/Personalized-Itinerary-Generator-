@@ -167,7 +167,7 @@ public class SignUpActivity extends AppCompatActivity {
                     });
                 } else {
                     Log.d(APP_TAG, "SignUp failure");
-                    Toast.makeText(SignUpActivity.this, e.toString(), Toast.LENGTH_LONG).show(); // TODO cut down e.toString()
+                    Toast.makeText(SignUpActivity.this, e.toString(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }
