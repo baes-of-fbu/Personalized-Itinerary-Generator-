@@ -45,8 +45,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull UserAdapter.ViewHolder holder, int position) {
         User user = users.get(position);
         holder.tvBio.setText(user.getBio());
-        holder.tvHomestate.setText(user.getHomeState());
-        holder.tvFullName.setText(user.getUsername());
+        holder.tvFullName.setText(user.getFullName());
+        holder.tvUsername.setText(user.getUsername());
         Glide.with(context)
                 .load(user.getProfileImage().getUrl())
                 .apply(RequestOptions.circleCropTransform())
@@ -74,13 +74,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         private TextView tvFullName;
         private TextView tvBio;
         private TextView tvHomestate;
+        private TextView tvUsername;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.ivImage);
             tvBio = itemView.findViewById(R.id.tvBio);
-            tvHomestate = itemView.findViewById(R.id.tvHomeState);
             tvFullName = itemView.findViewById(R.id.tvFullName);
+            tvUsername = itemView.findViewById(R.id.tvUsername);
             itemView.setOnClickListener(this);
         }
 

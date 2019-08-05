@@ -47,25 +47,26 @@ public class UserExploreFragment extends Fragment {
         svUsers.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
-            public boolean onQueryTextSubmit(String username) {
-                queryUsers(username);
+            public boolean onQueryTextSubmit(String keyword) {
+                queryUsers(keyword);
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String username) {
-                queryUsers(username);
+            public boolean onQueryTextChange(String keyword) {
+                queryUsers(keyword);
                 return true;
             }
         });
 
     }
 
-    private void queryUsers(String username) {
+    private void queryUsers(String keyword) {
         adapter.clear();
         ParseQuery<User> userQuery = new ParseQuery<>(User.class);
-        if( username != null) {
-            userQuery.whereContains("username", username);
+        if( keyword != null) {
+            //userQuery.whereContains("username", keyword);
+            userQuery.whereContains("fullName" , keyword);
         }
         userQuery.findInBackground(new FindCallback<User>() {
             @Override
