@@ -20,7 +20,9 @@ import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +99,47 @@ public class TimelineFragment extends Fragment {
                 } else {
                     Log.e(TAG,"Error");
                     e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void queryFollowingPosts() { //TODO test this
+        adapter.clear();
+        ParseQuery<ParseObject> followingQuery = new ParseQuery<>("Follow");
+        followingQuery.whereEqualTo("from", ParseUser.getCurrentUser());
+        followingQuery.include("toId");
+        followingQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    List<ParseQuery<Trip>> queries = new ArrayList<>();
+                    for (int i = 0; i < objects.size(); i++) {
+                        ParseQuery<Trip> query = new ParseQuery<Trip>(Trip.class);
+                        query.whereEqualTo("owner", objects.get(i).getString("toId"));
+                        queries.add(query);
+                    }
+
+                    ParseQuery<Trip> queryCurrent = new ParseQuery<Trip>(Trip.class);
+                    queryCurrent.whereEqualTo("owner", ParseUser.getCurrentUser());
+                    queries.add(queryCurrent);
+
+                    ParseQuery<Trip> compoundQuery = ParseQuery.or(queries);
+                    compoundQuery.setLimit(page_size);
+                    compoundQuery.include(Trip.KEY_OWNER);
+                    compoundQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+                    compoundQuery.findInBackground(new FindCallback<Trip>() {
+                        @Override
+                        public void done(List<Trip> trips, ParseException e) {
+                            swipeContainer.setRefreshing(false);
+                            if (e == null) {
+                                adapter.addAll(trips);
+                            } else {
+                                Log.e(TAG,"Error");
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
             }
         });

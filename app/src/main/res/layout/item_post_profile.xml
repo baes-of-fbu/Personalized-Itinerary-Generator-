@@ -9,7 +9,6 @@
     android:layout_margin="4dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardCornerRadius="@dimen/card_corner_radius"
     card_view:cardElevation="@dimen/card_elevation"
     android:focusable="true">
 
@@ -54,7 +53,7 @@
             android:id="@+id/Budget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:text="@string/budget_bold"
             android:textAlignment="textEnd"
             android:textColor="@color/black"
@@ -74,30 +73,29 @@
             card_view:layout_constraintStart_toEndOf="@+id/Budget"
             card_view:layout_constraintTop_toBottomOf="@+id/tvTripName" />
 
-        <ImageView
-            android:id="@+id/ivBanner"
-            android:layout_width="0dp"
-            android:layout_height="28dp"
-            android:background="#03A9F4"
+        <!--<ImageView-->
+            <!--android:id="@+id/ivBanner"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="28dp"-->
+            <!--android:background="@android:color/transparent"-->
 
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.0"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            <!--card_view:layout_constraintEnd_toEndOf="parent"-->
+            <!--card_view:layout_constraintHorizontal_bias="0.0"-->
+            <!--card_view:layout_constraintStart_toStartOf="parent"-->
+            <!--card_view:layout_constraintTop_toTopOf="parent" />-->
 
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/place_holder"
-            android:textStyle="bold"
-            card_view:layout_constraintBottom_toBottomOf="@+id/ivBanner"
-            card_view:layout_constraintEnd_toEndOf="@+id/ivBanner"
-            card_view:layout_constraintStart_toStartOf="@+id/ivBanner"
-            card_view:layout_constraintTop_toTopOf="@+id/ivBanner" />
+        <!--<TextView-->
+            <!--android:id="@+id/tvStatus"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:text="@string/place_holder"-->
+            <!--android:textStyle="bold"-->
+            <!--card_view:layout_constraintBottom_toBottomOf="@+id/ivBanner"-->
+            <!--card_view:layout_constraintEnd_toEndOf="@+id/ivBanner"-->
+            <!--card_view:layout_constraintStart_toStartOf="@+id/ivBanner"-->
+            <!--card_view:layout_constraintTop_toTopOf="@+id/ivBanner" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.cardview.widget.CardView>
