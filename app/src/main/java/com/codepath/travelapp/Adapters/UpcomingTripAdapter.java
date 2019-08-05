@@ -48,7 +48,7 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
         holder.tvTripBudget.setText("$" + trip.getBudget().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvTripBudget.setText(trip.getBudget().toString());
-        holder.tvStatus.setText("UPCOMING");
+//        holder.tvStatus.setText("UPCOMING");
 
         if (trip.get("image") != null) {
             ParseFile image = (ParseFile) trip.get("image");
@@ -76,7 +76,7 @@ public class UpcomingTripAdapter extends RecyclerView.Adapter<UpcomingTripAdapte
             tvTripBudget = itemView.findViewById(R.id.tvTripCost);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
+//            tvStatus = itemView.findViewById(R.id.tvStatus);
 
             itemView.setOnClickListener (this);
         }

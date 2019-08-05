@@ -25,9 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Adapters.AchievementAdapter;
-import com.codepath.travelapp.Adapters.CurrentTripAdapter;
-import com.codepath.travelapp.Adapters.PreviousTripAdapter;
-import com.codepath.travelapp.Adapters.UpcomingTripAdapter;
+import com.codepath.travelapp.Adapters.ProfileTripsAdapter;
 import com.codepath.travelapp.Models.Achievement;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
@@ -53,11 +51,11 @@ import static com.parse.ParseUser.getCurrentUser;
 public class ProfileFragment extends Fragment {
 
     private final String TAG = "ProfileFragment";
-    private UpcomingTripAdapter upcomingTripAdapter;
-    private PreviousTripAdapter previousTripAdapter;
-    private CurrentTripAdapter currentTripAdapter;
+    private ProfileTripsAdapter upcomingTripAdapter;
+    private ProfileTripsAdapter previousTripAdapter;
+    private ProfileTripsAdapter currentTripAdapter;
     private AchievementAdapter achievementAdapter;
-    private PreviousTripAdapter savedTripAdapter;
+    private ProfileTripsAdapter savedTripAdapter;
 
     private int pageSize = 10;
 
@@ -290,7 +288,6 @@ public class ProfileFragment extends Fragment {
         RecyclerView rvSaved = view.findViewById(R.id.rvSaved);
         RecyclerView rvAchievements = view.findViewById(R.id.rvAchievements);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
-        TextView tvFullName = view.findViewById(R.id.tvFullName);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
         TextView tvBio = view.findViewById(R.id.tvBio);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
@@ -314,7 +311,6 @@ public class ProfileFragment extends Fragment {
 
         //Populate views in Profile Fragment
         tvUsername.setText(userProfile.getUsername());
-        tvFullName.setText(userProfile.getFullName());
         tvHometown.setText(userProfile.getHomeState());
         tvBio.setText(userProfile.getBio());
         if (userProfile.getProfileImage() != null && getContext() != null) {
@@ -352,10 +348,10 @@ public class ProfileFragment extends Fragment {
         ArrayList<Trip> savedTrips = new ArrayList<>();
         ArrayList<Achievement> achievements = new ArrayList<>();
         //create the data source
-        upcomingTripAdapter = new UpcomingTripAdapter(upcomingTrips);
-        previousTripAdapter = new PreviousTripAdapter(previousTrips);
-        currentTripAdapter = new CurrentTripAdapter(currentTrips);
-        savedTripAdapter = new PreviousTripAdapter(savedTrips);
+        upcomingTripAdapter = new ProfileTripsAdapter(upcomingTrips);
+        previousTripAdapter = new ProfileTripsAdapter(previousTrips);
+        currentTripAdapter = new ProfileTripsAdapter(currentTrips);
+        savedTripAdapter = new ProfileTripsAdapter(savedTrips);
         achievementAdapter = new AchievementAdapter(achievements);
         // initialize the linear layout manager
         LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);

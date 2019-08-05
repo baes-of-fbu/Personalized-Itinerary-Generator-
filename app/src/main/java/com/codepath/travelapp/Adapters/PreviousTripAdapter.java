@@ -1,7 +1,6 @@
 package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,8 +49,8 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
             holder.tvTripName.setText(trip.getName());
             holder.tvTripBudget.setText(trip.getBudget().toString());
 
-            holder.ivBanner.setBackgroundColor(Color.argb(0, 255, 255, 255));
-            holder.tvStatus.setText("");
+//            holder.ivBanner.setBackgroundColor(Color.argb(0, 255, 255, 255));
+//            holder.tvStatus.setText("");
 
 
             if (trip.get("image") != null) {
@@ -83,8 +82,8 @@ public class PreviousTripAdapter extends RecyclerView.Adapter<PreviousTripAdapte
             tvTripBudget = itemView.findViewById(R.id.tvTripCost);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
-            ivBanner = itemView.findViewById(R.id.ivBanner);
+//            tvStatus = itemView.findViewById(R.id.tvStatus);
+//            ivBanner = itemView.findViewById(R.id.ivBanner);
 
             itemView.setOnClickListener(this);
         }

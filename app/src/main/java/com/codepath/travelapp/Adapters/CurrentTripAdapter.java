@@ -1,7 +1,6 @@
 package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,9 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Activities.MainActivity;
+import com.codepath.travelapp.Fragments.TripDetailsFragment;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
-import com.codepath.travelapp.Fragments.TripDetailsFragment;
 import com.parse.ParseFile;
 
 import java.util.ArrayList;
@@ -52,8 +51,8 @@ public class CurrentTripAdapter extends RecyclerView.Adapter<CurrentTripAdapter.
         holder.tvTripBudget.setText("$" + trip.getBudget().toString());
         holder.tvTripName.setText(trip.getName());
         holder.tvTripBudget.setText(trip.getBudget().toString());
-        holder.ivBanner.setBackgroundColor(Color.argb(255, 216, 27, 96));
-        holder.tvStatus.setText("CURRENT");
+//        holder.ivBanner.setBackgroundColor(Color.argb(255, 216, 27, 96));
+//        holder.tvStatus.setText("CURRENT");
 
         if (trip.getImage() != null) {
             ParseFile image = trip.getImage();
@@ -82,8 +81,8 @@ public class CurrentTripAdapter extends RecyclerView.Adapter<CurrentTripAdapter.
             tvTripBudget = itemView.findViewById(R.id.tvTripCost);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
-            ivBanner = itemView.findViewById(R.id.ivBanner);
+//            tvStatus = itemView.findViewById(R.id.tvStatus);
+//            ivBanner = itemView.findViewById(R.id.ivBanner);
 
 
             itemView.setOnClickListener(this);
