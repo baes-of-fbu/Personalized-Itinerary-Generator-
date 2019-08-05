@@ -218,7 +218,7 @@
             app:layout_constraintTop_toTopOf="@+id/tvNumLikes" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
