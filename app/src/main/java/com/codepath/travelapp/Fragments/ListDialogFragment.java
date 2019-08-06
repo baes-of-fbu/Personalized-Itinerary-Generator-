@@ -17,18 +17,15 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.codepath.travelapp.Adapters.UserAdapter;
+import com.codepath.travelapp.Adapters.UserListAdapter;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ListDialogFragment extends DialogFragment {
 
-    private TextView tvListName;
-    private RecyclerView rvUsers;
-
-    private UserAdapter adapter; // TODO create new adapter that is better for this list and is not clickable
     private ArrayList<User> users;
     private String listName;
 
@@ -48,35 +45,37 @@ public class ListDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        users = bundle.getParcelableArrayList("users");
-        listName = bundle.getString("listName");
+        if (bundle != null) {
+            users = bundle.getParcelableArrayList("users");
+            listName = bundle.getString("listName");
+        }
         return inflater.inflate(R.layout.fragment_list_dialog, container, false);
     }
 
     public void onResume() {
         // Store access variables for window and blank point
-        Window window = getDialog().getWindow();
+        Window window = Objects.requireNonNull(getDialog()).getWindow();
         Point size = new Point();
-        // Store dimensions of the screen in `size`
-        Display display = window.getWindowManager().getDefaultDisplay();
-        display.getSize(size);
-        // Set the width of the dialog proportional to 75% of the screen width
-        window.setLayout((size.x), WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        // Call super onResume after sizing
-        super.onResume();
+        if (window != null) {
+            Display display = window.getWindowManager().getDefaultDisplay();
+            display.getSize(size);
+            // Set the width of the dialog proportional to 75% of the screen width
+            window.setLayout((size.x), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            super.onResume();
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvListName = view.findViewById(R.id.tvListName);
-        rvUsers = view.findViewById(R.id.rvUsers);
+        TextView tvListName = view.findViewById(R.id.tvListName);
+        RecyclerView rvUsers = view.findViewById(R.id.rvUsers);
 
         tvListName.setText(listName);
 
-        adapter = new UserAdapter(users);
+        UserListAdapter adapter = new UserListAdapter(users);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvUsers.setLayoutManager(linearLayoutManager);
         rvUsers.setAdapter(adapter);
