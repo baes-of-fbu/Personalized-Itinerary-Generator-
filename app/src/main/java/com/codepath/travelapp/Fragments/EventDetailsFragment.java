@@ -34,7 +34,8 @@ public class EventDetailsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         MainActivity.bottomNavigationView.setVisibility(View.GONE);
         return inflater.inflate(R.layout.fragment_event_details, container, false);
     }
@@ -93,7 +94,8 @@ public class EventDetailsFragment extends Fragment {
                 intent.setAction(Intent.ACTION_VIEW);
                 String data = String.format("%s?q=%s", location, event.getName());
                 intent.setData(Uri.parse(data));
-                if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
+                if (intent.resolveActivity(Objects.requireNonNull(getActivity())
+                        .getPackageManager()) != null) {
                     startActivity(intent);
                 }
             }
@@ -102,8 +104,10 @@ public class EventDetailsFragment extends Fragment {
         tvWebsite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getWebsite()));
-                if (browserIntent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(event.getWebsite()));
+                if (browserIntent.resolveActivity(Objects.requireNonNull(getActivity())
+                        .getPackageManager()) != null) {
                     startActivity(browserIntent);
                 }
             }

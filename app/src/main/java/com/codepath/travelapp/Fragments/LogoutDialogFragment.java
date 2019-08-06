@@ -69,7 +69,8 @@ public class LogoutDialogFragment extends DialogFragment {
                     // Pop off everything up to and including the current tab
                     FragmentManager fragmentManager = getFragmentManager();
                     if (fragmentManager != null) {
-                        fragmentManager.popBackStack(MainActivity.BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        fragmentManager.popBackStack(MainActivity.BACK_STACK_ROOT_TAG,
+                                FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     }
                         Intent intent = new Intent(getContext(), OpeningActivity.class);
                         startActivity(intent);

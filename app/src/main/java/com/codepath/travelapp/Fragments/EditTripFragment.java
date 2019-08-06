@@ -60,7 +60,8 @@ public class EditTripFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         MainActivity.bottomNavigationView.setVisibility(View.GONE);
         return inflater.inflate(R.layout.fragment_edit_trip, container, false);
     }
@@ -147,8 +148,10 @@ public class EditTripFragment extends Fragment {
         }
 
         // Populate DayPlans
-        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans, allAvailableEvents, budget, remainingMoney, tvTripCost, tvRemainingBudget);
-        rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        DayPlanEditableAdapter dayPlanEditableAdapterAdapter = new DayPlanEditableAdapter(dayPlans,
+                allAvailableEvents, budget, remainingMoney, tvTripCost, tvRemainingBudget);
+        rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,
+                false));
         rvSchedule.setAdapter(dayPlanEditableAdapterAdapter);
 
         // Circle Indicator
@@ -171,9 +174,12 @@ public class EditTripFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // Reset to the previous state and return to editTrip Fragment
                                 Fragment fragment = new TripReviewFragment();
-                                // Overwrites pre-existing "available_events" and "dayPlans" in the bundle
-                                bundle.putParcelableArrayList("available_events", originalAllAvailableEvents);
-                                bundle.putParcelableArrayList("dayPlans", originalDayPlans);
+                                // Overwrites pre-existing "available_events" and "dayPlans"
+                                // in the bundle
+                                bundle.putParcelableArrayList("available_events",
+                                        originalAllAvailableEvents);
+                                bundle.putParcelableArrayList("dayPlans",
+                                        originalDayPlans);
                                 bundle.putInt("trip_cost", originalTripCost);
                                 fragment.setArguments(bundle);
                                 MainActivity.fragmentManager.beginTransaction()

@@ -8,6 +8,7 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +29,8 @@ public class UserExploreFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_user_explore, container, false);
     }
 
@@ -42,6 +44,7 @@ public class UserExploreFragment extends Fragment {
         rvUsers.setLayoutManager(linearLayoutManager);
         rvUsers.setAdapter(adapter);
 
+        // Sends a query for username as user enters or submits new text
         queryUsers(null);
         svUsers.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -62,7 +65,7 @@ public class UserExploreFragment extends Fragment {
         adapter.clear();
         ParseQuery<User> userQuery = new ParseQuery<>(User.class);
         if (keyword != null) {
-            userQuery.whereContains("fullName", keyword);
+            userQuery.whereContains("username", keyword);
         }
         userQuery.findInBackground(new FindCallback<User>() {
             @Override
@@ -71,8 +74,16 @@ public class UserExploreFragment extends Fragment {
                     adapter.addAll(users);
                 } else {
                     e.printStackTrace();
+                    showAlertDialog();
                 }
             }
         });
+    }
+    private void showAlertDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Error loading user explore.")
+                .setPositiveButton("OK", null)
+                .create();
+        dialog.show();
     }
 }

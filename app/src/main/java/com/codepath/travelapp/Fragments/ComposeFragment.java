@@ -110,7 +110,8 @@ public class ComposeFragment extends Fragment {
                     allTags = tagList;
                     adapter = new TagGridAdapter(allTags);
                     rvTags.setAdapter(adapter);
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),
+                            GridLayoutManager.VERTICAL);
                     gridLayoutManager.setSpanCount(NUM_COLUMNS);
                     rvTags.setLayoutManager(gridLayoutManager);
                 } else {
@@ -152,25 +153,35 @@ public class ComposeFragment extends Fragment {
 
                 // Checks input fields to prevent incorrect user input
                 if (tripName.length() == 0) {
-                    Toast.makeText(getContext(), "Specify trip name", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Specify trip name", Toast.LENGTH_LONG)
+                            .show();
                 } else if (startDate.length() == 0) {
-                    Toast.makeText(getContext(), "Specify start date", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Specify start date", Toast.LENGTH_LONG)
+                            .show();
                 } else if (endDate.length() == 0) {
-                    Toast.makeText(getContext(), "Specify end date", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Specify end date", Toast.LENGTH_LONG)
+                            .show();
                 } else {
-                    numDays = (int) getDifferenceBetweenDays(TripReviewFragment.getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
+                    numDays = (int) getDifferenceBetweenDays(TripReviewFragment
+                            .getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
                     if (numDays < 1) {
-                        Toast.makeText(getContext(), "Invalid dates. Please fix your start and/or end date", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),
+                                "Invalid dates. Please fix your start and/or end date",
+                                Toast.LENGTH_LONG).show();
                     } else if (dateHasPassed(TripReviewFragment.getParseDate(startDate))) {
-                        Toast.makeText(getContext(), "Start date has already passed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Start date has already passed",
+                                Toast.LENGTH_SHORT).show();
                     } else if (etBudget.getText().toString().length() == 0) {
-                        Toast.makeText(getContext(), "Specify budget", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Specify budget",
+                                Toast.LENGTH_LONG).show();
                     } else {
                         budget = Integer.parseInt(etBudget.getText().toString());
                         if (budget <= 0) {
-                            Toast.makeText(getContext(), "Minimum budget is $0.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Minimum budget is $0.",
+                                    Toast.LENGTH_LONG).show();
                         } else if (cityName.contains("Select city")) {
-                            Toast.makeText(getContext(), "Select city", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Select city",
+                                    Toast.LENGTH_LONG).show();
                         } else {
                             selectedTags = adapter.getSelectedTags();
                             generateSchedule(cityName);
