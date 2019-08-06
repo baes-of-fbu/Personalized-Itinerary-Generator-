@@ -62,12 +62,15 @@ public class EventDetailsFragment extends Fragment {
 
             String cost = "$" + event.getCost().toString();
             tvCost.setText(cost);
+
             rbRating.setRating(event.getRating().floatValue());
 
             SpannableString address = new SpannableString(event.getAddress());
             address.setSpan(new UnderlineSpan(), 0, address.length(), 0);
             tvAddress.setText(address);
+
             tvDescription.setText(event.getDescription());
+
             SpannableString website = new SpannableString(event.getWebsite());
             website.setSpan(new UnderlineSpan(), 0, website.length(), 0);
             tvWebsite.setText(website);
@@ -75,7 +78,9 @@ public class EventDetailsFragment extends Fragment {
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(event.getImage().getUrl())
                     .into(ivCoverPhoto);
+
             location = geoPointToString((Objects.requireNonNull(event.get("location"))).toString());
+
             addOnClickListeners();
         }
     }
@@ -107,7 +112,7 @@ public class EventDetailsFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
     }

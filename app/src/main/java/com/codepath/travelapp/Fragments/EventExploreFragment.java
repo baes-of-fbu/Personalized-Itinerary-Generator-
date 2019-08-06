@@ -36,6 +36,7 @@ public class EventExploreFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView rvEvents = view.findViewById(R.id.rvEvents);
         SearchView svEvents = view.findViewById(R.id.svEvents);
+
         ArrayList<Event> mEvents = new ArrayList<>();
         eventsAdapter = new EventAdapter(mEvents);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

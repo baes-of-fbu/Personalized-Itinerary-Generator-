@@ -17,20 +17,18 @@ import androidx.fragment.app.DialogFragment;
 
 import com.codepath.travelapp.R;
 
+import java.util.Objects;
+
 public class EditEventDialogFragment extends DialogFragment {
 
     private TextView tvRegenerateEvent;
     private TextView tvCancelEdit;
     private TextView tvRemoveEvent;
 
-    public EditEventDialogFragment() {
-        // Empty constructor is required for DialogFragment
-    }
+    public EditEventDialogFragment() {}
 
-    // TODO REMOVE PARAMETERS
     public static EditEventDialogFragment newInstance() {
-        EditEventDialogFragment fragment = new EditEventDialogFragment();
-        return fragment;
+        return new EditEventDialogFragment();
     }
 
     @Nullable
@@ -41,16 +39,16 @@ public class EditEventDialogFragment extends DialogFragment {
 
     public void onResume() {
         // Store access variables for window and blank point
-        Window window = getDialog().getWindow();
+        Window window = Objects.requireNonNull(getDialog()).getWindow();
         Point size = new Point();
-        // Store dimensions of the screen in `size`
-        Display display = window.getWindowManager().getDefaultDisplay();
-        display.getSize(size);
-        // Set the width of the dialog proportional to 75% of the screen width
-        window.setLayout((int) (size.x * 0.9), WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        // Call super onResume after sizing
-        super.onResume();
+        if (window != null) {
+            Display display = window.getWindowManager().getDefaultDisplay();
+            display.getSize(size);
+            // Set the width of the dialog proportional to 75% of the screen width
+            window.setLayout((int) (size.x * 0.9), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            super.onResume();
+        }
     }
 
 
