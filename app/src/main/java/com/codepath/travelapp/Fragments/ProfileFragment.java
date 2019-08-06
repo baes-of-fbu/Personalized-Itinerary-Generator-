@@ -198,14 +198,7 @@ public class ProfileFragment extends Fragment {
                         for (int i = 0; i < objects.size(); i++) {
                             user.getAchievementRelation().add(objects.get(i));
                         }
-                        user.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    achievementAdapter.addAll(objects);
-                                }
-                            }
-                        });
+                        user.saveInBackground();
                     }
                 }
             });
@@ -265,7 +258,7 @@ public class ProfileFragment extends Fragment {
             public void done(List<Achievement> achievements, ParseException e) {
                 if (e == null) {
                     Log.d(TAG, "The query was successful");
-                    achievementAdapter.addAll(achievements);
+                    achievementAdapter.addAllAchievements(achievements);
                 } else {
                     Log.e(TAG, "Error");
                     e.printStackTrace();
@@ -286,7 +279,7 @@ public class ProfileFragment extends Fragment {
         RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);
         RecyclerView rvCurrent = view.findViewById(R.id.rvCurrent);
         RecyclerView rvSaved = view.findViewById(R.id.rvSaved);
-        RecyclerView rvAchievements = view.findViewById(R.id.rvAchievements);
+        //RecyclerView rvAchievements = view.findViewById(R.id.rvAchievements);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
         TextView tvBio = view.findViewById(R.id.tvBio);
@@ -346,38 +339,38 @@ public class ProfileFragment extends Fragment {
         ArrayList<Trip> previousTrips = new ArrayList<>();
         ArrayList<Trip> currentTrips = new ArrayList<>();
         ArrayList<Trip> savedTrips = new ArrayList<>();
-        ArrayList<Achievement> achievements = new ArrayList<>();
+        //ArrayList<Achievement> achievements = new ArrayList<>();
         //create the data source
         upcomingTripAdapter = new ProfileTripsAdapter(upcomingTrips);
         previousTripAdapter = new ProfileTripsAdapter(previousTrips);
         currentTripAdapter = new ProfileTripsAdapter(currentTrips);
         savedTripAdapter = new ProfileTripsAdapter(savedTrips);
-        achievementAdapter = new AchievementAdapter(achievements);
+        //achievementAdapter = new AchievementAdapter(achievements);
         // initialize the linear layout manager
         LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager savedLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        LinearLayoutManager achievementLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        //LinearLayoutManager achievementLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         // set the layout manager on the recycler view
         rvUpcoming.setLayoutManager(upcomingLayoutManager);
         rvPrevious.setLayoutManager(previousLayoutManager);
         rvCurrent.setLayoutManager(currentLayoutManager);
         rvSaved.setLayoutManager(savedLayoutManager);
-        rvAchievements.setLayoutManager(achievementLayoutManager);
+        //rvAchievements.setLayoutManager(achievementLayoutManager);
         // set the adapters
         rvUpcoming.setAdapter(upcomingTripAdapter);
         rvPrevious.setAdapter(previousTripAdapter);
         rvCurrent.setAdapter(currentTripAdapter);
         rvSaved.setAdapter(savedTripAdapter);
-        rvAchievements.setAdapter(achievementAdapter);
+        //rvAchievements.setAdapter(achievementAdapter);
         // query posts for each view
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);
         queryCurrentPosts(userProfile);
-        if(!userProfile.getUsername().equals(userCurrent.getUsername())) {
-            queryAchievements();
-        }
+//        if(!userProfile.getUsername().equals(userCurrent.getUsername())) {
+//            queryAchievements();
+//        }
         querySaved(userProfile);
 
 
