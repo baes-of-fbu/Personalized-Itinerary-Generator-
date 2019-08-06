@@ -61,6 +61,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return comments.size();
     }
 
+    public void clear() {
+        comments.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Comment> list) {
+        comments.addAll(list);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvComment;
@@ -71,15 +81,5 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             tvComment = itemView.findViewById(R.id.tvComment);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
         }
-    }
-
-    public void clear() {
-        comments.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<Comment> list) {
-        comments.addAll(list);
-        notifyDataSetChanged();
     }
 }

@@ -10,7 +10,7 @@ import com.parse.ParseObject;
 public class Event extends ParseObject implements Parcelable {
 
     // Constants
-    public static final String KEY_NAME = "name";
+    private static final String KEY_NAME = "name";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_IMAGE = "eventImage";
     private static final String KEY_COST = "cost";

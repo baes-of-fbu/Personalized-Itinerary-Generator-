@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.ViewHolder> {
-    private Context context;
     private ArrayList<DayPlan> dayPlans;
 
     public TripDetailsAdapter(ArrayList<DayPlan> dayPlans) {
@@ -25,7 +24,7 @@ public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_day_plan, parent, false);
         return new ViewHolder(view);
     }

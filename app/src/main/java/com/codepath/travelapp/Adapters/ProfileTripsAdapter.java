@@ -59,10 +59,19 @@ public class ProfileTripsAdapter extends RecyclerView.Adapter<ProfileTripsAdapte
         }
     }
 
-    // Return the total count of trips
     @Override
     public int getItemCount() {
         return trips.size();
+    }
+
+    public void clear(){
+        trips.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Trip> list) {
+        trips.addAll(list);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -97,15 +106,5 @@ public class ProfileTripsAdapter extends RecyclerView.Adapter<ProfileTripsAdapte
                         .commit();
             }
         }
-    }
-
-    public void clear(){
-        trips.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<Trip> list) {
-        trips.addAll(list);
-        notifyDataSetChanged();
     }
 }
