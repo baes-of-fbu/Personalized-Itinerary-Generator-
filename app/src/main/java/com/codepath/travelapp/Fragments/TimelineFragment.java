@@ -34,7 +34,7 @@ public class TimelineFragment extends Fragment {
     private TimelineAdapter timelineAdapter;
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView rvTrips;
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     @Nullable
     @Override
@@ -46,9 +46,9 @@ public class TimelineFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading your timeline...");
-        progressDialog.setTitle("Please wait");
-        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading your timeline...121345");
+//        progressDialog.setTitle("Please wait");
+//        progressDialog.setCancelable(false);
         progressDialog.show();
 
         // Creates a timeline timelineAdapter with an empty array list of trips

@@ -19,16 +19,27 @@
 
     <ImageView
         android:id="@+id/ivShare"
-        android:layout_width="@dimen/post_btn_size"
-        android:layout_height="@dimen/post_btn_size"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
         android:tint="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintEnd_toStartOf="@+id/ivButtonSettings"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="?attr/actionModeShareDrawable" />
 
+    <ImageView
+        android:id="@+id/ivButtonSettings"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_three_dots" />
+
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -214,13 +225,14 @@
                 android:id="@+id/tvSchedule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/schedule"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider" />
+                app:layout_constraintTop_toBottomOf="@+id/tvBudget" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSchedule"
@@ -247,4 +259,5 @@
                 app:layout_constraintTop_toBottomOf="@id/rvSchedule" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

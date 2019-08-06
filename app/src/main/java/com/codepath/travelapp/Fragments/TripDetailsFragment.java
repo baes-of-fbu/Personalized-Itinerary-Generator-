@@ -1,7 +1,6 @@
 package com.codepath.travelapp.Fragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -58,11 +57,14 @@ public class TripDetailsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.show();
 
         final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
@@ -153,7 +155,6 @@ public class TripDetailsFragment extends Fragment {
 
                 addOnClickListeners();
             }
-            progressDialog.hide();
         }
     }
 
