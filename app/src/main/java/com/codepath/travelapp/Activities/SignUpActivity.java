@@ -117,7 +117,7 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (state.length() > 2) {
                     Log.e(APP_TAG, "No state");
                     Toast.makeText(getApplicationContext(), "Please select your home state", Toast.LENGTH_LONG).show();
-                } else if (image == null) {
+                } else if (selectedImage == null) {
                     Log.e(APP_TAG, "no profile picture");
                     Toast.makeText(getApplicationContext(), "Please select a profile picture", Toast.LENGTH_SHORT).show();
                 } else if (bio.length() == 0) {

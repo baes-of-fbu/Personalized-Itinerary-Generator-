@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Adapters.ProfileTripsAdapter;
+import com.codepath.travelapp.Models.Achievement;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
@@ -143,6 +144,30 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    private void queryNewAchievements(List<Trip> trips, final User user) {
+        ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
+        if (trips.size() > 0) {
+            if (trips.size() > 5) {
+                achievementQuery.whereEqualTo("name", "Adventurer");
+            }
+            if (trips.size() >= 1) {
+                achievementQuery.whereEqualTo("name", "Backpacker");
+            }
+
+            achievementQuery.findInBackground(new FindCallback<Achievement>() {
+                @Override
+                public void done(final List<Achievement> objects, ParseException e) {
+                    if (e == null) {
+                        for (int i = 0; i < objects.size(); i++) {
+                            user.getAchievementRelation().add(objects.get(i));
+                        }
+                        user.saveInBackground();
+                    }
+                }
+            });
+        }
+    }
+
     private void queryUpcomingPosts(ParseUser user) {
         upcomingTripAdapter.clear();
 
@@ -179,6 +204,7 @@ public class ProfileFragment extends Fragment {
             public void done(List<Trip> trips, ParseException e) {
                 if (e == null) {
                     previousTripAdapter.addAll(trips);
+                    queryNewAchievements(trips, userProfile);
                 } else {
                     e.printStackTrace();
                     showAlertDialog();
@@ -252,6 +278,7 @@ public class ProfileFragment extends Fragment {
         tvFollowers = view.findViewById(R.id.tvFollowers);
         tvFollowing = view.findViewById(R.id.tvFollowing);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
+        TextView tvFullName = view.findViewById(R.id.tvFullName);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
         TextView tvBio = view.findViewById(R.id.tvBio);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
@@ -271,6 +298,7 @@ public class ProfileFragment extends Fragment {
 
         //Populate views in Profile Fragment
         tvUsername.setText(userProfile.getUsername());
+        tvFullName.setText(userProfile.getFullName());
         tvHometown.setText(userProfile.getHomeState());
         tvBio.setText(userProfile.getBio());
         if (userProfile.getProfileImage() != null && getContext() != null) {

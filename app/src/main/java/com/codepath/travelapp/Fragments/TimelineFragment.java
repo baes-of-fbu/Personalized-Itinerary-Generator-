@@ -1,13 +1,14 @@
 package com.codepath.travelapp.Fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,14 +30,11 @@ import java.util.List;
 
 public class TimelineFragment extends Fragment {
 
-    private final String TAG = "TimelineFragment";
-
-    protected TimelineAdapter adapter;
-    private SwipeRefreshLayout swipeContainer;
-
-    private Integer skip = 0;
-    private boolean loadMore = false;
     private final int page_size = 10;
+    private TimelineAdapter timelineAdapter;
+    private SwipeRefreshLayout swipeContainer;
+    private RecyclerView rvTrips;
+    ProgressDialog progressDialog;
 
     @Nullable
     @Override
@@ -47,33 +45,47 @@ public class TimelineFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        RecyclerView rvTrips = view.findViewById(R.id.rvTrips);
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading your timeline...");
+        progressDialog.setTitle("Please wait");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-        // create the upcomingTripAdapter and set the layout manager on the recycler view
+        // Creates a timeline timelineAdapter with an empty array list of trips
         ArrayList<Trip> mTrips = new ArrayList<>();
-        adapter = new TimelineAdapter(mTrips);
+        timelineAdapter = new TimelineAdapter(mTrips);
+
+        rvTrips = view.findViewById(R.id.rvTrips);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+
+        // Connects adapter with recycler view
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvTrips.setLayoutManager(linearLayoutManager);
-        rvTrips.setAdapter(adapter);
+        rvTrips.setAdapter(timelineAdapter);
 
-        // Set up the scroll listener and add it to RecyclerView
+        // Adds endless scroll and scroll to refresh listeners
+        addScrollListeners(linearLayoutManager);
+
+        // Queries posts from parse network
+        queryFollowingPosts(0);
+    }
+
+    private void addScrollListeners(LinearLayoutManager linearLayoutManager) {
+        // Adds endless scroll listener
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-               loadNextDataFromApi(page);
+                queryFollowingPosts(page); // Loads the next set of posts
             }
         };
         rvTrips.addOnScrollListener(scrollListener);
 
-        queryFollowingPosts();
-
-        // Swipe Container/ refresh code
-        swipeContainer = view.findViewById(R.id.swipeContainer);
+        // Adds swipe to refresh listener
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeContainer.setRefreshing(true);
-                queryFollowingPosts();
+                queryFollowingPosts(0); // Queries from parse network
             }
         });
         // Configure the refreshing colors
@@ -83,8 +95,12 @@ public class TimelineFragment extends Fragment {
                 android.R.color.holo_red_light);
     }
 
-    private void queryFollowingPosts() {
-        adapter.clear();
+    private void queryFollowingPosts(final int offset) {
+        // Clears the adapter if querying top posts
+        if (offset == 0) {
+            timelineAdapter.clear();
+        }
+        // Queries for all the users that the current user follows
         ParseQuery<ParseObject> followingQuery = new ParseQuery<>("Follow");
         followingQuery.whereEqualTo("from", ParseUser.getCurrentUser());
         followingQuery.include("to");
@@ -92,6 +108,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
+                    // Creates a query of trips from each user the current user follows
                     List<ParseQuery<Trip>> queries = new ArrayList<>();
                     for (int i = 0; i < objects.size(); i++) {
                         ParseQuery<Trip> query = new ParseQuery<Trip>(Trip.class);
@@ -99,11 +116,14 @@ public class TimelineFragment extends Fragment {
                         queries.add(query);
                     }
 
+                    // Creates a query of trips from the current user
                     ParseQuery<Trip> queryCurrent = new ParseQuery<Trip>(Trip.class);
                     queryCurrent.whereEqualTo("owner", ParseUser.getCurrentUser());
                     queries.add(queryCurrent);
 
+                    // Sends only one query to the Parse network
                     ParseQuery<Trip> compoundQuery = ParseQuery.or(queries);
+                    compoundQuery.setSkip(offset * page_size);
                     compoundQuery.setLimit(page_size);
                     compoundQuery.include(Trip.KEY_OWNER);
                     compoundQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
@@ -111,68 +131,29 @@ public class TimelineFragment extends Fragment {
                         @Override
                         public void done(List<Trip> trips, ParseException e) {
                             swipeContainer.setRefreshing(false);
+                            progressDialog.hide();
                             if (e == null) {
-                                adapter.addAll(trips);
-                                loadMore = true;
+                                timelineAdapter.addAll(trips);
                             } else {
-                                Log.e(TAG,"Error");
                                 e.printStackTrace();
+                                showAlertDialog();
                             }
                         }
                     });
+                } else {
+                    progressDialog.hide();
+                    e.printStackTrace();
+                    showAlertDialog();
                 }
             }
         });
     }
 
-    // Append the next page of data into the adapter
-    private void loadNextDataFromApi(final int offset) {
-        ParseQuery<ParseObject> followingQuery = new ParseQuery<>("Follow");
-        followingQuery.whereEqualTo("from", ParseUser.getCurrentUser());
-        followingQuery.include("to");
-        followingQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(final List<ParseObject> objects, ParseException e) {
-                if (e == null) {
-                    List<ParseQuery<Trip>> queries = new ArrayList<>();
-                    for (int i = 0; i < objects.size(); i++) {
-                        ParseQuery<Trip> query = new ParseQuery<Trip>(Trip.class);
-                        query.whereEqualTo("owner", objects.get(i).getParseUser("to"));
-                        queries.add(query);
-                    }
-
-                    ParseQuery<Trip> queryCurrent = new ParseQuery<Trip>(Trip.class);
-                    queryCurrent.whereEqualTo("owner", ParseUser.getCurrentUser());
-                    queries.add(queryCurrent);
-
-                    ParseQuery<Trip> compoundQuery = ParseQuery.or(queries);
-                    // True is there are more posts to load
-                    if (loadMore) {
-                        compoundQuery.setSkip(offset * page_size);
-                    }
-                    compoundQuery.setLimit(page_size);
-                    compoundQuery.include(Trip.KEY_OWNER);
-                    compoundQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
-                    compoundQuery.findInBackground(new FindCallback<Trip>() {
-                        @Override
-                        public void done(List<Trip> trips, ParseException e) {
-                            swipeContainer.setRefreshing(false);
-                            if (e == null) {
-                                skip = skip + trips.size();
-                                if (objects.size() == 0) {
-                                    loadMore = false;
-                                } else {
-                                    loadMore = true;
-                                    adapter.addAll(trips);
-                                }
-                            } else {
-                                Log.e(TAG, "Error");
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            }
-        });
+    private void showAlertDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Error loading timeline.")
+                .setPositiveButton("OK", null)
+                .create();
+        dialog.show();
     }
 }

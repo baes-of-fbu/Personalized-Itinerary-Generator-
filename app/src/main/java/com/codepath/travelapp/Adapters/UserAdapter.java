@@ -45,6 +45,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         User user = users.get(position);
         if (user != null) {
             holder.tvBio.setText(user.getBio());
+            holder.tvHomeState.setText(user.getHomeState());
             holder.tvFullName.setText(user.getFullName());
             holder.tvUsername.setText(user.getUsername());
             Glide.with(context)
@@ -73,12 +74,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         private ImageView ivImage;
         private TextView tvFullName;
         private TextView tvBio;
+        private TextView tvHomeState;
         private TextView tvUsername;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.ivImage);
             tvBio = itemView.findViewById(R.id.tvBio);
+            tvHomeState = itemView.findViewById(R.id.tvHomeState);
             tvFullName = itemView.findViewById(R.id.tvFullName);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             itemView.setOnClickListener(this);
