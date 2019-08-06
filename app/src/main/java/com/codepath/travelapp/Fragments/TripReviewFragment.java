@@ -262,11 +262,6 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
                     .replace(R.id.flContainer, fragment)
                     .commit();
         }
-
-        if (inputText.contentEquals(getString(R.string.save_for_later))) {
-            // TODO save trip in background
-             // Somehow mark that it is saved, not published
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.O)

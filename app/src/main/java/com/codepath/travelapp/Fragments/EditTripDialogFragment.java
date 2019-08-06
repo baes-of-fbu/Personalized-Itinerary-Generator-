@@ -20,7 +20,6 @@ import com.codepath.travelapp.R;
 public class EditTripDialogFragment extends DialogFragment {
 
     private TextView tvEdit;
-    private TextView tvSaveForLater;
     private TextView tvCancel;
     private TextView tvDelete;
     private String actionToReturn;
@@ -61,7 +60,6 @@ public class EditTripDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         tvEdit = view.findViewById(R.id.tvEdit);
-        tvSaveForLater = view.findViewById(R.id.tvSaveForLater);
         tvCancel = view.findViewById(R.id.tvCancel);
         tvDelete = view.findViewById(R.id.tvDelete);
         actionToReturn = "";
@@ -75,14 +73,6 @@ public class EditTripDialogFragment extends DialogFragment {
                 actionToReturn = getString(R.string.edit);
                 sendBackResult();
               }
-        });
-
-        tvSaveForLater.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionToReturn = getString(R.string.save_for_later);
-                sendBackResult();
-            }
         });
 
         tvCancel.setOnClickListener(new View.OnClickListener() {

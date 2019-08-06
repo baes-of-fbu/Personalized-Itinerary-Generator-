@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.DayPlan;
+import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.R;
 import com.codepath.travelapp.Fragments.EventDetailsFragment;
 import com.parse.ParseException;
@@ -54,7 +55,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
 
             // Try/catch needed for .fetchIfNeeded()
             try {
-                holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
+                holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString(Event.KEY_NAME));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -99,7 +100,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
 
             // Try/catch needed for .fetchIfNeeded()
             try {
-                holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
+                holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString(Event.KEY_NAME));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -144,7 +145,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHold
 
             // Try/catch needed for .fetchIfNeeded()
             try {
-                holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
+                holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString(Event.KEY_NAME));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

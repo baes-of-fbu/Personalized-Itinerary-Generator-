@@ -2,16 +2,13 @@ package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,10 +16,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Fragments.EventDetailsFragment;
-import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.Event;
-import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -65,8 +60,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             public void done(List<City> objects, ParseException e) {
                 if (e == null) {
                     city = objects.get(0);
-                    String cityStateString = city.getName() + ", " + city.getState();
-                    holder.tvCity.setText(cityStateString);
+                    holder.tvCity.setText(String.format("%s, %s", city.getName(), city.getState()));
                 } else {
                     e.printStackTrace();
                 }
@@ -105,8 +99,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-            Log.d("Adapter", "item clicked");
-            Toast.makeText(context, "Card was clicked", Toast.LENGTH_SHORT).show();
             final Event event = events.get(getAdapterPosition());
             if (event != null) {
                 Fragment fragment = new EventDetailsFragment();

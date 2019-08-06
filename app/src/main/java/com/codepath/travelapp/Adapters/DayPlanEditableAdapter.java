@@ -2,6 +2,7 @@ package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -32,7 +34,6 @@ import java.util.Random;
 public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditableAdapter.ViewHolder> implements EditEventDialogFragment.Listener {
 
     private Context context;
-    private String timeOfDay;
     private DayPlan currDayPlan;
     private ArrayList<DayPlan> dayPlans;
     private ArrayList<Event> allAvailableEvents;
@@ -40,19 +41,14 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     private TextView tvTripCost;
     private TextView tvTripRemainingMoney;
 
+    private String timeOfDay;
     private String morningEvent;
     private String afternoonEvent;
     private String eveningEvent;
-    private String cancelEdit;
     private String removeEvent;
     private String reGenerateEvent;
     private int budget;
     private int remainingMoney;
-
-    private static final String KEY_MORNING = "morning";
-    private static final String KEY_AFTERNOON = "afternoon";
-    private static final String KEY_EVENING = "evening";
-
 
     public DayPlanEditableAdapter(ArrayList<DayPlan> dayPlans, ArrayList<Event> allAvailableEvents, int budget, int remainingMoney, TextView tvTripCost, TextView tvTripRemainingMoney) {
         this.dayPlans = dayPlans;
@@ -71,7 +67,6 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         morningEvent = context.getResources().getString(R.string.morning_event);
         afternoonEvent = context.getResources().getString(R.string.afternoon_event);
         eveningEvent = context.getResources().getString(R.string.evening_event);
-        cancelEdit = context.getResources().getString(R.string.cancel);
         removeEvent = context.getResources().getString(R.string.remove_event);
         reGenerateEvent = context.getResources().getString(R.string.regenerate_event);
 
@@ -83,22 +78,20 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     public void onBindViewHolder(@NonNull DayPlanEditableAdapter.ViewHolder holder, int position) {
         // Get the current day
         final DayPlan dayPlan = dayPlans.get(position);
-        holder.tvDayTitle.setText(dayPlan.getDate().toString());
+        holder.tvDayTitle.setText(dayPlan.getDate().toString()); // TODO CHANGE THIS TO LOOK BETTER
 
         if (dayPlan.getMorningEvent() == null) {
             // Fills morning card view with empty event and removes onClickListener
             useEmptyEvent(holder.tvMorningName, holder.ivMorningImage, holder.tvMorningPrice);
             holder.cvMorning.setOnClickListener(null);
         } else {
-
             // Try/catch needed for .fetchIfNeeded()
             try {
-                holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString("name"));
+                holder.tvMorningName.setText(dayPlan.getMorningEvent().fetchIfNeeded().getString(Event.KEY_NAME));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-            // Adds morning event cost
+            // Populates view with morning event cost
             int cost = (int) dayPlan.getMorningEvent().getCost();
             if (cost == 0) {
                 holder.tvMorningPrice.setText(context.getResources().getString(R.string.free));
@@ -108,7 +101,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                 holder.tvMorningPrice.setTextColor(context.getResources().getColor(R.color.black));
             }
 
-            // Adds morning event image
+            // Populated view with morning event image
             Glide.with(context)
                     .load(dayPlan.getMorningEvent().getImage().getUrl())
                     .into(holder.ivMorningImage);
@@ -135,15 +128,13 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
             useEmptyEvent(holder.tvAfternoonName, holder.ivAfternoonImage, holder.tvAfternoonPrice);
             holder.cvAfternoon.setOnClickListener(null);
         } else {
-
             // Try/catch needed for .fetchIfNeeded()
             try {
-                holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString("name"));
+                holder.tvAfternoonName.setText(dayPlan.getAfternoonEvent().fetchIfNeeded().getString(Event.KEY_NAME));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-            // Adds afternoon event cost
+            // Populates view with afternoon event cost
             int cost = (int) dayPlan.getAfternoonEvent().getCost();
             if (cost == 0) {
                 holder.tvAfternoonPrice.setText(context.getResources().getString(R.string.free));
@@ -152,13 +143,11 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                 holder.tvAfternoonPrice.setText(String.format("$%s", String.valueOf(cost)));
                 holder.tvAfternoonPrice.setTextColor(context.getResources().getColor(R.color.black));
             }
-
-            // Adds afternoon event image
+            // Populates view with afternoon event image
             Glide.with(context)
                     .load(dayPlan.getAfternoonEvent().getImage().getUrl())
                     .into(holder.ivAfternoonImage);
-
-            // Adds listener to afternoon card view
+            // Populates view with listener to afternoon card view
             holder.cvAfternoon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -180,15 +169,13 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
             useEmptyEvent(holder.tvEveningName, holder.ivEveningImage, holder.tvEveningPrice);
             holder.cvEvening.setOnClickListener(null);
         } else {
-
             // Try/catch needed for .fetchIfNeeded()
             try {
-                holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString("name"));
+                holder.tvEveningName.setText(dayPlan.getEveningEvent().fetchIfNeeded().getString(Event.KEY_NAME));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-            // Adds evening event cost
+            // Populates view with evening event cost
             int cost = (int) dayPlan.getEveningEvent().getCost();
             if (cost == 0) {
                 holder.tvEveningPrice.setText(context.getResources().getString(R.string.free));
@@ -197,12 +184,10 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
                 holder.tvEveningPrice.setText(String.format("$%s", String.valueOf(cost)));
                 holder.tvEveningPrice.setTextColor(context.getResources().getColor(R.color.black));
             }
-
-            // Adds evening event image
+            // Populates view with evening event image
             Glide.with(context)
                     .load(dayPlan.getEveningEvent().getImage().getUrl())
                     .into(holder.ivEveningImage);
-
             // Adds listener to evening card view
             holder.cvEvening.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -256,8 +241,6 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     }
 
     // Prompts user with options for editing an event
-    // Passes the dayPlan and time of day so that the return data
-    // can include this information and use it to edit the arraylist of events
     private void promptUser() {
         FragmentManager fragmentManager = MainActivity.fragmentManager;
         EditEventDialogFragment editEventDialogFragment = EditEventDialogFragment.newInstance();
@@ -265,12 +248,11 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         editEventDialogFragment.show(fragmentManager, "fragment_edit_event_options");
     }
 
-    // This is called when the dialog is completed and the results have been passed
+    // This is called when the dialog is closed or the user has selected on option
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void returnData(String action) {
-        if (action.contentEquals(cancelEdit)) {
-            // Do nothing
-        } else if (action.contentEquals(removeEvent)) {
+        if (action.contentEquals(removeEvent)) {
             // Removes event from the DayPlan
             removeEvent();
             updateTripCost();
@@ -310,6 +292,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void generateEvent() {
         // shuffleEvents() clears the allAvailableEvents array
         // and returns a new shuffled list of events
@@ -320,7 +303,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
             allAvailableEvents.remove(event);
             if (timeOfDay.contentEquals(morningEvent)) {
                 currDayPlan.setMorningEvent(event);
-                remainingMoney -= (int) event.getCost();
+                remainingMoney = Math.subtractExact(remainingMoney, (int) event.getCost());
                 notifyDataSetChanged();
             } else if (timeOfDay.contentEquals(afternoonEvent)) {
                 currDayPlan.setAfternoonEvent(event);
@@ -338,8 +321,9 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateTripCost() {
-        int tripCost = budget-remainingMoney;
+        int tripCost = Math.subtractExact(budget, remainingMoney);
         tvTripCost.setText(String.format("$%s", String.valueOf(tripCost)));
         tvTripRemainingMoney.setText(String.format("$%s", String.valueOf(remainingMoney)));
         if (remainingMoney < 0) {
@@ -354,8 +338,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         // Loops through each event
         for (int i = 0; i < numEvents; i++) {
             Event event = allAvailableEvents.get(i);
-            if (isEventAvailable(event, timeOfDay) && isEventWithinBudget(event, remainingMoney)) {
-                // TODO timeOfDay and remainingMoney are instance variables that don't HAVE to be passed in
+            if (isEventAvailable(event) && isEventWithinBudget(event)) {
                 // Returns event if it is available and within budget
                 return event;
             }
@@ -372,9 +355,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         for (int i = 0; i < numEvents; i++) {
             // Selects a random event
             Event event = getRandomElement(allAvailableEvents);
-            // Adds the random event to the shuffledEvents list
             shuffledEvents.add(event);
-            // Removes the event from allAvailableEvents
             allAvailableEvents.remove(event);
         }
         // Returns a new shuffled list of events
@@ -391,23 +372,20 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     }
 
     // Returns if the event is available during a given time of day
-    private Boolean isEventAvailable(Event event, String timeOfDay) { //TODO can we make this more generic?
+    private Boolean isEventAvailable(Event event) {
         if (timeOfDay.contentEquals(morningEvent)) {
             return event.isAvailableMorning();
         } else if (timeOfDay.contentEquals(afternoonEvent)) {
             return event.isAvailableAfternoon();
-        } else if (timeOfDay.contentEquals(eveningEvent)){
+        } else {
             return event.isAvailableEvening();
         }
-        return false;
     }
 
     // Checks if the cost of an event is within the budget
-    private Boolean isEventWithinBudget(Event event, int budget) {
-        int eventCost = (int) event.getCost();
-        return eventCost < budget;
+    private Boolean isEventWithinBudget(Event event) {
+        return (int) event.getCost() < remainingMoney;
     }
-
 
     // Returns the total count of dayPlans
     @Override
@@ -455,7 +433,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         }
     }
 
-    public void useEmptyEvent(TextView tvEventName, ImageView ivEventImage, TextView tvEventPrice) {
+    private void useEmptyEvent(TextView tvEventName, ImageView ivEventImage, TextView tvEventPrice) {
         tvEventName.setText(R.string.empty_slot);
         ivEventImage.setImageResource(R.drawable.emptyevent);
         tvEventPrice.setText("");
