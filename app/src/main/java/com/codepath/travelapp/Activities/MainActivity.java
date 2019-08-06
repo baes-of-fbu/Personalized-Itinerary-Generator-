@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.codepath.travelapp.Fragments.AchievementFragment;
 import com.codepath.travelapp.Fragments.ComposeFragment;
 import com.codepath.travelapp.Fragments.ExploreFragment;
 import com.codepath.travelapp.Fragments.ProfileFragment;
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_explore:
                         fragment = new ExploreFragment();
+                        break;
+                    case R.id.action_achievements:
+                        fragment = new AchievementFragment();
                         break;
                     default:
                         fragment = new TimelineFragment();

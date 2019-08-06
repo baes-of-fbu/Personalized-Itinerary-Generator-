@@ -31,7 +31,7 @@ public class AchievementDialougeFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_achievement, container);
+        return inflater.inflate(R.layout.fragment_achievement_dialouge, container);
     }
 
     public void onResume() {

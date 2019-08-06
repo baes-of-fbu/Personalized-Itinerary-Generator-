@@ -18,8 +18,9 @@
         android:title="New Trip"
         app:showAsAction="always" />
     <item
-        android:icon="@android:drawable/ic_dialog_email"
-        android:title="Item"
+        android:id="@+id/action_achievements"
+        android:icon="@android:drawable/star_off"
+        android:title="Achievements"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_profile"
