@@ -18,13 +18,10 @@ import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
 import com.codepath.travelapp.R;
-import com.parse.ParseObject;
 
 import static com.parse.ParseUser.getCurrentUser;
 
 public class SidebarFragment extends Fragment {
-
-    private ParseObject user;
 
     @Nullable
     @Override
@@ -46,16 +43,15 @@ public class SidebarFragment extends Fragment {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new LogoutDialogFragment();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
                 LogoutDialogFragment logoutDialogFragment = LogoutDialogFragment.newInstance();
                 logoutDialogFragment.show(fragmentManager, "fragment_logout_confirmation");
             }
         });
+
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new ProfileDialogFragment();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
                 ProfileDialogFragment profileDialogFragment = ProfileDialogFragment.newInstance();
                 profileDialogFragment.show(fragmentManager, "fragment_edit_profile");
