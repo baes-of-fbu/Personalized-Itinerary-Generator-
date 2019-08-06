@@ -49,11 +49,6 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     private int budget;
     private int remainingMoney;
 
-    private static final String KEY_MORNING = "morning";
-    private static final String KEY_AFTERNOON = "afternoon";
-    private static final String KEY_EVENING = "evening";
-
-
     public DayPlanEditableAdapter(ArrayList<DayPlan> dayPlans, ArrayList<Event> allAvailableEvents, int budget, int remainingMoney, TextView tvTripCost, TextView tvTripRemainingMoney) {
         this.dayPlans = dayPlans;
         this.allAvailableEvents = allAvailableEvents;

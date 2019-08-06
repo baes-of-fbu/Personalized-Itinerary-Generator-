@@ -44,7 +44,8 @@ public class ProfileTripsAdapter extends RecyclerView.Adapter<ProfileTripsAdapte
         Trip trip = trips.get(position);
 
         if (trip != null) {
-            holder.tvTripBudget.setText("$" + trip.getBudget().toString());
+            String budgetString = "$" + trip.getBudget().toString();
+            holder.tvTripBudget.setText(budgetString);
             holder.tvTripName.setText(trip.getName());
             holder.tvTripBudget.setText(trip.getBudget().toString());
 
