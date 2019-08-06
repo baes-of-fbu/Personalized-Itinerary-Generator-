@@ -32,7 +32,6 @@ import com.codepath.travelapp.GravitySnapHelper;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.CityImages;
 import com.codepath.travelapp.Models.DayPlan;
-import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
@@ -65,13 +64,13 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
     private int budget;
     private int tripCost;
     private int numDays;
-    private ArrayList<Tag> tags;
-    private ArrayList<Event> allAvailableEvents;
     private ArrayList<DayPlan> dayPlans;
     private ParseFile image;
     private Bundle bundle;
     private DayPlanAdapter dayPlanAdapter;
 
+    private Button btnAccept;
+    private Button btnEdit;
 
     @Nullable
     @Override
@@ -90,29 +89,6 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Creating your schedule...");
-        progressDialog.setTitle("Please wait");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
-        bundle = getArguments();
-        if (bundle == null) {
-            Log.d("Review Fragment", "No bundle");
-        }
-
-        tripName = bundle.getString("trip_name");
-        city = bundle.getParcelable("city");
-        startDate = bundle.getString("start_date");
-        endDate = bundle.getString("end_date");
-        numDays = bundle.getInt("number_days");
-        budget = bundle.getInt("budget");
-        tripCost = bundle.getInt("trip_cost");
-        allAvailableEvents = bundle.getParcelableArrayList("available_events");
-        tags = bundle.getParcelableArrayList("selected_tags");
-        dayPlans = bundle.getParcelableArrayList("dayPlans");
-
-
         final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
@@ -123,11 +99,33 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
         TextView tvCityState = view.findViewById(R.id.tvCityState);
         RecyclerView rvTags = view.findViewById(R.id.rvTags);
         RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
-        Button btnAccept = view.findViewById(R.id.btnAccept);
-        Button btnEdit = view.findViewById(R.id.btnDeny);
+        btnAccept = view.findViewById(R.id.btnAccept);
+        btnEdit = view.findViewById(R.id.btnDeny);
 
         SnapHelper snapHelper = new GravitySnapHelper(Gravity.END);
         snapHelper.attachToRecyclerView(rvTags);
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Creating your schedule...");
+        progressDialog.setTitle("Please wait");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        bundle = getArguments();
+        if (bundle == null) {
+            Log.d("Review Fragment", "No bundle");
+            // TODO add Alert statement instead of Log
+        }
+
+        tripName = bundle.getString("trip_name");
+        city = bundle.getParcelable("city");
+        startDate = bundle.getString("start_date");
+        endDate = bundle.getString("end_date");
+        numDays = bundle.getInt("number_days");
+        budget = bundle.getInt("budget");
+        tripCost = bundle.getInt("trip_cost");
+        ArrayList<Tag> tags = bundle.getParcelableArrayList("selected_tags");
+        dayPlans = bundle.getParcelableArrayList("dayPlans");
 
         tvTripName.setText(tripName);
         tvTravelDates.setText(String.format("%s - %s", startDate, endDate));
@@ -140,9 +138,8 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
         if (remainingMoney < 0) {
             tvRemainingBudget.setTextColor(Color.RED);
         } else if (remainingMoney > 0) {
-            tvRemainingBudget.setTextColor(getResources().getColor(R.color.LightSkyBlue)); // TODO change color?
+            tvRemainingBudget.setTextColor(getResources().getColor(R.color.LightSkyBlue));
         }
-
 
         // Populate list of Tags
         TagSelectedAdapter adapter = new TagSelectedAdapter(tags);
@@ -150,8 +147,10 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
         rvTags.setLayoutManager(linearLayoutManager);
         rvTags.setAdapter(adapter);
 
+        // Populate the cover photo with a random city image
         ParseQuery<CityImages> cityImagesQuery = new ParseQuery<>(CityImages.class);
-        cityImagesQuery.setLimit(10);
+        int pageSize = 10;
+        cityImagesQuery.setLimit(pageSize);
         cityImagesQuery.include(CityImages.KEY_IMAGE);
         cityImagesQuery.whereEqualTo(CityImages.KEY_CITY, city);
         cityImagesQuery.findInBackground(new FindCallback<CityImages>() {
@@ -159,13 +158,16 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
             public void done(List<CityImages> objects, ParseException e) {
                 if (e == null) {
                     CityImages cityImage = getRandomElement(objects);
-                    image = cityImage.getImage();
-                    Glide.with(Objects.requireNonNull(getContext()))
-                            .load(image.getUrl())
-                            .into(ivCoverPhoto);
+                    if (cityImage != null) {
+                        image = cityImage.getImage();
+                        Glide.with(Objects.requireNonNull(getContext()))
+                                .load(image.getUrl())
+                                .into(ivCoverPhoto);
+                    }
                     progressDialog.hide();
                 } else {
                     Log.d("TripReviewFragment", "Unable to parse for a photo");
+                    // TODO add Alert statement instead of Log
                 }
             }
         });
@@ -182,7 +184,10 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
         indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
         dayPlanAdapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
 
+        addOnClickListeners();
+    }
 
+    private void addOnClickListeners() {
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.O)
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -231,15 +236,12 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
                 editTripDialogFragment.show(fragmentManager, "fragment_edit_trip_options");
             }
         });
-
     }
 
     // This is called when the dialog is completed and the results have been passed
     @Override
     public void onFinishEditDialog(String inputText) {
         if (inputText.contentEquals(getString(R.string.edit))) {
-
-            // Send Fragment to edit trip
             Fragment fragment = new EditTripFragment();
             fragment.setArguments(bundle);
             MainActivity.fragmentManager.beginTransaction()
@@ -248,7 +250,6 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
         }
 
         if (inputText.contentEquals(getString(R.string.delete))) {
-
             // Deletes each dayPlan
             for (int day = 0; day < numDays; day++) {
                 DayPlan dayPlan = dayPlans.get(day);

@@ -212,32 +212,30 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         holder.ivEditMorningEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currHolder = holder;
-                currDayPlan = dayPlan;
-                timeOfDay = morningEvent;
-                promptUser();
+                editEventListeners(holder, dayPlan, morningEvent);
             }
         });
 
         holder.ivEditAfternoonEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currHolder = holder;
-                currDayPlan = dayPlan;
-                timeOfDay = afternoonEvent;
-                promptUser();
+                editEventListeners(holder, dayPlan, afternoonEvent);
             }
         });
 
         holder.ivEditEveningEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currHolder = holder;
-                currDayPlan = dayPlan;
-                timeOfDay = eveningEvent;
-                promptUser();
+                editEventListeners(holder, dayPlan, eveningEvent);
             }
         });
+    }
+
+    private void editEventListeners(ViewHolder holder, DayPlan dayPlan, String eventTime) {
+        currHolder = holder;
+        currDayPlan = dayPlan;
+        timeOfDay = eventTime;
+        promptUser();
     }
 
     // Prompts user with options for editing an event

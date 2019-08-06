@@ -26,7 +26,6 @@ public class UserExploreFragment extends Fragment {
 
     protected UserAdapter adapter;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class UserExploreFragment extends Fragment {
 
         queryUsers(null);
         svUsers.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
             @Override
             public boolean onQueryTextSubmit(String keyword) {
                 queryUsers(keyword);
@@ -58,22 +56,20 @@ public class UserExploreFragment extends Fragment {
                 return true;
             }
         });
-
     }
 
     private void queryUsers(String keyword) {
         adapter.clear();
         ParseQuery<User> userQuery = new ParseQuery<>(User.class);
-        if( keyword != null) {
-            //userQuery.whereContains("username", keyword);
-            userQuery.whereContains("fullName" , keyword);
+        if (keyword != null) {
+            userQuery.whereContains("fullName", keyword);
         }
         userQuery.findInBackground(new FindCallback<User>() {
             @Override
             public void done(List<User> users, ParseException e) {
                 if (e == null) {
                     adapter.addAll(users);
-                }else{
+                } else {
                     e.printStackTrace();
                 }
             }
