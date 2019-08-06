@@ -27,6 +27,7 @@ import com.codepath.travelapp.Fragments.CommentDialogFragment;
 import com.codepath.travelapp.Fragments.ProfileFragment;
 import com.codepath.travelapp.Fragments.TripDetailsFragment;
 import com.codepath.travelapp.Models.City;
+import com.codepath.travelapp.Models.Comment;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
@@ -75,6 +76,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         final boolean[] savedCurrent = {false};
         final boolean[] likedCurrent = {false};
         final int[] numLikes = {0};
+        final int[] numComments = {0};
 
         final String[] costString = {"$" + trip.getCost().toString()};
         holder.tvTripCost.setText(costString[0]);
@@ -206,12 +208,24 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             }
         });
 
+        // Send a Parse Query to get "likes" Relation
+        trip.getComments().getQuery().findInBackground(new FindCallback<Comment>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void done(List<Comment> objects, ParseException e) {
+                if (e == null) {
+                    numComments[0] = objects.size();
+                    holder.tvNumComments.setText(Integer.toString(numComments[0]));
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         // Set onClickListener to prompt the current user to write a comment for a trip
         holder.ibComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new CommentDialogFragment();
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
                 CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance(trip);
                 commentDialogFragment.show(fragmentManager, "fragment_comment_dialog");
@@ -295,6 +309,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         return trips.size();
     }
 
+    public void clear() {
+        trips.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Trip> list) {
+        trips.addAll(list);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTripCost;
         private TextView tvTripDates;
@@ -306,13 +330,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         private ImageView ivPin;
         private TextView tvNumLikes;
         private ImageButton ibLike;
+        private TextView tvNumComments;
         private ImageButton ibComment;
         private ImageButton ibSave;
         private TextView tvTime;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Finds views that will be populated
             tvTripDates = itemView.findViewById(R.id.tvTripDates);
             tvTripCost = itemView.findViewById(R.id.tvTripCost);
             tvTripName = itemView.findViewById(R.id.tvTripName);
@@ -324,6 +348,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             tvNumLikes = itemView.findViewById(R.id.tvNumLikes);
             ibLike = itemView.findViewById(R.id.ibLike);
             ibComment = itemView.findViewById(R.id.ibComment);
+            tvNumComments = itemView.findViewById(R.id.tvNumComments);
             ibSave = itemView.findViewById(R.id.ibSave);
             tvTime = itemView.findViewById(R.id.tvTime);
 
@@ -350,23 +375,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         }
     }
 
-    public void clear() {
-        trips.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<Trip> list) {
-        trips.addAll(list);
-        notifyDataSetChanged();
-    }
-    public String getRelativeTimeAgo(String rawJsonDate) {
+    private String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
 
         String relativeDate = "";
         try {
-            long dateMillis = sf.parse(rawJsonDate).getTime();
+            long dateMillis = Objects.requireNonNull(sf.parse(rawJsonDate)).getTime();
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
                     System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         } catch (java.text.ParseException e) {

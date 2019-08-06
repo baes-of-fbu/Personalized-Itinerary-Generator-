@@ -2,6 +2,7 @@ package com.codepath.travelapp.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +44,13 @@ public class ProfileTripsAdapter extends RecyclerView.Adapter<ProfileTripsAdapte
         Trip trip = trips.get(position);
 
         if (trip != null) {
-            holder.tvTripBudget.setText(String.format("$%s", trip.getBudget().toString()));
+            String budgetString = "$" + trip.getBudget().toString();
+            holder.tvTripBudget.setText(budgetString);
             holder.tvTripName.setText(trip.getName());
             holder.tvTripBudget.setText(trip.getBudget().toString());
 
-            if (trip.get(Trip.KEY_IMAGE) != null) {
-                ParseFile image = (ParseFile) trip.get(Trip.KEY_IMAGE);
+            if (trip.get("image") != null) {
+                ParseFile image = (ParseFile) trip.get("image");
                 assert image != null;
                 Glide.with(context)
                         .load(image.getUrl())
@@ -57,10 +59,19 @@ public class ProfileTripsAdapter extends RecyclerView.Adapter<ProfileTripsAdapte
         }
     }
 
-    // Return the total count of trips
     @Override
     public int getItemCount() {
         return trips.size();
+    }
+
+    public void clear(){
+        trips.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Trip> list) {
+        trips.addAll(list);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -74,12 +85,13 @@ public class ProfileTripsAdapter extends RecyclerView.Adapter<ProfileTripsAdapte
             tvTripName = itemView.findViewById(R.id.tvTripName);
             ivTripImage = itemView.findViewById(R.id.ivTripImage);
 
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener (this);
         }
 
         @Override
         public void onClick(View v) {
             // Sends trip info to TripDetailsFragment when trip card is clicked
+            Log.d("Adapter", "item clicked");
             final Trip trip = trips.get(getAdapterPosition());
             if (trip != null) {
                 Fragment fragment = new TripDetailsFragment();
@@ -94,15 +106,5 @@ public class ProfileTripsAdapter extends RecyclerView.Adapter<ProfileTripsAdapte
                         .commit();
             }
         }
-    }
-
-    public void clear(){
-        trips.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<Trip> list) {
-        trips.addAll(list);
-        notifyDataSetChanged();
     }
 }

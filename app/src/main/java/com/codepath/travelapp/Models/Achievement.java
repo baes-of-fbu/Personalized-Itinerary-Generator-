@@ -1,16 +1,10 @@
 package com.codepath.travelapp.Models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseRelation;
 
 import java.io.Serializable;
-
-import static android.provider.Settings.System.getString;
 
 @ParseClassName("Achievement")
 public class Achievement extends ParseObject implements Serializable {

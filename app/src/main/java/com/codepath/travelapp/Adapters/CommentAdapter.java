@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Models.Comment;
-import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -44,8 +43,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.tvComment.setText(comment.getComment());
 
         try {
-            if (comment.getUser().fetchIfNeeded().get(User.KEY_IMAGE) != null) {
-                ParseFile image = (ParseFile) comment.getUser().get(User.KEY_IMAGE);
+            if (comment.getUser().fetchIfNeeded().get("profileImage") != null) {
+                ParseFile image = (ParseFile) comment.getUser().get("profileImage");
                 assert image != null;
                 Glide.with(context)
                         .load(image.getUrl())
@@ -62,6 +61,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return comments.size();
     }
 
+    public void clear() {
+        comments.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Comment> list) {
+        comments.addAll(list);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvComment;
@@ -72,15 +81,5 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             tvComment = itemView.findViewById(R.id.tvComment);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
         }
-    }
-
-    public void clear() {
-        comments.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<Comment> list) {
-        comments.addAll(list);
-        notifyDataSetChanged();
     }
 }

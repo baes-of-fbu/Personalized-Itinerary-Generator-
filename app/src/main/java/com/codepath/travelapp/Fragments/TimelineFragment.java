@@ -94,7 +94,7 @@ public class TimelineFragment extends Fragment {
                 if (e == null) {
                     List<ParseQuery<Trip>> queries = new ArrayList<>();
                     for (int i = 0; i < objects.size(); i++) {
-                        ParseQuery<Trip> query = new ParseQuery<Trip>(Trip.class);
+                        ParseQuery<Trip> query = new ParseQuery<>(Trip.class);
                         query.whereEqualTo("owner", objects.get(i).getString("toId"));
                         queries.add(query);
                     }
@@ -124,7 +124,7 @@ public class TimelineFragment extends Fragment {
         });
     }
 
-    // Query all trips and add them to the adapter to populate the Timeline TODO remove this 
+    // Query all trips and add them to the adapter to populate the Timeline TODO remove this
     private void queryPosts() {
         adapter.clear();
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
