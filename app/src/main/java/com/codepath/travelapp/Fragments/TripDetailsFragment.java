@@ -1,16 +1,15 @@
 package com.codepath.travelapp.Fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +29,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,37 +44,41 @@ public class TripDetailsFragment extends Fragment {
     private DayPlanAdapter adapter;
     private ArrayList<DayPlan> mDayPlan;
 
+    private Trip trip;
+    private ImageView ivPin;
+    private ImageView ivShare;
+    private TextView tvUsername;
+    private TextView tvCityState;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         MainActivity.bottomNavigationView.setVisibility(View.GONE);
-        return inflater.inflate(R.layout.fragment_trip_details,container, false);
+        return inflater.inflate(R.layout.fragment_trip_details, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.show();
+
         final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
-        final TextView tvUsername = view.findViewById(R.id.tvFullName);
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
         TextView tvCost = view.findViewById(R.id.tvCost);
-        TextView tvCityState = view.findViewById(R.id.tvCityState);
-        ImageView ivPin = view.findViewById(R.id.ivPin);
         final RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
-        ImageView ivShare = view.findViewById(R.id.ivShare);
+        tvCityState = view.findViewById(R.id.tvCityState);
+        tvUsername = view.findViewById(R.id.tvFullName);
+        ivPin = view.findViewById(R.id.ivPin);
+        ivShare = view.findViewById(R.id.ivShare);
 
-        Bundle bundle = getArguments();
-        final Trip trip = (Trip) bundle.getSerializable("Trip");
         mDayPlan = new ArrayList<>();
-        //create the data source
         adapter = new DayPlanAdapter(mDayPlan);
-        // set the layout manager on the recycler view
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         rvSchedule.setLayoutManager(linearLayoutManager);
         rvSchedule.setAdapter(adapter);
@@ -83,100 +87,108 @@ public class TripDetailsFragment extends Fragment {
         final PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
         pagerSnapHelper.attachToRecyclerView(rvSchedule);
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            trip = (Trip) bundle.getSerializable("Trip");
+            if (trip != null) {
+                tvTripName.setText(trip.getName());
 
-        if (bundle.containsKey("DayPlans")) {
-            ArrayList<DayPlan> temp = bundle.getParcelableArrayList("DayPlans");
-            if (temp != null) {
-                mDayPlan.addAll(temp);
-                addCircleIndicator(view, rvSchedule, pagerSnapHelper);
-            } else {
-                Toast.makeText(getContext(), "There are no current schedules", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<>(DayPlan.class);
-            dayPlanQuery.setLimit(20);
-            dayPlanQuery.include(DayPlan.KEY_TRIP);
-            dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
-            dayPlanQuery.addAscendingOrder(DayPlan.KEY_DATE);
-            dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
-                @Override
-                public void done(List<DayPlan> dayPlans, ParseException e) {
-                    if (e != null) {
-                        Log.e("DayPlan", "Error");
-                        e.printStackTrace();
-                        return;
+                try {
+                    tvUsername.setText(trip.getOwner().fetchIfNeeded().getString("username"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                String travelWindow;
+                if (trip.getNumDays().intValue() != 1) {
+                    travelWindow = trip.getStartDate().toString().substring(0, 10) + " - " + trip.getEndDate().toString().substring(0, 10);
+                } else {
+                    travelWindow = trip.getStartDate().toString().substring(0, 10);
+                }
+
+                tvTravelDates.setText(travelWindow);
+                tvDays.setText(trip.getNumDays().toString());
+
+                String costString = "$" + trip.getCost();
+                tvCost.setText(costString);
+
+                String budgetString = "$" + trip.getBudget();
+                tvBudget.setText(budgetString);
+
+                try {
+                    tvCityState.setText(String.format("%s, %s", trip.getCity().fetchIfNeeded().getString("name"), trip.getCity().getState()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Glide.with(Objects.requireNonNull(getContext()))
+                        .load(trip.getImage().getUrl())
+                        .into(ivCoverPhoto);
+
+                ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+                if (image != null) {
+                    Glide.with(getContext())
+                            .load(image.getUrl())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(ivProfileImage);
+                }
+
+                ParseQuery<DayPlan> dayPlanQuery = new ParseQuery<>(DayPlan.class);
+                dayPlanQuery.include(DayPlan.KEY_TRIP);
+                dayPlanQuery.whereEqualTo(DayPlan.KEY_TRIP, trip);
+                dayPlanQuery.addAscendingOrder(DayPlan.KEY_DATE);
+                dayPlanQuery.findInBackground(new FindCallback<DayPlan>() {
+                    @Override
+                    public void done(List<DayPlan> dayPlans, ParseException e) {
+                        if (e == null) {
+                            adapter.clear();
+                            mDayPlan.addAll(dayPlans);
+                            addCircleIndicator(view, rvSchedule, pagerSnapHelper);
+                        } else {
+                            e.printStackTrace();
+                            showAlertDialog();
+                        }
                     }
-                    adapter.clear();
-                    mDayPlan.addAll(dayPlans);
-                    addCircleIndicator(view, rvSchedule, pagerSnapHelper);
-                }
-            });
+                });
+
+                addOnClickListeners();
+            }
+            progressDialog.hide();
         }
+    }
 
-        if (trip != null) {
-            tvTripName.setText(trip.getName());
-            try {
-                tvUsername.setText(trip.getOwner().fetchIfNeeded().getString("username"));
-            } catch (ParseException e) {
-                e.printStackTrace();
+    private void addOnClickListeners() {
+
+        // Opens the city location in Google Maps when clicked
+        tvCityState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMaps(trip);
             }
-            String travelWindow;
-            if(trip.getNumDays().intValue() != 1) {
-                travelWindow = trip.getStartDate().toString().substring(0, 10) + " - " + trip.getEndDate().toString().substring(0, 10);
-            }else {
-                travelWindow = trip.getStartDate().toString().substring(0, 10);
+        });
+
+        // Opens the city location in Google Maps when clicked
+        ivPin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMaps(trip);
             }
+        });
 
-            tvTravelDates.setText(travelWindow);
-            tvDays.setText(trip.getNumDays().toString());
-
-            String costString = "$" + trip.getCost();
-            tvCost.setText(costString);
-
-            String budgetString = "$" + trip.getBudget();
-            tvBudget.setText(budgetString);
-
-            try {
-                tvCityState.setText(String.format("%s, %s", trip.getCity().fetchIfNeeded().getString("name"), trip.getCity().getState()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            Glide.with(Objects.requireNonNull(getContext()))
-                    .load(trip.getImage().getUrl())
-                    .into(ivCoverPhoto);
-
-            ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
-            Glide.with(getContext())
-                    .load(image.getUrl())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(ivProfileImage);
-
-            tvCityState.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openMaps(trip);
-                }
-            });
-
-            ivPin.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openMaps(trip);
-                }
-            });
-        }
-
-        progressDialog.hide();
-
+        // Allows the User to view another User's profile
         tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String username = (String) tvUsername.getText();
                 Fragment fragment = new ProfileFragment();
                 Bundle userBundle = new Bundle();
-                userBundle.putString("username",  username);
+                userBundle.putString("username", username);
                 fragment.setArguments(userBundle);
+
+                if (username.equals(ParseUser.getCurrentUser().getUsername())) {
+                    MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_profile);
+                }
+
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)
                         .addToBackStack(null)
@@ -185,7 +197,6 @@ public class TripDetailsFragment extends Fragment {
         });
 
         // Allows User to share a text message containing the City, start date, and end date of their trip
-        // TODO send a link to our app or send a more detailed version of the itinerary with all the events and pictures
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -196,15 +207,9 @@ public class TripDetailsFragment extends Fragment {
                     e.printStackTrace();
                 }
                 text += " from " + trip.getStartDate().toString() + " to " + trip.getEndDate().toString() + "!";
-//                File imagePath = new File(getContext().getFilesDir(), "Pictures");
-//                File newFile = new File(imagePath, "default_image.jpg");
-//                Uri imageUri = getUriForFile(getContext(), "com.codepath.fileprovider.travelApp", newFile);
-//                Uri imageUri = Uri.parse("file://my_picture");
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-//                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
                 shareIntent.setType("text/plain");
-//                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(shareIntent, "Share Trip"));
             }
         });
@@ -222,13 +227,19 @@ public class TripDetailsFragment extends Fragment {
         intent.setAction(Intent.ACTION_VIEW);
         String data = String.format("%s?q=%s", location, trip.getCity().getName());
         intent.setData(Uri.parse(data));
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            getContext().startActivity(intent);
-        }
+        Objects.requireNonNull(getContext()).startActivity(intent);
     }
 
     private String geoPointToString(String geoPoint) {
         String temp = geoPoint.substring(geoPoint.indexOf('[') + 1, geoPoint.length() - 1);
         return "geo:" + temp;
+    }
+
+    private void showAlertDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Error loading trip details.")
+                .setPositiveButton("OK", null)
+                .create();
+        dialog.show();
     }
 }
