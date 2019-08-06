@@ -40,11 +40,7 @@ import java.util.List;
 
 public class CommentDialogFragment extends DialogFragment {
 
-    private TextView tvTripName;
-    private ImageView ivProfileImage;
     private EditText etNewComment;
-    private RecyclerView rvComments;
-    private Button btnPost;
 
     private CommentAdapter adapter;
     private Trip trip;
@@ -64,7 +60,9 @@ public class CommentDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        trip = bundle.getParcelable("trip");
+        if (bundle != null) {
+            trip = bundle.getParcelable("trip");
+        }
         return inflater.inflate(R.layout.fragment_comment_dialog, container, false);
     }
 
@@ -78,7 +76,7 @@ public class CommentDialogFragment extends DialogFragment {
         // Set the width of the dialog proportional to 75% of the screen width
         window.setLayout((size.x), WindowManager.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
-        // Call super onResume after sizing
+
         super.onResume();
     }
 
@@ -86,11 +84,11 @@ public class CommentDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvTripName = view.findViewById(R.id.tvTripName);
-        ivProfileImage = view.findViewById(R.id.ivProfileImage);
+        TextView tvTripName = view.findViewById(R.id.tvTripName);
+        ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         etNewComment = view.findViewById(R.id.etNewComment);
-        rvComments = view.findViewById(R.id.rvComments);
-        btnPost = view.findViewById(R.id.btnPost);
+        RecyclerView rvComments = view.findViewById(R.id.rvComments);
+        Button btnPost = view.findViewById(R.id.btnPost);
 
         tvTripName.setText(trip.getName());
 

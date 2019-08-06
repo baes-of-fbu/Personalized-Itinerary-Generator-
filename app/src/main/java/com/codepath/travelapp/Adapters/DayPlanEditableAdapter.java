@@ -403,7 +403,6 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         return eventCost < budget;
     }
 
-
     // Returns the total count of dayPlans
     @Override
     public int getItemCount() {

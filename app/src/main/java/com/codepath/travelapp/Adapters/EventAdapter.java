@@ -33,7 +33,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     private List<Event> events;
     private City city;
 
-
     public EventAdapter(ArrayList<Event> events){ this.events = events;}
 
     @NonNull
@@ -78,6 +77,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         return events.size();
     }
 
+    public void clear() {
+        events.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Event> list) {
+        events.addAll(list);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvName;
         private TextView tvBudget;
@@ -110,15 +119,5 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         .commit();
             }
         }
-    }
-
-    public void clear() {
-        events.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<Event> list) {
-        events.addAll(list);
-        notifyDataSetChanged();
     }
 }

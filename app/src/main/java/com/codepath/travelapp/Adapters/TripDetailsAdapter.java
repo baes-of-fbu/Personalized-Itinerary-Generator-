@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.travelapp.Models.DayPlan;
-import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
 
 import java.util.ArrayList;
@@ -37,9 +36,18 @@ public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.
         holder.rvSchedule.setAdapter(adapter);
     }
 
-    // Returns total count of dayPlans
     @Override
     public int getItemCount() {return dayPlans.size();}
+
+    public void clear(){
+        dayPlans.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<DayPlan> list) {
+        dayPlans.addAll(list);
+        notifyDataSetChanged();
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private RecyclerView rvSchedule;
@@ -49,14 +57,5 @@ public class TripDetailsAdapter extends RecyclerView.Adapter<TripDetailsAdapter.
             // Finds view that will be populated
             rvSchedule = itemView.findViewById(R.id.rvSchedule);
         }
-    }
-    public void clear(){
-        dayPlans.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<DayPlan> list) {
-        dayPlans.addAll(list);
-        notifyDataSetChanged();
     }
 }

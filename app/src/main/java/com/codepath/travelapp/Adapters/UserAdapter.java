@@ -43,14 +43,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull UserAdapter.ViewHolder holder, int position) {
         User user = users.get(position);
-        holder.tvBio.setText(user.getBio());
-        holder.tvFullName.setText(user.getFullName());
-        holder.tvUsername.setText(user.getUsername());
-        Glide.with(context)
-                .load(user.getProfileImage().getUrl())
-                .apply(RequestOptions.circleCropTransform())
-                .into(holder.ivImage);
-
+        if (user != null) {
+            holder.tvBio.setText(user.getBio());
+            holder.tvFullName.setText(user.getFullName());
+            holder.tvUsername.setText(user.getUsername());
+            Glide.with(context)
+                    .load(user.getProfileImage().getUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(holder.ivImage);
+        }
     }
 
     @Override
@@ -87,7 +88,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public void onClick(View view) {
             // Sends a bundle to TripDetailsFragment when trip item is clicked
             Log.d("Adapter", "item clicked");
-            //Toast.makeText(context, "Card was clicked", Toast.LENGTH_SHORT).show();
             final User user = users.get(getAdapterPosition());
             if (user != null) {
                 Fragment fragment = new ProfileFragment();
