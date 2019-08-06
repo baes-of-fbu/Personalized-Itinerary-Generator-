@@ -18,7 +18,6 @@ import com.codepath.travelapp.R;
 import com.google.android.material.tabs.TabLayout;
 
 public class ExploreFragment extends Fragment {
-    private FragmentActivity myContext;
 
     @Nullable
     @Override
@@ -37,8 +36,8 @@ public class ExploreFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
     }
     @Override
-    public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
+    public void onAttach(@NonNull Activity activity) {
+        FragmentActivity myContext = (FragmentActivity) activity;
         super.onAttach(activity);
     }
 }

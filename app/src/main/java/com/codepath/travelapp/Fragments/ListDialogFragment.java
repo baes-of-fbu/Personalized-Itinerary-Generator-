@@ -28,7 +28,7 @@ public class ListDialogFragment extends DialogFragment {
     private TextView tvListName;
     private RecyclerView rvUsers;
 
-    private UserAdapter adapter;
+    private UserAdapter adapter; // TODO create new adapter that is better for this list and is not clickable
     private ArrayList<User> users;
     private String listName;
 

@@ -1,9 +1,9 @@
 package com.codepath.travelapp.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,9 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
-import com.codepath.travelapp.Adapters.AchievementAdapter;
 import com.codepath.travelapp.Adapters.ProfileTripsAdapter;
-import com.codepath.travelapp.Models.Achievement;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.OnSwipeTouchListener;
@@ -44,23 +42,32 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 import static com.parse.ParseUser.getCurrentUser;
 
 public class ProfileFragment extends Fragment {
 
-    private final String TAG = "ProfileFragment";
     private ProfileTripsAdapter upcomingTripAdapter;
     private ProfileTripsAdapter previousTripAdapter;
     private ProfileTripsAdapter currentTripAdapter;
-    private AchievementAdapter achievementAdapter;
     private ProfileTripsAdapter savedTripAdapter;
+
+    private RecyclerView rvUpcoming;
+    private RecyclerView rvCurrent;
+    private RecyclerView rvPrevious;
+    private RecyclerView rvSaved;
+    private Button btnFollowingStatus;
+    private TextView tvFollowersCount;
+    private TextView tvFollowingCount;
+    private TextView tvFollowers;
+    private TextView tvFollowing;
 
     private int pageSize = 10;
 
     private User userProfile;
-    private Map<String, ParseObject> following;
+    private Map<User, ParseObject> following;
     private Map<User, ParseObject> followers;
 
     private User userCurrent;
@@ -87,47 +94,50 @@ public class ProfileFragment extends Fragment {
             userQuery.findInBackground(new FindCallback<ParseUser>() {
                 @Override
                 public void done(List<ParseUser> objects, ParseException e) {
-                    if (e != null) {
-                        Log.e("ProfileFragment", "Error");
-                        e.printStackTrace();
-                        return;
-                    }
+                    if (e == null) {
+                        userProfile = (User) objects.get(0);
+                        userCurrent = (User) getCurrentUser();
 
-                    userProfile = (User) objects.get(0);
-                    userCurrent = (User) getCurrentUser();
+                        List<ParseQuery<ParseObject>> queries = new ArrayList<>();
 
-                    List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+                        ParseQuery<ParseObject> queryFrom = ParseQuery.getQuery("Follow");
+                        queryFrom.whereEqualTo("from", userProfile);
+                        queries.add(queryFrom);
 
-                    ParseQuery<ParseObject> queryFrom = ParseQuery.getQuery("Follow");
-                    queryFrom.whereEqualTo("from", userProfile);
-                    queries.add(queryFrom);
+                        ParseQuery<ParseObject> queryTo = ParseQuery.getQuery("Follow");
+                        queryTo.whereEqualTo("toId", userProfile.getObjectId());
+                        queries.add(queryTo);
 
-                    ParseQuery<ParseObject> queryTo = ParseQuery.getQuery("Follow");
-                    queryTo.whereEqualTo("toId", userProfile.getObjectId());
-                    queries.add(queryTo);
-
-                    ParseQuery<ParseObject> compoundQuery = ParseQuery.or(queries);
-                    compoundQuery.include("from");
-                    compoundQuery.include("toId");
-                    compoundQuery.findInBackground(new FindCallback<ParseObject>() {
-                        public void done(List<ParseObject> followList, ParseException e) {
-                            if (e == null) {
-                                for (int i = 0; i < followList.size(); i++) {
-                                    if (followList.get(i).getString("toId").equals(userProfile.getObjectId())) {
-                                        if (((User) followList.get(i).get("from")).getObjectId().equals(userCurrent.getObjectId())) {
-                                            followers.put(userCurrent, followList.get(i));
-                                        } else {
-                                            followers.put(((User) followList.get(i).get("from")), followList.get(i));
+                        ParseQuery<ParseObject> compoundQuery = ParseQuery.or(queries);
+                        compoundQuery.include("from");
+                        compoundQuery.include("toId");
+                        compoundQuery.include("to");
+                        compoundQuery.findInBackground(new FindCallback<ParseObject>() {
+                            public void done(List<ParseObject> followList, ParseException e) {
+                                if (e == null) {
+                                    for (int i = 0; i < followList.size(); i++) {
+                                        if (Objects.equals(followList.get(i).getString("toId"), userProfile.getObjectId())) {
+                                            if (((User) Objects.requireNonNull(followList.get(i).get("from"))).getObjectId().equals(userCurrent.getObjectId())) {
+                                                followers.put(userCurrent, followList.get(i));
+                                            } else {
+                                                followers.put(((User) followList.get(i).get("from")), followList.get(i));
+                                            }
+                                        } else if (((User) Objects.requireNonNull(followList.get(i).get("from"))).getObjectId().equals(userProfile.getObjectId())) {
+                                            following.put((User) followList.get(i).get("to"), followList.get(i));
                                         }
-                                    } else if (((User) followList.get(i).get("from")).getObjectId().equals(userProfile.getObjectId())) {
-                                        following.put(followList.get(i).getString("toId"), followList.get(i));
                                     }
+                                    FillInLayout(view);
+                                    SideSwipe(view);
+                                } else {
+                                    e.printStackTrace();
+                                    showAlertDialog();
                                 }
-                                FillInLayout(view);
-                                SideSwipe(view);
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        e.printStackTrace();
+                        showAlertDialog();
+                    }
                 }
             });
         }
@@ -145,12 +155,12 @@ public class ProfileFragment extends Fragment {
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error");
+                if (e == null) {
+                    upcomingTripAdapter.addAll(trips);
+                } else {
                     e.printStackTrace();
-                    return;
+                    showAlertDialog();
                 }
-                upcomingTripAdapter.addAll(trips);
             }
         });
     }
@@ -167,42 +177,14 @@ public class ProfileFragment extends Fragment {
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error");
+                if (e == null) {
+                    previousTripAdapter.addAll(trips);
+                } else {
                     e.printStackTrace();
-                    return;
-                }
-                previousTripAdapter.addAll(trips);
-
-                if(user.getUsername().equals(userCurrent.getUsername())){
-                    queryNewAchievements(trips, user);
+                    showAlertDialog();
                 }
             }
         });
-    }
-
-    private void queryNewAchievements(List<Trip> trips, final User user) {
-        ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
-        if (trips.size() > 0) {
-            if (trips.size() > 5) {
-                achievementQuery.whereEqualTo("name", "Adventurer");
-            }
-            if (trips.size() >= 1) {
-                achievementQuery.whereEqualTo("name", "Backpacker");
-            }
-
-            achievementQuery.findInBackground(new FindCallback<Achievement>() {
-                @Override
-                public void done(final List<Achievement> objects, ParseException e) {
-                    if (e == null) {
-                        for (int i = 0; i < objects.size(); i++) {
-                            user.getAchievementRelation().add(objects.get(i));
-                        }
-                        user.saveInBackground();
-                    }
-                }
-            });
-        }
     }
 
     private void queryCurrentPosts(ParseUser user) {
@@ -218,12 +200,12 @@ public class ProfileFragment extends Fragment {
         tripQuery.findInBackground(new FindCallback<Trip>() {
             @Override
             public void done(List<Trip> trips, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error");
+                if (e == null) {
+                    currentTripAdapter.addAll(trips);
+                } else {
                     e.printStackTrace();
-                    return;
+                    showAlertDialog();
                 }
-                currentTripAdapter.addAll(trips);
             }
         });
     }
@@ -239,29 +221,14 @@ public class ProfileFragment extends Fragment {
             public void done(List<ParseObject> savedList, ParseException e) {
                 if (e == null) {
                     for (int i = 0; i < savedList.size(); i++) {
-                        if (((User) savedList.get(i).get("user")).getObjectId().equals(user.getObjectId())) {
+                        if (((User) Objects.requireNonNull(savedList.get(i).get("user"))).getObjectId().equals(user.getObjectId())) {
                             mTrips.add((Trip) savedList.get(i).get("trip"));
                         }
                     }
                     savedTripAdapter.addAll(mTrips);
                 } else {
                     e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void queryAchievements() {
-        ParseQuery<Achievement> achievementParseQuery = userProfile.getAchievementRelation().getQuery();
-        achievementParseQuery.findInBackground(new FindCallback<Achievement>() {
-            @Override
-            public void done(List<Achievement> achievements, ParseException e) {
-                if (e == null) {
-                    Log.d(TAG, "The query was successful");
-                    achievementAdapter.addAllAchievements(achievements);
-                } else {
-                    Log.e(TAG, "Error");
-                    e.printStackTrace();
+                    showAlertDialog();
                 }
             }
         });
@@ -275,21 +242,21 @@ public class ProfileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void FillInLayout(View view) {
-        RecyclerView rvUpcoming = view.findViewById(R.id.rvUpcoming);
-        RecyclerView rvPrevious = view.findViewById(R.id.rvPrevious);
-        RecyclerView rvCurrent = view.findViewById(R.id.rvCurrent);
-        RecyclerView rvSaved = view.findViewById(R.id.rvSaved);
-        //RecyclerView rvAchievements = view.findViewById(R.id.rvAchievements);
+        rvUpcoming = view.findViewById(R.id.rvUpcoming);
+        rvPrevious = view.findViewById(R.id.rvPrevious);
+        rvCurrent = view.findViewById(R.id.rvCurrent);
+        rvSaved = view.findViewById(R.id.rvSaved);
+        btnFollowingStatus = view.findViewById(R.id.btnFollowingStatus);
+        tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
+        tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
+        tvFollowers = view.findViewById(R.id.tvFollowers);
+        tvFollowing = view.findViewById(R.id.tvFollowing);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
         TextView tvBio = view.findViewById(R.id.tvBio);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
-        final Button btnFollowingStatus = view.findViewById(R.id.btnFollowingStatus);
-        final TextView tvFollowersCount = view.findViewById(R.id.tvFollowersCount);
-        final TextView tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
-        TextView tvFollowers = view.findViewById(R.id.tvFollowers);
-        TextView tvFollowing = view.findViewById(R.id.tvFollowing);
 
+        // Only shows the bottom navigation bar if the current user is on his own profile page
         if (userProfile.getObjectId().equals(userCurrent.getObjectId())) {
             MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
             btnFollowingStatus.setVisibility(View.GONE);
@@ -314,67 +281,52 @@ public class ProfileFragment extends Fragment {
                     .into(ivProfileImage);
         }
 
-        updateFollowCnt(tvFollowersCount, tvFollowingCount);
+        updateFollowCnt();
+        populateTripRecyclerViews();
+        addOnClickListeners();
+    }
 
-        tvFollowers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fragmentManager = MainActivity.fragmentManager;
-                ListDialogFragment listDialogFragment = new ListDialogFragment().newInstance(getFromList(), "Followers");
-                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
-            }
-        });
-        tvFollowing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                FragmentManager fragmentManager = MainActivity.fragmentManager;
-//                ListDialogFragment listDialogFragment = new ListDialogFragment().newInstance(getToList(), "Following");
-//                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
-            }
-        });
-
-
-        //create the upcomingTripAdapter
+    private void populateTripRecyclerViews() {
+        // Create the upcomingTripAdapter
         ArrayList<Trip> upcomingTrips = new ArrayList<>();
         ArrayList<Trip> previousTrips = new ArrayList<>();
         ArrayList<Trip> currentTrips = new ArrayList<>();
         ArrayList<Trip> savedTrips = new ArrayList<>();
-        //ArrayList<Achievement> achievements = new ArrayList<>();
-        //create the data source
+
+        // Create the data source
         upcomingTripAdapter = new ProfileTripsAdapter(upcomingTrips);
         previousTripAdapter = new ProfileTripsAdapter(previousTrips);
         currentTripAdapter = new ProfileTripsAdapter(currentTrips);
         savedTripAdapter = new ProfileTripsAdapter(savedTrips);
-        //achievementAdapter = new AchievementAdapter(achievements);
-        // initialize the linear layout manager
+
+        // Initialize the linear layout manager
         LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
         LinearLayoutManager savedLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        //LinearLayoutManager achievementLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        // set the layout manager on the recycler view
+
+        // Set the layout manager on the recycler view
         rvUpcoming.setLayoutManager(upcomingLayoutManager);
         rvPrevious.setLayoutManager(previousLayoutManager);
         rvCurrent.setLayoutManager(currentLayoutManager);
         rvSaved.setLayoutManager(savedLayoutManager);
-        //rvAchievements.setLayoutManager(achievementLayoutManager);
-        // set the adapters
+
+        // Set the adapters
         rvUpcoming.setAdapter(upcomingTripAdapter);
         rvPrevious.setAdapter(previousTripAdapter);
         rvCurrent.setAdapter(currentTripAdapter);
         rvSaved.setAdapter(savedTripAdapter);
-        //rvAchievements.setAdapter(achievementAdapter);
-        // query posts for each view
+
+        // Query posts for each view
         queryUpcomingPosts(userProfile);
         queryPreviousPosts(userProfile);
         queryCurrentPosts(userProfile);
-//        if(!userProfile.getUsername().equals(userCurrent.getUsername())) {
-//            queryAchievements();
-//        }
         querySaved(userProfile);
+    }
 
+    private void addOnClickListeners() {
 
-        // Set onClick listener for follow/currentFollowing button
+        // User can follow or un-follow another user
         btnFollowingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -384,7 +336,6 @@ public class ProfileFragment extends Fragment {
 
                     btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
-                    updateFollowCnt(tvFollowersCount, tvFollowingCount);
                 } else {
                     final ParseObject follow = new ParseObject("Follow");
                     follow.put("from", userCurrent);
@@ -398,19 +349,39 @@ public class ProfileFragment extends Fragment {
 
                                 btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
                                 btnFollowingStatus.setText(getString(R.string.following));
-                                updateFollowCnt(tvFollowersCount, tvFollowingCount);
                             } else {
                                 e.printStackTrace();
                             }
                         }
                     });
                 }
+                updateFollowCnt();
+            }
+        });
+
+        // User can see a list of the profile user's followers
+        tvFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                ListDialogFragment listDialogFragment = ListDialogFragment.newInstance(getFromList(), "Followers");
+                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
+            }
+        });
+
+        // User can see a list of who the profile user is following
+        tvFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = MainActivity.fragmentManager;
+                ListDialogFragment listDialogFragment = ListDialogFragment.newInstance(getToList(), "Following");
+                listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
         });
     }
 
     @SuppressLint("SetTextI18n")
-    private void updateFollowCnt(final TextView tvFollowersCount, final TextView tvFollowingCount) {
+    private void updateFollowCnt() {
         tvFollowersCount.setText(Integer.toString(getFromList().size()));
         tvFollowingCount.setText(Integer.toString(getToList().size()));
     }
@@ -439,7 +410,15 @@ public class ProfileFragment extends Fragment {
         return new ArrayList<>(followers.keySet());
     }
 
-    private ArrayList<String> getToList() {
+    private ArrayList<User> getToList() {
         return new ArrayList<>(following.keySet());
+    }
+
+    private void showAlertDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Error loading profile.")
+                .setPositiveButton("OK", null)
+                .create();
+        dialog.show();
     }
 }
