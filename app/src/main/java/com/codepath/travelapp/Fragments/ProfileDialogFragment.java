@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,7 +24,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
@@ -102,11 +102,14 @@ public class ProfileDialogFragment extends DialogFragment {
 
                 // Check to see all fields are entered
                 if (newBio.length() == 0) {
-                    Toast.makeText(getContext(), "Please enter a bio", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please enter a bio", Toast.LENGTH_SHORT)
+                            .show();
                 }else if(newState.length() > 2) {
-                    Toast.makeText(getContext(), "Please select a State", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please select a State", Toast.LENGTH_SHORT)
+                            .show();
                 }else if(newImage == null) {
-                    Toast.makeText(getContext(), "Please select a Profile picture", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please select a Profile picture",
+                            Toast.LENGTH_SHORT).show();
                 }else{
                     applyChanges(newBio, newState, newImage);
                 }
@@ -116,8 +119,10 @@ public class ProfileDialogFragment extends DialogFragment {
     }
 
     private void onLaunchGallery() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if (photoPickerIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media
+                .EXTERNAL_CONTENT_URI);
+        if (photoPickerIntent.resolveActivity(Objects.requireNonNull(getContext())
+                .getPackageManager()) != null) {
             startActivityForResult(photoPickerIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
@@ -139,7 +144,8 @@ public class ProfileDialogFragment extends DialogFragment {
                     }
                 }
             } else {
-                Toast.makeText(getContext(), "You haven't picked Image",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "You haven't picked Image",
+                        Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -199,7 +205,8 @@ public class ProfileDialogFragment extends DialogFragment {
         }
         if (exif != null) {
             String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-            int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+            int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface
+                    .ORIENTATION_NORMAL;
             int rotationAngle = 0;
             if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
             if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
@@ -207,8 +214,10 @@ public class ProfileDialogFragment extends DialogFragment {
 
             // Rotate Bitmap
             Matrix matrix = new Matrix();
-            matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-            return Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+            matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2,
+                    (float) bm.getHeight() / 2);
+            return Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix,
+                    true);
         } else {
             return null;
         }

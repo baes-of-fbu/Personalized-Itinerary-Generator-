@@ -75,7 +75,8 @@ public class ProfileFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
@@ -117,14 +118,21 @@ public class ProfileFragment extends Fragment {
                             public void done(List<ParseObject> followList, ParseException e) {
                                 if (e == null) {
                                     for (int i = 0; i < followList.size(); i++) {
-                                        if (Objects.equals(followList.get(i).getString("toId"), userProfile.getObjectId())) {
-                                            if (((User) Objects.requireNonNull(followList.get(i).get("from"))).getObjectId().equals(userCurrent.getObjectId())) {
+                                        if (Objects.equals(followList.get(i).getString("toId"),
+                                                userProfile.getObjectId())) {
+                                            if (((User) Objects.requireNonNull(followList.get(i)
+                                                    .get("from"))).getObjectId().equals(userCurrent
+                                                    .getObjectId())) {
                                                 followers.put(userCurrent, followList.get(i));
                                             } else {
-                                                followers.put(((User) followList.get(i).get("from")), followList.get(i));
+                                                followers.put(((User) followList.get(i)
+                                                        .get("from")), followList.get(i));
                                             }
-                                        } else if (((User) Objects.requireNonNull(followList.get(i).get("from"))).getObjectId().equals(userProfile.getObjectId())) {
-                                            following.put((User) followList.get(i).get("to"), followList.get(i));
+                                        } else if (((User) Objects.requireNonNull(followList.get(i)
+                                                .get("from"))).getObjectId()
+                                                .equals(userProfile.getObjectId())) {
+                                            following.put((User) followList.get(i).get("to"),
+                                                    followList.get(i));
                                         }
                                     }
                                     FillInLayout(view);
@@ -147,7 +155,10 @@ public class ProfileFragment extends Fragment {
     private void queryNewAchievements(List<Trip> trips, final User user) {
         ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
         if (trips.size() > 0) {
-            if (trips.size() > 5) {
+            if (trips.size() > 25){
+                achievementQuery.whereEqualTo("name", "Nomad");
+            }
+            if (trips.size() > 10) {
                 achievementQuery.whereEqualTo("name", "Adventurer");
             }
             if (trips.size() >= 1) {
@@ -247,7 +258,8 @@ public class ProfileFragment extends Fragment {
             public void done(List<ParseObject> savedList, ParseException e) {
                 if (e == null) {
                     for (int i = 0; i < savedList.size(); i++) {
-                        if (((User) Objects.requireNonNull(savedList.get(i).get("user"))).getObjectId().equals(user.getObjectId())) {
+                        if (((User) Objects.requireNonNull(savedList.get(i).get("user")))
+                                .getObjectId().equals(user.getObjectId())) {
                             mTrips.add((Trip) savedList.get(i).get("trip"));
                         }
                     }
@@ -328,10 +340,14 @@ public class ProfileFragment extends Fragment {
         savedTripAdapter = new ProfileTripsAdapter(savedTrips);
 
         // Initialize the linear layout manager
-        LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
-        LinearLayoutManager savedLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        LinearLayoutManager upcomingLayoutManager = new LinearLayoutManager(getContext(),
+                HORIZONTAL, false);
+        LinearLayoutManager previousLayoutManager = new LinearLayoutManager(getContext(),
+                HORIZONTAL, false);
+        LinearLayoutManager currentLayoutManager = new LinearLayoutManager(getContext(),
+                HORIZONTAL, false);
+        LinearLayoutManager savedLayoutManager = new LinearLayoutManager(getContext(),
+                HORIZONTAL, false);
 
         // Set the layout manager on the recycler view
         rvUpcoming.setLayoutManager(upcomingLayoutManager);
@@ -362,7 +378,8 @@ public class ProfileFragment extends Fragment {
                     followers.get(userCurrent).deleteInBackground();
                     followers.remove(userCurrent);
 
-                    btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
+                    btnFollowingStatus.setBackgroundColor(getResources()
+                            .getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
                 } else {
                     final ParseObject follow = new ParseObject("Follow");
@@ -392,7 +409,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
-                ListDialogFragment listDialogFragment = ListDialogFragment.newInstance(getFromList(), "Followers");
+                ListDialogFragment listDialogFragment = ListDialogFragment.newInstance(getFromList(),
+                        "Followers");
                 listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
         });
@@ -402,7 +420,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
-                ListDialogFragment listDialogFragment = ListDialogFragment.newInstance(getToList(), "Following");
+                ListDialogFragment listDialogFragment = ListDialogFragment.newInstance(getToList(),
+                        "Following");
                 listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
         });

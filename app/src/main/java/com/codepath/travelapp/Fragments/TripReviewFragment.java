@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,7 +56,8 @@ import me.relex.circleindicator.CircleIndicator2;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 
-public class TripReviewFragment extends Fragment implements EditTripDialogFragment.EditTripDialogListener {
+public class TripReviewFragment extends Fragment implements
+        EditTripDialogFragment.EditTripDialogListener {
 
     private String tripName;
     private City city;
@@ -74,7 +76,8 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_trip_review, container, false);
     }
 
@@ -113,8 +116,7 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
 
         bundle = getArguments();
         if (bundle == null) {
-            Log.d("Review Fragment", "No bundle");
-            // TODO add Alert statement instead of Log
+            showAlertDialog();
         }
 
         tripName = bundle.getString("trip_name");
@@ -143,7 +145,8 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
 
         // Populate list of Tags
         TagSelectedAdapter adapter = new TagSelectedAdapter(tags);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL,
+                false);
         rvTags.setLayoutManager(linearLayoutManager);
         rvTags.setAdapter(adapter);
 
@@ -166,15 +169,15 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
                     }
                     progressDialog.hide();
                 } else {
-                    Log.d("TripReviewFragment", "Unable to parse for a photo");
-                    // TODO add Alert statement instead of Log
+                    showAlertDialog();
                 }
             }
         });
 
         // Populate DayPlans
         dayPlanAdapter = new DayPlanAdapter(dayPlans);
-        rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        rvSchedule.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,
+                false));
         rvSchedule.setAdapter(dayPlanAdapter);
 
         // Circle Indicator
@@ -232,7 +235,8 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
             public void onClick(View view) {
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
                 EditTripDialogFragment editTripDialogFragment = EditTripDialogFragment.newInstance();
-                editTripDialogFragment.setTargetFragment(TripReviewFragment.this, 300);
+                editTripDialogFragment.setTargetFragment(TripReviewFragment.this,
+                        300);
                 editTripDialogFragment.show(fragmentManager, "fragment_edit_trip_options");
             }
         });
@@ -284,5 +288,12 @@ public class TripReviewFragment extends Fragment implements EditTripDialogFragme
             return null;
         }
         return list.get(rand.nextInt(list.size()));
+    }
+    private void showAlertDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Error loading trip review.")
+                .setPositiveButton("OK", null)
+                .create();
+        dialog.show();
     }
 }

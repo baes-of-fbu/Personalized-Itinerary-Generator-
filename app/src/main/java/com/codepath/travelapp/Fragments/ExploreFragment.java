@@ -21,7 +21,8 @@ public class ExploreFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_explore, container, false);
     }

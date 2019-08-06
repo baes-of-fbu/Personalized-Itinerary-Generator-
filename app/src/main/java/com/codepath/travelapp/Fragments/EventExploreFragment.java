@@ -1,5 +1,6 @@
 package com.codepath.travelapp.Fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,8 @@ public class EventExploreFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_event_explore, container, false);
     }
 
@@ -36,6 +38,7 @@ public class EventExploreFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView rvEvents = view.findViewById(R.id.rvEvents);
         SearchView svEvents = view.findViewById(R.id.svEvents);
+
         ArrayList<Event> mEvents = new ArrayList<>();
         eventsAdapter = new EventAdapter(mEvents);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -71,8 +74,16 @@ public class EventExploreFragment extends Fragment {
                     eventsAdapter.addAll(events);
                 } else{
                     e.printStackTrace();
+                    showAlertDialog();
                 }
             }
         });
+    }
+    private void showAlertDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Error event explore page.")
+                .setPositiveButton("OK", null)
+                .create();
+        dialog.show();
     }
 }

@@ -17,6 +17,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.codepath.travelapp.R;
 
+import java.util.Objects;
+
 public class EditTripDialogFragment extends DialogFragment {
 
     private TextView tvEdit;
@@ -25,33 +27,31 @@ public class EditTripDialogFragment extends DialogFragment {
     private String actionToReturn;
 
     public EditTripDialogFragment() {
-        // Empty constructor is required for DialogFragment
     }
 
-    // TODO REMOVE PARAMETERS
     public static EditTripDialogFragment newInstance() {
-        EditTripDialogFragment fragment = new EditTripDialogFragment();
-        return fragment;
+        return new EditTripDialogFragment();
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_editdialog_options, container, false);
     }
 
     public void onResume() {
         // Store access variables for window and blank point
-        Window window = getDialog().getWindow();
+        Window window = Objects.requireNonNull(getDialog()).getWindow();
         Point size = new Point();
-        // Store dimensions of the screen in `size`
-        Display display = window.getWindowManager().getDefaultDisplay();
-        display.getSize(size);
-        // Set the width of the dialog proportional to 75% of the screen width
-        window.setLayout((int) (size.x * 0.6), WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        // Call super onResume after sizing
-        super.onResume();
+        if (window != null) {
+            Display display = window.getWindowManager().getDefaultDisplay();
+            display.getSize(size);
+            // Set the width of the dialog proportional to 75% of the screen width
+            window.setLayout((int) (size.x * 0.6), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            super.onResume();
+        }
     }
 
 
@@ -63,6 +63,7 @@ public class EditTripDialogFragment extends DialogFragment {
         tvCancel = view.findViewById(R.id.tvCancel);
         tvDelete = view.findViewById(R.id.tvDelete);
         actionToReturn = "";
+
         addOnClickListeners();
     }
 
@@ -72,7 +73,7 @@ public class EditTripDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 actionToReturn = getString(R.string.edit);
                 sendBackResult();
-              }
+            }
         });
 
         tvCancel.setOnClickListener(new View.OnClickListener() {
@@ -91,16 +92,18 @@ public class EditTripDialogFragment extends DialogFragment {
         });
     }
 
-    // User to return info to the parent
+    // Used to return info to the parent
     public interface EditTripDialogListener {
-        void onFinishEditDialog(String inputText); // TODO May want to change for a bundle
+        void onFinishEditDialog(String inputText);
     }
 
     // Call this method to send the data back to the parent fragment
     private void sendBackResult() {
         // 'getTargetFragment' will be set when the dialog is displayed
         EditTripDialogListener listener = (EditTripDialogListener) getTargetFragment();
-        listener.onFinishEditDialog(actionToReturn);
-        dismiss();
+        if (listener != null) {
+            listener.onFinishEditDialog(actionToReturn);
+            dismiss();
+        }
     }
 }

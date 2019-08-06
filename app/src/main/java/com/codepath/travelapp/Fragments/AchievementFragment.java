@@ -1,6 +1,5 @@
 package com.codepath.travelapp.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,19 +24,18 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.parse.ParseUser.getCurrentUser;
 
 public class AchievementFragment extends Fragment {
     private static final int NUM_COLUMNS = 3;
     private AchievementAdapter achievementAdapter;
-    private ArrayList<Achievement> allAchievements;
-    private ArrayList<Achievement> earnedAchievements;
-
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_achievement, container,false);
     }
@@ -46,24 +44,28 @@ public class AchievementFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final RecyclerView rvAchievements = view.findViewById(R.id.rvAchievements);
-        allAchievements = new ArrayList<>();
-        earnedAchievements = new ArrayList<>();
+        ArrayList<Achievement> allAchievements = new ArrayList<>();
+        ArrayList<Achievement> earnedAchievements = new ArrayList<>();
+
         achievementAdapter = new AchievementAdapter(allAchievements, earnedAchievements);
         rvAchievements.setAdapter(achievementAdapter);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),
+                GridLayoutManager.VERTICAL);
         gridLayoutManager.setSpanCount(NUM_COLUMNS);
         rvAchievements.setLayoutManager(gridLayoutManager);
+
         achievementAdapter.clearAllAchievements();
-        final ParseQuery<Achievement> achievementquery = new ParseQuery<>(Achievement.class);
-        achievementquery.findInBackground(new FindCallback<Achievement>() {
+        final ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
+        achievementQuery.findInBackground(new FindCallback<Achievement>() {
             @Override
             public void done(List<Achievement> achievements, ParseException e) {
                 if (e == null) {
-                    Log.d("DEBUG", "Successful query for allAchievements");
                     achievementAdapter.addAllAchievements(achievements);
                     achievementAdapter.clearEarnedAchievements();
                     User user = (User) getCurrentUser();
-                    ParseQuery<Achievement> achievementParseQuery = user.getAchievementRelation().getQuery();
+
+                    ParseQuery<Achievement> achievementParseQuery = user.getAchievementRelation()
+                            .getQuery();
                     achievementParseQuery.findInBackground(new FindCallback<Achievement>() {
                         @Override
                         public void done(List<Achievement> objects, ParseException e) {
@@ -75,7 +77,6 @@ public class AchievementFragment extends Fragment {
                             }
                         }
                     });
-
                 } else {
                     e.printStackTrace();
                     showAlertDialog();
@@ -85,7 +86,7 @@ public class AchievementFragment extends Fragment {
 
     }
     private void showAlertDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                 .setTitle("Error loading achievements.")
                 .setPositiveButton("OK", null)
                 .create();

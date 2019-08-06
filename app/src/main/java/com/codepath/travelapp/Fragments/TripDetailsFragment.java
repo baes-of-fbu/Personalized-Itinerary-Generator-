@@ -51,7 +51,8 @@ public class TripDetailsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         MainActivity.bottomNavigationView.setVisibility(View.GONE);
         return inflater.inflate(R.layout.fragment_trip_details, container, false);
     }
@@ -81,7 +82,8 @@ public class TripDetailsFragment extends Fragment {
 
         mDayPlan = new ArrayList<>();
         adapter = new DayPlanAdapter(mDayPlan);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL,
+                false);
         rvSchedule.setLayoutManager(linearLayoutManager);
         rvSchedule.setAdapter(adapter);
 
@@ -103,7 +105,8 @@ public class TripDetailsFragment extends Fragment {
 
                 String travelWindow;
                 if (trip.getNumDays().intValue() != 1) {
-                    travelWindow = trip.getStartDate().toString().substring(0, 10) + " - " + trip.getEndDate().toString().substring(0, 10);
+                    travelWindow = trip.getStartDate().toString().substring(0, 10) + " - " +
+                            trip.getEndDate().toString().substring(0, 10);
                 } else {
                     travelWindow = trip.getStartDate().toString().substring(0, 10);
                 }
@@ -118,7 +121,9 @@ public class TripDetailsFragment extends Fragment {
                 tvBudget.setText(budgetString);
 
                 try {
-                    tvCityState.setText(String.format("%s, %s", trip.getCity().fetchIfNeeded().getString("name"), trip.getCity().getState()));
+                    tvCityState.setText(String.format("%s, %s",
+                            trip.getCity().fetchIfNeeded().getString("name"), trip.getCity()
+                                    .getState()));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -197,17 +202,20 @@ public class TripDetailsFragment extends Fragment {
             }
         });
 
-        // Allows User to share a text message containing the City, start date, and end date of their trip
+        // Allows User to share a text message containing the City, start date,
+        // and end date of their trip
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String text = null;
                 try {
-                    text = "Check out this awesome trip! I'm going to " + trip.getCity().fetchIfNeeded().getString("name");
+                    text = "Check out this awesome trip! I'm going to " +
+                            trip.getCity().fetchIfNeeded().getString("name");
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                text += " from " + trip.getStartDate().toString() + " to " + trip.getEndDate().toString() + "!";
+                text += " from " + trip.getStartDate().toString() + " to " +
+                        trip.getEndDate().toString() + "!";
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, text);
                 shareIntent.setType("text/plain");
@@ -216,14 +224,16 @@ public class TripDetailsFragment extends Fragment {
         });
     }
 
-    private void addCircleIndicator(@NonNull View view, RecyclerView rvSchedule, PagerSnapHelper pagerSnapHelper) {
+    private void addCircleIndicator(@NonNull View view, RecyclerView rvSchedule,
+                                    PagerSnapHelper pagerSnapHelper) {
         CircleIndicator2 indicator = view.findViewById(R.id.indicator);
         indicator.attachToRecyclerView(rvSchedule, pagerSnapHelper);
         adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
     }
 
     private void openMaps(Trip trip) {
-        String location = geoPointToString((Objects.requireNonNull(trip.getCity().get("location"))).toString());
+        String location = geoPointToString((Objects.requireNonNull(trip.getCity().get("location")))
+                .toString());
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         String data = String.format("%s?q=%s", location, trip.getCity().getName());

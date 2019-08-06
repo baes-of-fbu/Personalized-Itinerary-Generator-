@@ -38,7 +38,8 @@ public class TimelineFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
@@ -72,7 +73,8 @@ public class TimelineFragment extends Fragment {
 
     private void addScrollListeners(LinearLayoutManager linearLayoutManager) {
         // Adds endless scroll listener
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener =
+                new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 queryFollowingPosts(page); // Loads the next set of posts
