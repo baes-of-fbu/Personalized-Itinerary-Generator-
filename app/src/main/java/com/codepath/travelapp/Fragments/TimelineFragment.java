@@ -48,8 +48,8 @@ public class TimelineFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading your timeline...121345");
-//        progressDialog.setTitle("Please wait");
-//        progressDialog.setCancelable(false);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         // Creates a timeline timelineAdapter with an empty array list of trips
