@@ -1,13 +1,10 @@
 package com.codepath.travelapp.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
@@ -38,15 +36,14 @@ import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileDialogFragment extends DialogFragment {
 
     private User user;
-    private Button imageBtn;
     private ImageView ivProfileImage;
     private EditText etBio;
     private Spinner spHomeState;
@@ -54,40 +51,39 @@ public class ProfileDialogFragment extends DialogFragment {
     private String newState;
     private ParseFile newImage;
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-    private Bitmap selectedImage;
-    private Bitmap rotatedImage;
 
     public ProfileDialogFragment() { }
 
     static ProfileDialogFragment newInstance() {
-        ProfileDialogFragment frag = new ProfileDialogFragment();
-        return frag;
+       return new ProfileDialogFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_edit_profile, container);
     }
 
     public void onResume() {
         // Store access variables for window and blank point
-        Window window = getDialog().getWindow();
+        Window window = Objects.requireNonNull(getDialog()).getWindow();
         Point size = new Point();
         // Store dimensions of the screen in `size`
-        Display display = window.getWindowManager().getDefaultDisplay();
-        display.getSize(size);
-        // Set the width of the dialog proportional to 75% of the screen width
-        window.setLayout((size.x), WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        // Call super onResume after sizing
-        super.onResume();
+        if (window != null) {
+            Display display = window.getWindowManager().getDefaultDisplay();
+            display.getSize(size);
+            // Set the width of the dialog proportional to 75% of the screen width
+            window.setLayout((size.x), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            // Call super onResume after sizing
+            super.onResume();
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        imageBtn = view.findViewById(R.id.imageBtn);
+        Button imageBtn = view.findViewById(R.id.imageBtn);
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         etBio = view.findViewById(R.id.etBio);
         spHomeState = view.findViewById(R.id.spHomeState);
@@ -96,7 +92,7 @@ public class ProfileDialogFragment extends DialogFragment {
         imageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onLaunchGallery(view);
+                onLaunchGallery();
             }
         });
 
@@ -106,7 +102,6 @@ public class ProfileDialogFragment extends DialogFragment {
                 newBio = etBio.getText().toString();
                 newState = spHomeState.getSelectedItem().toString();
 
-
                 // Check to see all fields are entered
                 if (newBio.length() == 0) {
                     Toast.makeText(getContext(), "Please enter a bio", Toast.LENGTH_SHORT).show();
@@ -115,18 +110,16 @@ public class ProfileDialogFragment extends DialogFragment {
                 }else if(newImage == null) {
                     Toast.makeText(getContext(), "Please select a Profile picture", Toast.LENGTH_SHORT).show();
                 }else{
-                    ApplyChanges(newBio, newState, newImage);
+                    applyChanges(newBio, newState, newImage);
                 }
-
-
             }
         });
-        SetViews();
+        setViews();
     }
 
-    private void onLaunchGallery(View view) {
+    private void onLaunchGallery() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if (photoPickerIntent.resolveActivity(getContext().getPackageManager()) != null) {
+        if (photoPickerIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
             startActivityForResult(photoPickerIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
@@ -136,53 +129,22 @@ public class ProfileDialogFragment extends DialogFragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 final Uri imageUri = data.getData();
-                File photoFile = new File(getRealPathFromURI(getContext(), imageUri));
-                try {
-                    selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
-                    rotatedImage = rotateBitmapOrientation(imageUri.getPath());
+                if (imageUri != null) {
+                    Bitmap rotatedImage = rotateBitmapOrientation(imageUri.getPath());
                     Glide.with(this)
                             .load(rotatedImage)
                             .apply(RequestOptions.circleCropTransform())
                             .into(ivProfileImage);
                     ivProfileImage.setVisibility(View.VISIBLE);
-                    newImage = conversionBitmapParseFile(rotatedImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    if (rotatedImage != null) {
+                        newImage = conversionBitmapParseFile(rotatedImage);
+                    }
                 }
             } else {
                 Toast.makeText(getContext(), "You haven't picked Image",Toast.LENGTH_LONG).show();
             }
         }
     }
-
-
-    private String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    private static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-
-    private static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
-        Matrix matrix = new Matrix();
-        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-
 
     private static ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
@@ -192,12 +154,12 @@ public class ProfileDialogFragment extends DialogFragment {
     }
 
 
-    private void SetViews () {
+    private void setViews() {
         user = (User) User.getCurrentUser();
         etBio.setText(user.getBio());
         if (user.getProfileImage() != null) {
             ParseFile image = user.getProfileImage();
-            Glide.with(getContext())
+            Glide.with(Objects.requireNonNull(getContext()))
                     .load(image.getUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
@@ -205,7 +167,7 @@ public class ProfileDialogFragment extends DialogFragment {
         }
     }
 
-    private void ApplyChanges(String newBio, String newState, ParseFile newImage) {
+    private void applyChanges(String newBio, String newState, ParseFile newImage) {
         user.setBio(newBio);
         user.setHomeState(newState);
         user.setProfileImage(newImage);
@@ -222,7 +184,8 @@ public class ProfileDialogFragment extends DialogFragment {
             }
         });
     }
-    public Bitmap rotateBitmapOrientation(String photoFilePath) {
+
+    private Bitmap rotateBitmapOrientation(String photoFilePath) {
         // Create and configure BitmapFactory
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
@@ -236,17 +199,20 @@ public class ProfileDialogFragment extends DialogFragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
-        int rotationAngle = 0;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
-        // Rotate Bitmap
-        Matrix matrix = new Matrix();
-        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
-        // Return result
-        return rotatedBitmap;
+        if (exif != null) {
+            String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+            int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+            int rotationAngle = 0;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+
+            // Rotate Bitmap
+            Matrix matrix = new Matrix();
+            matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+            return Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        } else {
+            return null;
+        }
     }
 }
