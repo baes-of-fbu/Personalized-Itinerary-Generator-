@@ -396,6 +396,7 @@ public class ProfileFragment extends Fragment {
                     final ParseObject follow = new ParseObject("Follow");
                     follow.put("from", userCurrent);
                     follow.put("toId", userProfile.getObjectId());
+                    follow.put("to", userProfile);
                     follow.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {

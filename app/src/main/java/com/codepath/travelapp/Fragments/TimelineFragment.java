@@ -83,19 +83,19 @@ public class TimelineFragment extends Fragment {
                 android.R.color.holo_red_light);
     }
 
-    private void queryFollowingPosts() { //TODO test this
+    private void queryFollowingPosts() {
         adapter.clear();
         ParseQuery<ParseObject> followingQuery = new ParseQuery<>("Follow");
         followingQuery.whereEqualTo("from", ParseUser.getCurrentUser());
-        followingQuery.include("toId");
+        followingQuery.include("to");
         followingQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
                     List<ParseQuery<Trip>> queries = new ArrayList<>();
                     for (int i = 0; i < objects.size(); i++) {
-                        ParseQuery<Trip> query = new ParseQuery<>(Trip.class);
-                        query.whereEqualTo("owner", objects.get(i).getString("toId"));
+                        ParseQuery<Trip> query = new ParseQuery<Trip>(Trip.class);
+                        query.whereEqualTo("owner", objects.get(i).getParseUser("to"));
                         queries.add(query);
                     }
 
@@ -113,6 +113,7 @@ public class TimelineFragment extends Fragment {
                             swipeContainer.setRefreshing(false);
                             if (e == null) {
                                 adapter.addAll(trips);
+                                loadMore = true;
                             } else {
                                 Log.e(TAG,"Error");
                                 e.printStackTrace();
@@ -124,55 +125,52 @@ public class TimelineFragment extends Fragment {
         });
     }
 
-    // Query all trips and add them to the adapter to populate the Timeline TODO remove this
-    private void queryPosts() {
-        adapter.clear();
-        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-        tripQuery.setLimit(page_size);
-        tripQuery.include(Trip.KEY_OWNER);
-        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
-        tripQuery.findInBackground(new FindCallback<Trip>() {
-            @Override
-            public void done(List<Trip> trips, ParseException e) {
-                swipeContainer.setRefreshing(false);
-                if (e == null) {
-                    adapter.addAll(trips);
-                } else {
-                    Log.e(TAG,"Error");
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     // Append the next page of data into the adapter
-    private void loadNextDataFromApi(int offset) {
-        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-        tripQuery.include(Trip.KEY_OWNER);
-
-        // True is there are more posts to load
-        if(loadMore) {
-            tripQuery.setSkip(offset*page_size);
-        }
-
-        tripQuery.setLimit(page_size);
-        tripQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
-        tripQuery.findInBackground(new FindCallback<Trip>() {
+    private void loadNextDataFromApi(final int offset) {
+        ParseQuery<ParseObject> followingQuery = new ParseQuery<>("Follow");
+        followingQuery.whereEqualTo("from", ParseUser.getCurrentUser());
+        followingQuery.include("to");
+        followingQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<Trip> objects, ParseException e) {
+            public void done(final List<ParseObject> objects, ParseException e) {
                 if (e == null) {
-                    Log.d("DEBUG", "Adding more posts to timeline");
-                    skip = skip + objects.size();
-                    if(objects.size() == 0) {
-                        loadMore = false;
-                    } else {
-                        loadMore = true;
-                        adapter.clear();
-                        adapter.addAll(objects);
+                    List<ParseQuery<Trip>> queries = new ArrayList<>();
+                    for (int i = 0; i < objects.size(); i++) {
+                        ParseQuery<Trip> query = new ParseQuery<Trip>(Trip.class);
+                        query.whereEqualTo("owner", objects.get(i).getParseUser("to"));
+                        queries.add(query);
                     }
-                } else {
-                    e.printStackTrace();
-                    Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+
+                    ParseQuery<Trip> queryCurrent = new ParseQuery<Trip>(Trip.class);
+                    queryCurrent.whereEqualTo("owner", ParseUser.getCurrentUser());
+                    queries.add(queryCurrent);
+
+                    ParseQuery<Trip> compoundQuery = ParseQuery.or(queries);
+                    // True is there are more posts to load
+                    if (loadMore) {
+                        compoundQuery.setSkip(offset * page_size);
+                    }
+                    compoundQuery.setLimit(page_size);
+                    compoundQuery.include(Trip.KEY_OWNER);
+                    compoundQuery.addDescendingOrder(Trip.KEY_CREATED_AT);
+                    compoundQuery.findInBackground(new FindCallback<Trip>() {
+                        @Override
+                        public void done(List<Trip> trips, ParseException e) {
+                            swipeContainer.setRefreshing(false);
+                            if (e == null) {
+                                skip = skip + trips.size();
+                                if (objects.size() == 0) {
+                                    loadMore = false;
+                                } else {
+                                    loadMore = true;
+                                    adapter.addAll(trips);
+                                }
+                            } else {
+                                Log.e(TAG, "Error");
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
             }
         });
