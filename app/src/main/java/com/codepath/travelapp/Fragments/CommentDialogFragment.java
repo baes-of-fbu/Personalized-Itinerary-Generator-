@@ -58,7 +58,8 @@ public class CommentDialogFragment extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         if (bundle != null) {
             trip = bundle.getParcelable("trip");
@@ -138,7 +139,8 @@ public class CommentDialogFragment extends DialogFragment {
                     etNewComment.setText("");
                     populateComments();
                 } else {
-                    Toast.makeText(getContext(), "Please input a comment", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please input a comment", Toast.LENGTH_SHORT)
+                            .show();
                 }
             }
         });
@@ -150,7 +152,8 @@ public class CommentDialogFragment extends DialogFragment {
         progressDialog.setTitle("Please wait");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        trip.getComments().getQuery().orderByAscending("createdAt").findInBackground(new FindCallback<Comment>() {
+        trip.getComments().getQuery().orderByAscending("createdAt")
+                .findInBackground(new FindCallback<Comment>() {
             @Override
             public void done(List<Comment> objects, ParseException e) {
                 if (e == null) {

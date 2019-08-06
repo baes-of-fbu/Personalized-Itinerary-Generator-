@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -77,7 +77,8 @@ public class ComposeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_compose,container, false);
     }
@@ -106,19 +107,15 @@ public class ComposeFragment extends Fragment {
             @Override
             public void done(List<Tag> tagList, ParseException e) {
                 if (e == null) {
-                    Log.d("DEBUG", "Successful query for tags");
                     allTags = tagList;
-
-                    // Create TagGridAdapter, passing in the sample user data
                     adapter = new TagGridAdapter(allTags);
-                    // Attach the TagGridAdapter to the recyclerView to populate items
                     rvTags.setAdapter(adapter);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GridLayoutManager.VERTICAL);
                     gridLayoutManager.setSpanCount(NUM_COLUMNS);
                     rvTags.setLayoutManager(gridLayoutManager);
                 } else {
                     e.printStackTrace();
-                    Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+                    showAlertDialog();
                 }
             }
         });
@@ -126,6 +123,7 @@ public class ComposeFragment extends Fragment {
 
     // Adds onClickListeners for etStartDate, etEndDate, and btnGenerate
     private void addOnClickListeners(){
+
         etStartDate.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -152,7 +150,7 @@ public class ComposeFragment extends Fragment {
 
                 cityName = spCity.getSelectedItem().toString();
 
-                // Checks to prevent incorrect user input
+                // Checks input fields to prevent incorrect user input
                 if (tripName.length() == 0) {
                     Toast.makeText(getContext(), "Specify trip name", Toast.LENGTH_LONG).show();
                 } else if (startDate.length() == 0) {
@@ -185,7 +183,8 @@ public class ComposeFragment extends Fragment {
 
     // Generates schedule and opens review fragment
     private void generateSchedule(final String cityName) {
-        // Sends network request for city name
+        allAvailableEvents = new ArrayList<>();
+
         ParseQuery<City> cityQuery = new ParseQuery<>(City.class);
         cityQuery.whereEqualTo(City.KEY_NAME, cityName);
         cityQuery.findInBackground(new FindCallback<City>() {
@@ -194,8 +193,8 @@ public class ComposeFragment extends Fragment {
                 if (e == null) {
                     city = cityList.get(0);
                     // Creates a new query for the events in the city
-                    allAvailableEvents = new ArrayList<>();
                     List<ParseQuery<Event>> queries = new ArrayList<>();
+
                     // Creates queries for each tag
                     for (int i = 0; i < selectedTags.size(); i++) {
                         Tag tag = selectedTags.get(i);
@@ -212,21 +211,18 @@ public class ComposeFragment extends Fragment {
                         @Override
                         public void done(List<Event> eventList, ParseException e) {
                             if (e == null) {
-                                Log.d("ComposeFragment", "All events" + eventList.toString());
                                 allAvailableEvents.addAll(eventList);
-                                // Creates Day Plans using the events
                                 createDayPlans();
                                 sendBundle();
                             } else {
-                                Log.d("Compose Fragment", e.toString());
-                                Toast.makeText(getContext(), "Query for available events unsuccessful", Toast.LENGTH_LONG).show();
+                                e.printStackTrace();
+                                showAlertDialog();
                             }
                         }
                     });
                 } else {
-                    Log.d("ComposeFragment", "Failed to query city: " + e.toString());
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Failed to query city: " + cityName, Toast.LENGTH_LONG).show();
+                    showAlertDialog();
                 }
             }
         });
@@ -236,14 +232,10 @@ public class ComposeFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void createDayPlans() {
-
-        // shuffleEvents() clears the allAvailableEvents array
-        // and returns a new shuffled list of events
         allAvailableEvents.addAll(shuffleEvents());
         dayPlans = new ArrayList<>();
         int runningBudget = budget;
 
-        // Loop through each day
         for (int day = 0; day < numDays; day++) {
             // Create a DayPlan for each day in the Trip and assign it the appropriate calendar Date
             DayPlan tempDay = new DayPlan();
@@ -283,7 +275,6 @@ public class ComposeFragment extends Fragment {
 
     private Event getEvent(String timeOfDay, int runningBudget) {
         int numEvents = allAvailableEvents.size();
-        // Loops through each event
         for (int i = 0; i < numEvents; i++) {
             Event event = allAvailableEvents.get(i);
             if (isEventAvailable(event, timeOfDay) && isEventWithinBudget(event, runningBudget)) {
@@ -299,16 +290,13 @@ public class ComposeFragment extends Fragment {
     private ArrayList<Event> shuffleEvents() {
         int numEvents = allAvailableEvents.size();
         ArrayList<Event> shuffledEvents = new ArrayList<>();
-        // Loops through every event
         for (int i = 0; i < numEvents; i++) {
-            // Selects a random event
             Event event = getRandomElement(allAvailableEvents);
             // Adds the random event to the shuffledEvents list
             shuffledEvents.add(event);
             // Removes the event from allAvailableEvents
             allAvailableEvents.remove(event);
         }
-        // Returns a new shuffled list of events
         return shuffledEvents;
     }
 
@@ -322,7 +310,7 @@ public class ComposeFragment extends Fragment {
     }
 
     // Returns if the event is available during a given time of day
-    private Boolean isEventAvailable(Event event, String timeOfDay) { //TODO can we make this more generic?
+    private Boolean isEventAvailable(Event event, String timeOfDay) {
         if (timeOfDay.contentEquals(KEY_MORNING)) {
             return event.isAvailableMorning();
         } else if (timeOfDay.contentEquals(KEY_AFTERNOON)) {
@@ -364,7 +352,9 @@ public class ComposeFragment extends Fragment {
 
     // Opens a calendar and fills textView with selected date
     private void getCurrentDate(final TextView tvDate) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog =
+                new DatePickerDialog(Objects.requireNonNull(getContext()),
+                        new DatePickerDialog.OnDateSetListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -375,7 +365,8 @@ public class ComposeFragment extends Fragment {
                 tvDate.setText(simpleDateFormat.format(calendar.getTime()));
             }
 
-        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
@@ -397,10 +388,19 @@ public class ComposeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private Boolean dateHasPassed(LocalDate startDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        String currDate = simpleDateFormat.format(android.icu.util.Calendar.getInstance().getTime());
-        LocalDate todaysDate = TripReviewFragment.getParseDate(currDate);
+        String currDate = simpleDateFormat.format(android.icu.util.Calendar.getInstance()
+                .getTime());
+        LocalDate todayDate = TripReviewFragment.getParseDate(currDate);
 
-        int numDays = (int) getDifferenceBetweenDays(todaysDate, startDate);
+        int numDays = (int) getDifferenceBetweenDays(todayDate, startDate);
         return (numDays < 1);
+    }
+
+    private void showAlertDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                .setTitle("Error with compose.")
+                .setPositiveButton("OK", null)
+                .create();
+        dialog.show();
     }
 }
