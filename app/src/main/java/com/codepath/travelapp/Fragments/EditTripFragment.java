@@ -24,7 +24,10 @@ import com.codepath.travelapp.Adapters.DayPlanEditableAdapter;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Event;
+import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 
@@ -201,22 +204,44 @@ public class EditTripFragment extends Fragment {
 
 
     private void save() {
-        Fragment fragment;
+        final Fragment fragment;
         if (bundle.getString("return_screen").contains("details")) {
             fragment = new TripDetailsFragment();
         } else {
             fragment = new TripReviewFragment();
         }
-            bundle.putString("trip_name", etEditTripName.getText().toString());
-            tripCost = getTripCost(dayPlans);
-            bundle.putInt("trip_cost", tripCost);
-            bundle.putParcelableArrayList("dayPlans", dayPlans);
-            bundle.putParcelableArrayList("available_event", allAvailableEvents);
-            fragment.setArguments(bundle);
-            MainActivity.fragmentManager.beginTransaction()
-                    .replace(R.id.flContainer, fragment)
-                    .commit();
-            Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
+
+        final Trip trip = (Trip) bundle.getSerializable("Trip");
+        trip.setName(etEditTripName.getText().toString());
+        trip.setCost(getTripCost(dayPlans));
+        trip.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (dayPlans != null) {
+                    for (int i = 0; i < dayPlans.size(); i++) {
+                        dayPlans.get(i).setTrip(trip);
+                        if (i != dayPlans.size()-1) {
+                            dayPlans.get(i).saveInBackground();
+                        } else {
+                            dayPlans.get(i).saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    bundle.putString("trip_name", etEditTripName.getText().toString());
+                                    bundle.putInt("trip_cost", getTripCost(dayPlans));
+                                    bundle.putParcelableArrayList("dayPlans", dayPlans);
+                                    bundle.putParcelableArrayList("available_event", allAvailableEvents);
+                                    fragment.setArguments(bundle);
+                                    MainActivity.fragmentManager.beginTransaction()
+                                            .replace(R.id.flContainer, fragment)
+                                            .commit();
+                                    Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private int getTripCost(ArrayList<DayPlan> dayPlansList) {
