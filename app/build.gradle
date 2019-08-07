@@ -34,7 +34,7 @@ dependencies {
     implementation 'com.github.parse-community:ParseFacebookUtils-Android:1.14.0'
 
     // Google Text Layout
-    implementation 'com.google.android.material:material:1.1.0-alpha06'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -55,4 +55,9 @@ dependencies {
     // Adds Keyboard listener
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
+
+    // Toolbar scroll react
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 }
