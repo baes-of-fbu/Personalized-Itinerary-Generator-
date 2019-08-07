@@ -249,6 +249,7 @@ public class TripReviewFragment extends Fragment implements
     public void onFinishEditDialog(String inputText) {
         if (inputText.contentEquals(getString(R.string.edit))) {
             Fragment fragment = new EditTripFragment();
+            bundle.putString("return_screen", "edit");
             fragment.setArguments(bundle);
             MainActivity.fragmentManager.beginTransaction()
                     .add(R.id.flContainer, fragment)
