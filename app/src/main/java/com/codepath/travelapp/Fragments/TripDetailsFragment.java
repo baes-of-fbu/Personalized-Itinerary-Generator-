@@ -159,7 +159,6 @@ public class TripDetailsFragment extends Fragment {
                             for (int i = 0; i < dayPlans.size(); i++) {
                                 DayPlan newDayPlan = new DayPlan();
                                 DayPlan currDayPlan = dayPlans.get(i);
-                                // TODO add helper function
 
                                 if (currDayPlan.getDate() != null) {
                                     newDayPlan.setDate(currDayPlan.getDate());
@@ -185,7 +184,7 @@ public class TripDetailsFragment extends Fragment {
                             addCircleIndicator(view, rvSchedule, pagerSnapHelper);
                         } else {
                             e.printStackTrace();
-                            showAlertDialog();
+                            showAlertDialog("Error loading trip details.");
                         }
                     }
                 });
@@ -212,6 +211,7 @@ public class TripDetailsFragment extends Fragment {
                 newBundle.putString("return_screen", "details");
                 ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
                 eventQuery.include(Event.KEY_CITY);
+                // Queries for available events
                 eventQuery.findInBackground(new FindCallback<Event>() {
                     @Override
                     public void done(List<Event> events, ParseException e) {
@@ -220,11 +220,12 @@ public class TripDetailsFragment extends Fragment {
                             newBundle.putParcelableArrayList("available_events", (ArrayList<Event>) events);
                             fragment.setArguments(newBundle);
                             MainActivity.fragmentManager.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
+                                    .replace(R.id.flContainer, fragment)
+                                    .addToBackStack(null)
                                     .commit();
                         } else {
                             e.printStackTrace();
-                            showAlertDialog();
+                            showAlertDialog("Error loading edit trip.");
                         }
                     }
                 });
@@ -236,8 +237,6 @@ public class TripDetailsFragment extends Fragment {
 
         for (int i = 0; i < dayPlans.size(); i++) {
             DayPlan currDayPlan = dayPlans.get(i);
-
-            // TODO add helper function
 
             if (currDayPlan.getMorningEvent() != null) {
                 Event event = null;
@@ -369,9 +368,9 @@ public class TripDetailsFragment extends Fragment {
         return "geo:" + temp;
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog(String message) {
         AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle("Error loading trip details.")
+                .setTitle(message)
                 .setPositiveButton("OK", null)
                 .create();
         dialog.show();

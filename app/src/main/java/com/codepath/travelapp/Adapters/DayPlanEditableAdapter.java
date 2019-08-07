@@ -262,11 +262,12 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void removeEvent() {
         if (timeOfDay.contentEquals(morningEvent)) {
             if (currDayPlan.getMorningEvent() != null) {
                 allAvailableEvents.add(currDayPlan.getMorningEvent());
-                remainingMoney += (int) currDayPlan.getMorningEvent().getCost();
+                remainingMoney = Math.addExact(remainingMoney, (int) currDayPlan.getMorningEvent().getCost());
                 useEmptyEvent(currHolder.tvMorningName, currHolder.ivMorningImage, currHolder.tvMorningPrice);
                 currHolder.cvMorning.setOnClickListener(null);
                 currDayPlan.removeMorningEvent();
@@ -274,7 +275,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         } else if (timeOfDay.contentEquals(afternoonEvent)) {
             if (currDayPlan.getAfternoonEvent() != null) {
                 allAvailableEvents.add(currDayPlan.getAfternoonEvent());
-                remainingMoney += (int) currDayPlan.getAfternoonEvent().getCost();
+                remainingMoney = Math.addExact(remainingMoney, (int) currDayPlan.getAfternoonEvent().getCost());
                 useEmptyEvent(currHolder.tvAfternoonName, currHolder.ivAfternoonImage, currHolder.tvAfternoonPrice);
                 currHolder.cvAfternoon.setOnClickListener(null);
                 currDayPlan.removeAfternoonEvent();
@@ -282,7 +283,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         } else if (timeOfDay.contentEquals(eveningEvent)) {
             if (currDayPlan.getEveningEvent() != null) {
                 allAvailableEvents.add(currDayPlan.getEveningEvent());
-                remainingMoney += (int) currDayPlan.getEveningEvent().getCost();
+                remainingMoney = Math.addExact(remainingMoney, (int) currDayPlan.getEveningEvent().getCost());
                 useEmptyEvent(currHolder.tvEveningName, currHolder.ivEveningImage, currHolder.tvEveningPrice);
                 currHolder.cvEvening.setOnClickListener(null);
                 currDayPlan.removeEveningEvent();
@@ -382,7 +383,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
 
     // Checks if the cost of an event is within the budget
     private Boolean isEventWithinBudget(Event event) {
-        return (int) event.getCost() < remainingMoney;
+        return (int) event.getCost() <= remainingMoney;
     }
 
     // Returns the total count of dayPlans
