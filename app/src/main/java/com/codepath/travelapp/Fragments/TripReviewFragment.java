@@ -150,7 +150,7 @@ public class TripReviewFragment extends Fragment implements
         if (remainingMoney < 0) {
             tvRemainingBudget.setTextColor(Color.RED);
         } else if (remainingMoney > 0) {
-            tvRemainingBudget.setTextColor(getResources().getColor(R.color.LightSkyBlue));
+            tvRemainingBudget.setTextColor(getResources().getColor(R.color.green));
         }
 
         // Populate list of Tags
@@ -257,7 +257,7 @@ public class TripReviewFragment extends Fragment implements
     public void onFinishEditDialog(String inputText) {
         if (inputText.contentEquals(getString(R.string.edit))) {
             Fragment fragment = new EditTripFragment();
-            bundle.putString("return_screen", "edit");
+            bundle.putString("return_screen", "review");
             fragment.setArguments(bundle);
             MainActivity.fragmentManager.beginTransaction()
                     .add(R.id.flContainer, fragment)
