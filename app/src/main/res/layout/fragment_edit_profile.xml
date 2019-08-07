@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -30,9 +32,9 @@
         android:id="@+id/ivProfileImage"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"
         android:scaleType="centerCrop"
-        android:layout_gravity="center_horizontal"
         app:srcCompat="@android:color/black" />
 
     <Button
@@ -41,7 +43,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/rounded_btn"
-        android:text="Set Profile Image" />
+        android:text="Set Profile Image"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/applyBtn"
@@ -49,6 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/rounded_btn"
-        android:text="Apply Changes" />
+        android:text="Apply Changes"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

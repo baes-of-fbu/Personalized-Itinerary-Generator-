@@ -27,6 +27,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TimelineFragment extends Fragment {
 
@@ -152,7 +153,7 @@ public class TimelineFragment extends Fragment {
     }
 
     private void showAlertDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                 .setTitle("Error loading timeline.")
                 .setPositiveButton("OK", null)
                 .create();

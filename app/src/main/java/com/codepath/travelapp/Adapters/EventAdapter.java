@@ -48,7 +48,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         Event event = events.get(position);
         if (event != null) {
             holder.tvName.setText(event.getName());
-            holder.tvBudget.setText(event.getCost().toString());
             Glide.with(context)
                     .load(event.getImage().getUrl())
                     .apply(RequestOptions.circleCropTransform())
@@ -89,14 +88,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvName;
-        private TextView tvBudget;
         private TextView tvCity;
         private ImageView ivEvent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
-            tvBudget = itemView.findViewById(R.id.tvBudget);
             tvCity = itemView.findViewById(R.id.tvCity);
             ivEvent = itemView.findViewById(R.id.ivEvent);
             itemView.setOnClickListener(this);

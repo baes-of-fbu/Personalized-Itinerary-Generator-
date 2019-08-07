@@ -141,6 +141,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                         setInactiveLikeIcon(holder);
                     }
                     numLikes[0] = objects.size();
+                    if (numLikes[0] == 0) {
+                        holder.tvNumLikes.setTextColor(Color.WHITE);
+                    }
                     holder.tvNumLikes.setText(Integer.toString(numLikes[0]));
                 } else {
                     e.printStackTrace();
@@ -164,6 +167,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 }
                 likedCurrent[0] = !likedCurrent[0];
                 trip.saveInBackground();
+                if (numLikes[0] == 0) {
+                    holder.tvNumLikes.setTextColor(Color.WHITE);
+                }
                 holder.tvNumLikes.setText(Integer.toString(numLikes[0]));
             }
         });
@@ -208,13 +214,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             }
         });
 
-        // Send a Parse Query to get "likes" Relation
         trip.getComments().getQuery().findInBackground(new FindCallback<Comment>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void done(List<Comment> objects, ParseException e) {
                 if (e == null) {
                     numComments[0] = objects.size();
+                    if (numComments[0] == 0) {
+                        holder.tvNumComments.setTextColor(Color.WHITE);
+                    }
                     holder.tvNumComments.setText(Integer.toString(numComments[0]));
                 } else {
                     e.printStackTrace();
@@ -282,11 +290,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     private void setInactiveLikeIcon(@NonNull ViewHolder holder) {
         holder.ibLike.setImageResource(ufi_heart);
         holder.ibLike.setColorFilter(Color.BLACK);
+        holder.tvNumLikes.setTextColor(Color.BLACK);
     }
 
     private void setActiveLikeIcon(@NonNull ViewHolder holder) {
         holder.ibLike.setImageResource(heart_filled);
         holder.ibLike.setColorFilter(Color.rgb(255, 0, 0));
+        holder.tvNumLikes.setTextColor(Color.WHITE);
     }
 
     private void setInactiveSaveIcon(@NonNull ViewHolder holder) {

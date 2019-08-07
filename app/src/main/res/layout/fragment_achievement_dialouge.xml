@@ -3,6 +3,7 @@
     android:id="@+id/llAchievement"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical"
     android:padding="24dp">
 
