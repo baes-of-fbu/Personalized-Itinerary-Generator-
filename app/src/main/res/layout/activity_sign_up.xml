@@ -4,15 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/seattle_signup_background"
+    android:background="@drawable/blue_gradient"
     tools:context=".Activities.SignUpActivity">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivBackBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_app_logo" />
 
     <TextView
         android:id="@+id/tvAppName"
         android:layout_width="0dp"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:text="@string/app_name"
         android:textAlignment="center"
@@ -20,8 +32,9 @@
         android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/imageView4" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -45,7 +58,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
-            android:background="@color/signUpTransparent"
+            android:background="@android:color/transparent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,18 +72,24 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="40dp"
+                android:textColorHint="@color/white"
+                app:hintTextColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvAppName"
-                app:passwordToggleEnabled="false">
+                app:passwordToggleEnabled="false"
+                app:passwordToggleTint="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSignUpUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="12"
-                    android:hint="@string/username" />
+                    android:hint="@string/username"
+                    android:textColor="@color/white"
+                    android:textColorHighlight="@color/white"
+                    android:textColorHint="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -80,6 +99,8 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="40dp"
+                android:textColorHint="@color/white"
+                app:hintTextColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
@@ -90,13 +111,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/white"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSignUpFullName"
@@ -106,7 +131,9 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginBottom="8dp"
-                    android:hint="Full Name" />
+                    android:hint="Full Name"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -116,6 +143,8 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="40dp"
+                android:textColorHint="@color/white"
+                app:hintTextColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
@@ -125,7 +154,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -134,8 +165,10 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="40dp"
+                android:textColorHint="@color/white"
                 app:counterEnabled="true"
-                app:counterMaxLength="150">
+                app:counterMaxLength="150"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSignUpBio"
@@ -143,7 +176,9 @@
                     android:layout_height="wrap_content"
                     android:ems="150"
                     android:enabled="true"
-                    android:hint="@string/bio_prompt" />
+                    android:hint="@string/bio_prompt"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -180,7 +215,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="40dp"
                 android:background="@drawable/rounded_btn"
-                android:text="@string/profile_image_prompt" />
+                android:text="@string/profile_image_prompt"
+                android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/signUpBtn"
@@ -193,7 +229,7 @@
                 android:background="@drawable/rounded_btn"
                 android:text="@string/signUp"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

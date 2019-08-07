@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,8 +24,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etUsername;
     private EditText etPassword;
     private Button loginBtn;
-    private Button signUpBtn;
-    private Button facebookLoginBtn;
+    private TextView signUpBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,37 +44,12 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etLoginPassword);
         loginBtn = findViewById(R.id.loginBtn);
         signUpBtn = findViewById(R.id.signUpBtn);
-        facebookLoginBtn = findViewById(R.id.facebookLoginBtn);
+
 
         addOnClickListeners();
     }
 
     private void addOnClickListeners() {
-        // TODO fix login with Facebook
-        facebookLoginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ParseFacebookUtils.logInWithReadPermissionsInBackground(LoginActivity.this, null, new LogInCallback() {
-                    @Override
-                    public void done(ParseUser user, ParseException e) {
-                        if (user == null) {
-                            Log.d(APP_TAG, "Uh oh. The user cancelled the Facebook login.");
-                            Log.d(APP_TAG, e.toString());
-                        } else if (user.isNew()) {
-                            Log.d(APP_TAG, "User signed up and logged in through Facebook!");
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Log.d(APP_TAG, "User logged in through Facebook!");
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                });
-            }
-        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
