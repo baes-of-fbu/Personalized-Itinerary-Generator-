@@ -98,49 +98,17 @@ public class TripDetailsFragment extends Fragment {
 
                 try {
                     tvUsername.setText(trip.getOwner().fetchIfNeeded().getString(User.KEY_USERNAME));
-                    if (trip.getOwner().getUsername().contentEquals(ParseUser.getCurrentUser().getUsername())) {
-                        editBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                final Fragment fragment = new EditTripFragment();
-                                final Bundle newBundle = new Bundle();
-                                newBundle.putString("trip_name", trip.getName());
-                                newBundle.putParcelable("city", trip.getCity());
-                                newBundle.putString("start_date",trip.getStartDate().toString());
-                                newBundle.putString("end_date", trip.getEndDate().toString());
-                                newBundle.putInt("number_days", (int) trip.getNumDays());
-                                newBundle.putInt("budget", (int) trip.getBudget());
-                                newBundle.putInt("trip_cost", (int) trip.getCost());
-                                newBundle.putParcelableArrayList("dayPlans", mDayPlans);
-
-                                ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
-                                eventQuery.include(Event.KEY_CITY);
-                                eventQuery.findInBackground(new FindCallback<Event>() {
-                                    @Override
-                                    public void done(List<Event> events, ParseException e) {
-                                        if (e == null) {
-                                            removeDuplicates(events, mDayPlans);
-                                            newBundle.putParcelableArrayList("available_events", (ArrayList<Event>) events);
-                                            fragment.setArguments(newBundle);
-                                            MainActivity.fragmentManager.beginTransaction()
-                                                    .add(R.id.flContainer, fragment)
-                                                    .commit();
-                                        } else {
-                                            e.printStackTrace();
-                                            showAlertDialog();
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                        editBtn.setVisibility(View.VISIBLE);
-                    } else {
-                        editBtn.setOnClickListener(null);
-                        editBtn.setVisibility(View.GONE);
-                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                if (trip.getOwner().getUsername().contentEquals(ParseUser.getCurrentUser().getUsername())) {
+                    addEditBtnListener(editBtn);
+                    editBtn.setVisibility(View.VISIBLE);
+                } else {
+                    editBtn.setOnClickListener(null);
+                    editBtn.setVisibility(View.GONE);
+                }
+
 
                 String travelWindow;
                 if (trip.getNumDays().intValue() != 1) {
@@ -224,6 +192,44 @@ public class TripDetailsFragment extends Fragment {
                 addOnClickListeners();
             }
         }
+    }
+
+    private void addEditBtnListener(Button editBtn) {
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Fragment fragment = new EditTripFragment();
+                final Bundle newBundle = new Bundle();
+                newBundle.putSerializable("Trip", trip);
+                newBundle.putString("trip_name", trip.getName());
+                newBundle.putParcelable("city", trip.getCity());
+                newBundle.putString("start_date",trip.getStartDate().toString());
+                newBundle.putString("end_date", trip.getEndDate().toString());
+                newBundle.putInt("number_days", (int) trip.getNumDays());
+                newBundle.putInt("budget", (int) trip.getBudget());
+                newBundle.putInt("trip_cost", (int) trip.getCost());
+                newBundle.putParcelableArrayList("dayPlans", mDayPlans);
+                newBundle.putString("return_screen", "details");
+                ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
+                eventQuery.include(Event.KEY_CITY);
+                eventQuery.findInBackground(new FindCallback<Event>() {
+                    @Override
+                    public void done(List<Event> events, ParseException e) {
+                        if (e == null) {
+                            removeDuplicates(events, mDayPlans);
+                            newBundle.putParcelableArrayList("available_events", (ArrayList<Event>) events);
+                            fragment.setArguments(newBundle);
+                            MainActivity.fragmentManager.beginTransaction()
+                                    .add(R.id.flContainer, fragment)
+                                    .commit();
+                        } else {
+                            e.printStackTrace();
+                            showAlertDialog();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void removeDuplicates(List<Event> events, ArrayList<DayPlan> dayPlans) {

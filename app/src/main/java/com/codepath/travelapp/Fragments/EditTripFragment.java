@@ -165,8 +165,13 @@ public class EditTripFragment extends Fragment {
                         .setTitle("Are you sure you want to return without saving?")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                // Reset to the previous state and return to editTrip Fragment
-                                Fragment fragment = new TripReviewFragment();
+                                Fragment fragment;
+                                if (bundle.getString("return_screen").contains("details")) {
+                                    fragment = new TripDetailsFragment();
+                                } else {
+                                    // Reset to the previous state and return to editTrip Fragment
+                                    fragment = new TripReviewFragment();
+                                }
                                 // Overwrites pre-existing "available_events" and "dayPlans"
                                 // in the bundle
                                 bundle.putParcelableArrayList("available_events",
@@ -196,17 +201,22 @@ public class EditTripFragment extends Fragment {
 
 
     private void save() {
-        Fragment fragment = new TripReviewFragment();
-        bundle.putString("trip_name", etEditTripName.getText().toString());
-        tripCost = getTripCost(dayPlans);
-        bundle.putInt("trip_cost", tripCost);
-        bundle.putParcelableArrayList("dayPlans", dayPlans);
-        bundle.putParcelableArrayList("available_event", allAvailableEvents);
-        fragment.setArguments(bundle);
-        MainActivity.fragmentManager.beginTransaction()
-                .replace(R.id.flContainer, fragment)
-                .commit();
-        Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
+        Fragment fragment;
+        if (bundle.getString("return_screen").contains("details")) {
+            fragment = new TripDetailsFragment();
+        } else {
+            fragment = new TripReviewFragment();
+        }
+            bundle.putString("trip_name", etEditTripName.getText().toString());
+            tripCost = getTripCost(dayPlans);
+            bundle.putInt("trip_cost", tripCost);
+            bundle.putParcelableArrayList("dayPlans", dayPlans);
+            bundle.putParcelableArrayList("available_event", allAvailableEvents);
+            fragment.setArguments(bundle);
+            MainActivity.fragmentManager.beginTransaction()
+                    .replace(R.id.flContainer, fragment)
+                    .commit();
+            Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
     }
 
     private int getTripCost(ArrayList<DayPlan> dayPlansList) {
