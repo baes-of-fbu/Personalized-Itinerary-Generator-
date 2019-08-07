@@ -160,6 +160,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/comment"
             android:scaleType="centerCrop"
+            android:tint="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ibLike"
             app:layout_constraintTop_toBottomOf="@+id/ivTripImage"
@@ -187,41 +188,22 @@
             card_view:srcCompat="@drawable/ufi_save" />
 
         <TextView
-            android:id="@+id/tvLikedBy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/liked_by"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ibLike" />
-
-        <TextView
             android:id="@+id/tvNumLikes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
             android:text="@string/place_holder"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/tvLikedBy"
-            app:layout_constraintTop_toBottomOf="@+id/ibComment" />
-
-        <TextView
-            android:id="@+id/tvUsers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/users"
-            app:layout_constraintStart_toEndOf="@+id/tvNumLikes"
-            app:layout_constraintTop_toTopOf="@+id/tvNumLikes" />
+            app:layout_constraintBottom_toBottomOf="@+id/ibLike"
+            app:layout_constraintEnd_toEndOf="@+id/ibLike"
+            app:layout_constraintStart_toStartOf="@+id/ibLike"
+            app:layout_constraintTop_toTopOf="@+id/ibLike" />
 
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:text="Time stamp "
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/tvTripName"
@@ -231,7 +213,7 @@
             android:id="@+id/divider5"
             android:layout_width="1dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="12dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintBottom_toBottomOf="@+id/tvTripDates"
             app:layout_constraintEnd_toStartOf="@+id/tvCost"
@@ -241,13 +223,12 @@
             android:id="@+id/tvNumComments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/tvUsers"
-            app:layout_constraintStart_toEndOf="@+id/ibComment"
-            app:layout_constraintTop_toBottomOf="@+id/ivTripImage" />
+            android:text="@string/place_holder"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/ibComment"
+            app:layout_constraintEnd_toEndOf="@+id/ibComment"
+            app:layout_constraintStart_toStartOf="@+id/ibComment"
+            app:layout_constraintTop_toTopOf="@+id/ibComment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

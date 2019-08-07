@@ -36,6 +36,7 @@ public class ExploreFragment extends Fragment {
         viewPager.setAdapter((new ViewPagerAdapter(getChildFragmentManager())));
         tabLayout.setupWithViewPager(viewPager);
     }
+
     @Override
     public void onAttach(@NonNull Activity activity) {
         FragmentActivity myContext = (FragmentActivity) activity;
