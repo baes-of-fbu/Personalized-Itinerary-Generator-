@@ -12,7 +12,7 @@
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/com_facebook_blue</item>
         <item name="colorPrimary">@color/LightSkyBlue</item>
 
     </style>

@@ -81,6 +81,7 @@
         android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_btn"
         android:text="Post"
+        android:textColor="@color/white"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/etNewComment"
         app:layout_constraintEnd_toEndOf="parent"
