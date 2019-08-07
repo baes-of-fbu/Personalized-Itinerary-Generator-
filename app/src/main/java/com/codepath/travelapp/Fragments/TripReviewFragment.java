@@ -150,7 +150,7 @@ public class TripReviewFragment extends Fragment implements
         if (remainingMoney < 0) {
             tvRemainingBudget.setTextColor(Color.RED);
         } else if (remainingMoney > 0) {
-            tvRemainingBudget.setTextColor(getResources().getColor(R.color.LightSkyBlue));
+            tvRemainingBudget.setTextColor(getResources().getColor(R.color.green));
         }
 
         // Populate list of Tags
