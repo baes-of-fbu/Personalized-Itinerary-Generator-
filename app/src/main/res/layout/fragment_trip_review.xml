@@ -10,14 +10,12 @@
         android:id="@+id/tvTripName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
         android:layout_marginTop="8dp"
         android:text="@string/trip_name"
         android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,20 +23,18 @@
         android:id="@+id/tvCityState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/city"
         android:textColor="@color/black"
-        app:layout_constraintStart_toEndOf="@+id/tvTripName"
+        app:layout_constraintEnd_toStartOf="@+id/ivPin"
         app:layout_constraintTop_toBottomOf="@+id/tvTripName" />
 
     <ImageView
         android:id="@+id/ivPin"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         app:layout_constraintEnd_toEndOf="@+id/scrollView2"
-        app:layout_constraintStart_toEndOf="@+id/tvCityState"
         app:layout_constraintTop_toTopOf="@+id/tvCityState"
         app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
@@ -62,9 +58,9 @@
                 android:id="@+id/btnEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/rounded_btn"
                 android:backgroundTint="#FFEB3B"
                 android:text="Edit"
@@ -72,16 +68,16 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/indicator" />
 
             <Button
                 android:id="@+id/btnAccept"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/rounded_btn"
                 android:backgroundTint="@android:color/holo_green_light"
                 android:text="Accept"
@@ -89,7 +85,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/indicator" />
 
             <ImageView
