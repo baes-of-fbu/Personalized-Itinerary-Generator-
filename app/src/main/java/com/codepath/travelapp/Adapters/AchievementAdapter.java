@@ -109,7 +109,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         for (int i = 0; i < earnedAchievements.size(); i++) {
             Achievement currentAchievement = earnedAchievements.get(i);
             String currentName = currentAchievement.getName();
-            if (currentName.contains(achievementName)) {
+            if (currentName.equals(achievementName)) {
                 return false;
             }
         }

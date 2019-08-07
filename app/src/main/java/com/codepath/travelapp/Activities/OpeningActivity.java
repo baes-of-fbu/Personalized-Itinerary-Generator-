@@ -21,7 +21,7 @@ import java.util.TimerTask;
 public class OpeningActivity extends AppCompatActivity {
 
     private ImageSwitcher imageSwitcher;
-    private int[] gallery = {R.drawable.seattle1, R.drawable.seattle2, R.drawable.seattle3, R.drawable.seattle4, R.drawable.seattle5, R.drawable.seattle6, R.drawable.seattle7, R.drawable.seattle8, R.drawable.seattle9, R.drawable.seattle10};
+    private int[] gallery = {R.drawable.op1, R.drawable.op2, R.drawable.op3, R.drawable.op4, R.drawable.op5, R.drawable.op6};
     private int position = 0;
 
     @Override
@@ -84,7 +84,7 @@ public class OpeningActivity extends AppCompatActivity {
                     public void run() {
                         imageSwitcher.setImageResource(gallery[position]);
                         position++;
-                        if (position == 10)
+                        if (position == 6)
                         {
                             position = 0;
                         }
