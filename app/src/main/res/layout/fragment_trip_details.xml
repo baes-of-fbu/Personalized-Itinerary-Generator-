@@ -262,6 +262,9 @@
                 android:backgroundTint="#FFEB3B"
                 android:elevation="4dp"
                 android:text="@string/edit"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/indicator" />

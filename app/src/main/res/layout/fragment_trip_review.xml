@@ -68,6 +68,9 @@
                 android:background="@drawable/rounded_btn"
                 android:backgroundTint="#FFEB3B"
                 android:text="Edit"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/indicator" />
@@ -82,6 +85,9 @@
                 android:background="@drawable/rounded_btn"
                 android:backgroundTint="@android:color/holo_green_light"
                 android:text="Accept"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/indicator" />

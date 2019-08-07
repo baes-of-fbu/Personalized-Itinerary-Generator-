@@ -201,7 +201,9 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/current_trips"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCurrent"
@@ -224,7 +226,9 @@
                 android:layout_margin="8dp"
                 android:text="@string/upcoming_trips"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvUpcoming"
@@ -245,7 +249,9 @@
                 android:layout_margin="8dp"
                 android:text="@string/previous_trips"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPrevious"
@@ -268,7 +274,9 @@
                 android:layout_margin="8dp"
                 android:text="@string/favorite_trips"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSaved"

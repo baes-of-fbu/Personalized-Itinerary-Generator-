@@ -24,7 +24,9 @@
         android:layout_margin="16dp"
         android:background="@drawable/rounded_btn"
         android:text="Edit Profile"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/report_btn"
@@ -33,7 +35,9 @@
         android:layout_margin="16dp"
         android:background="@drawable/rounded_btn"
         android:text="Report a Problem"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/help_btn"
@@ -42,7 +46,9 @@
         android:layout_margin="16dp"
         android:background="@drawable/rounded_btn"
         android:text="Help and Support"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/logout_btn"
@@ -51,6 +57,8 @@
         android:layout_margin="16dp"
         android:background="@drawable/rounded_btn"
         android:text="Log Out"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </LinearLayout>
