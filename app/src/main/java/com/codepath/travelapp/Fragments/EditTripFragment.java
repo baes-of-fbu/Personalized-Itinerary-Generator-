@@ -24,9 +24,7 @@ import com.codepath.travelapp.Adapters.DayPlanEditableAdapter;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Event;
-import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.R;
-import com.parse.ParseFile;
 
 import java.util.ArrayList;
 
@@ -45,8 +43,6 @@ public class EditTripFragment extends Fragment {
     private int budget;
     private int numDays;
 
-    private ArrayList<Tag> tags;
-
     private int tripCost;
     private ArrayList<Event> allAvailableEvents;
     private ArrayList<DayPlan> dayPlans;
@@ -56,8 +52,6 @@ public class EditTripFragment extends Fragment {
     private ArrayList<DayPlan> originalDayPlans;
 
     private Bundle bundle;
-    private ParseFile image;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -92,7 +86,6 @@ public class EditTripFragment extends Fragment {
         numDays = bundle.getInt("number_days");
         budget = bundle.getInt("budget");
         tripCost = bundle.getInt("trip_cost");
-        tags = bundle.getParcelableArrayList("selected_tags");
         allAvailableEvents = bundle.getParcelableArrayList("available_events");
         dayPlans = bundle.getParcelableArrayList("dayPlans");
 

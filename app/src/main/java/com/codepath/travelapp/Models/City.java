@@ -14,7 +14,7 @@ public class City extends ParseObject implements Parcelable {
     public static String KEY_NAME = "name";
     private static String KEY_STATE = "state";
     private static String KEY_DESCRIPTION = "description";
-    private static String KEY_LOCATION = "location";
+    public static String KEY_LOCATION = "location";
     private static String KEY_IMAGE = "coverPhoto";
 
     public City() {}

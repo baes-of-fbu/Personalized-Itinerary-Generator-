@@ -12,6 +12,7 @@ public class User extends ParseUser implements Parcelable {
 
     // Instance Variables
     private static final String KEY_BIO = "bio";
+    public static final String KEY_USERNAME = "username";
     public static final String KEY_IMAGE ="profileImage";
     private static final String KEY_HOMESTATE = "homeState";
     private static final String KEY_FULLNAME = "fullName";

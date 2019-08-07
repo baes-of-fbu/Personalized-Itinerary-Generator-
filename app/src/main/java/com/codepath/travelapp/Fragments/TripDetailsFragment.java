@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +22,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Activities.MainActivity;
 import com.codepath.travelapp.Adapters.DayPlanAdapter;
+import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.DayPlan;
+import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Trip;
+import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -41,7 +45,7 @@ import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 public class TripDetailsFragment extends Fragment {
 
     private DayPlanAdapter adapter;
-    private ArrayList<DayPlan> mDayPlan;
+    private ArrayList<DayPlan> mDayPlans;
 
     private Trip trip;
     private ImageView ivPin;
@@ -58,30 +62,25 @@ public class TripDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
-        TextView tvBudget = view.findViewById(R.id.tvBudget);
+        final TextView tvBudget = view.findViewById(R.id.tvBudget);
         TextView tvCost = view.findViewById(R.id.tvCost);
+        Button editBtn = view.findViewById(R.id.editBtn);
         final RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
         tvCityState = view.findViewById(R.id.tvCityState);
         tvUsername = view.findViewById(R.id.tvFullName);
         ivPin = view.findViewById(R.id.ivPin);
         ivShare = view.findViewById(R.id.ivShare);
 
-        mDayPlan = new ArrayList<>();
-        adapter = new DayPlanAdapter(mDayPlan);
+        mDayPlans = new ArrayList<>();
+        adapter = new DayPlanAdapter(mDayPlans);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), HORIZONTAL,
                 false);
         rvSchedule.setLayoutManager(linearLayoutManager);
@@ -91,14 +90,54 @@ public class TripDetailsFragment extends Fragment {
         final PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
         pagerSnapHelper.attachToRecyclerView(rvSchedule);
 
-        Bundle bundle = getArguments();
+        final Bundle bundle = getArguments();
         if (bundle != null) {
             trip = (Trip) bundle.getSerializable("Trip");
             if (trip != null) {
                 tvTripName.setText(trip.getName());
 
                 try {
-                    tvUsername.setText(trip.getOwner().fetchIfNeeded().getString("username"));
+                    tvUsername.setText(trip.getOwner().fetchIfNeeded().getString(User.KEY_USERNAME));
+                    if (trip.getOwner().getUsername().contentEquals(ParseUser.getCurrentUser().getUsername())) {
+                        editBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                final Fragment fragment = new EditTripFragment();
+                                final Bundle newBundle = new Bundle();
+                                newBundle.putString("trip_name", trip.getName());
+                                newBundle.putParcelable("city", trip.getCity());
+                                newBundle.putString("start_date",trip.getStartDate().toString());
+                                newBundle.putString("end_date", trip.getEndDate().toString());
+                                newBundle.putInt("number_days", (int) trip.getNumDays());
+                                newBundle.putInt("budget", (int) trip.getBudget());
+                                newBundle.putInt("trip_cost", (int) trip.getCost());
+                                newBundle.putParcelableArrayList("dayPlans", mDayPlans);
+
+                                ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
+                                eventQuery.include(Event.KEY_CITY);
+                                eventQuery.findInBackground(new FindCallback<Event>() {
+                                    @Override
+                                    public void done(List<Event> events, ParseException e) {
+                                        if (e == null) {
+                                            removeDuplicates(events, mDayPlans);
+                                            newBundle.putParcelableArrayList("available_events", (ArrayList<Event>) events);
+                                            fragment.setArguments(newBundle);
+                                            MainActivity.fragmentManager.beginTransaction()
+                                                    .add(R.id.flContainer, fragment)
+                                                    .commit();
+                                        } else {
+                                            e.printStackTrace();
+                                            showAlertDialog();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        editBtn.setVisibility(View.VISIBLE);
+                    } else {
+                        editBtn.setOnClickListener(null);
+                        editBtn.setVisibility(View.GONE);
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -122,7 +161,7 @@ public class TripDetailsFragment extends Fragment {
 
                 try {
                     tvCityState.setText(String.format("%s, %s",
-                            trip.getCity().fetchIfNeeded().getString("name"), trip.getCity()
+                            trip.getCity().fetchIfNeeded().getString(Trip.KEY_NAME), trip.getCity()
                                     .getState()));
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -132,7 +171,7 @@ public class TripDetailsFragment extends Fragment {
                         .load(trip.getImage().getUrl())
                         .into(ivCoverPhoto);
 
-                ParseFile image = (ParseFile) trip.getOwner().get("profileImage");
+                ParseFile image = (ParseFile) trip.getOwner().get(User.KEY_IMAGE);
                 if (image != null) {
                     Glide.with(getContext())
                             .load(image.getUrl())
@@ -149,7 +188,32 @@ public class TripDetailsFragment extends Fragment {
                     public void done(List<DayPlan> dayPlans, ParseException e) {
                         if (e == null) {
                             adapter.clear();
-                            mDayPlan.addAll(dayPlans);
+                            for (int i = 0; i < dayPlans.size(); i++) {
+                                DayPlan newDayPlan = new DayPlan();
+                                DayPlan currDayPlan = dayPlans.get(i);
+                                // TODO add helper function
+
+                                if (currDayPlan.getDate() != null) {
+                                    newDayPlan.setDate(currDayPlan.getDate());
+                                }
+
+                                if (currDayPlan.getTrip() != null) {
+                                    newDayPlan.setTrip(currDayPlan.getTrip());
+                                }
+
+                                if (currDayPlan.getMorningEvent() != null) {
+                                    newDayPlan.setMorningEvent(currDayPlan.getMorningEvent());
+                                }
+
+                                if (currDayPlan.getAfternoonEvent() != null) {
+                                    newDayPlan.setAfternoonEvent(currDayPlan.getAfternoonEvent());
+                                }
+
+                                if (currDayPlan.getEveningEvent() != null) {
+                                    newDayPlan.setEveningEvent(currDayPlan.getEveningEvent());
+                                }
+                                mDayPlans.add(newDayPlan);
+                            }
                             addCircleIndicator(view, rvSchedule, pagerSnapHelper);
                         } else {
                             e.printStackTrace();
@@ -157,8 +221,61 @@ public class TripDetailsFragment extends Fragment {
                         }
                     }
                 });
-
                 addOnClickListeners();
+            }
+        }
+    }
+
+    private void removeDuplicates(List<Event> events, ArrayList<DayPlan> dayPlans) {
+
+        for (int i = 0; i < dayPlans.size(); i++) {
+            DayPlan currDayPlan = dayPlans.get(i);
+
+            // TODO add helper function
+
+            if (currDayPlan.getMorningEvent() != null) {
+                Event event = null;
+                try {
+                    event = (Event) currDayPlan.getMorningEvent().fetchIfNeeded();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                for (int j = 0; j < events.size(); j++) {
+                    Event currEvent = events.get(j);
+                    if (currEvent.getName().contains(event.getName())) {
+                        events.remove(currEvent);
+                    }
+                }
+            }
+
+            if (currDayPlan.getAfternoonEvent() != null) {
+                Event event = null;
+                try {
+                    event = (Event) currDayPlan.getAfternoonEvent().fetchIfNeeded();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                for (int j = 0; j < events.size(); j++) {
+                    Event currEvent = events.get(j);
+                    if (currEvent.getName().contains(event.getName())) {
+                        events.remove(currEvent);
+                    }
+                }
+            }
+
+            if (currDayPlan.getEveningEvent() != null) {
+                Event event = null;
+                try {
+                    event = (Event) currDayPlan.getEveningEvent().fetchIfNeeded();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                for (int j = 0; j < events.size(); j++) {
+                    Event currEvent = events.get(j);
+                    if (currEvent.getName().contains(event.getName())) {
+                        events.remove(currEvent);
+                    }
+                }
             }
         }
     }
@@ -210,7 +327,7 @@ public class TripDetailsFragment extends Fragment {
                 String text = null;
                 try {
                     text = "Check out this awesome trip! I'm going to " +
-                            trip.getCity().fetchIfNeeded().getString("name");
+                            trip.getCity().fetchIfNeeded().getString(City.KEY_NAME);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -232,7 +349,7 @@ public class TripDetailsFragment extends Fragment {
     }
 
     private void openMaps(Trip trip) {
-        String location = geoPointToString((Objects.requireNonNull(trip.getCity().get("location")))
+        String location = geoPointToString((Objects.requireNonNull(trip.getCity().get(City.KEY_LOCATION)))
                 .toString());
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);

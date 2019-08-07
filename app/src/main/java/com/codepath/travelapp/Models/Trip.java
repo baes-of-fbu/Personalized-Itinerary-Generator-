@@ -13,7 +13,7 @@ import java.util.Date;
 public class Trip extends ParseObject implements Serializable {
 
     // Instance variables
-    private static final String KEY_NAME = "name";
+    public static final String KEY_NAME = "name";
     public static final String KEY_OWNER = "owner";
     public static final String KEY_IMAGE = "image";
     private static final String KEY_BUDGET = "budget";

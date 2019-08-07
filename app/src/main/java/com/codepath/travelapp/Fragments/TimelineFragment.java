@@ -47,7 +47,7 @@ public class TimelineFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading your timeline...121345");
+        progressDialog.setMessage("Loading your timeline...");
         progressDialog.setTitle("Please wait");
         progressDialog.setCancelable(false);
         progressDialog.show();
