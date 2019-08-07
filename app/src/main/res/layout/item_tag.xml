@@ -17,7 +17,7 @@
             android:id="@+id/ivTagImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="#00BCD4"
+            android:background="@color/white"
             android:scaleType="centerCrop"
             android:textColor="@color/white"
             android:textSize="14sp"
