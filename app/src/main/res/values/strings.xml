@@ -114,6 +114,6 @@
     <string name="comment">comment</string>
     <string name="save">save</string>
     <string name="free">FREE</string>
-    <string name="compose_trip">Compose Trip</string>
+    <string name="compose_trip">Compose a Trip</string>
     <string name="profile_image_keyword">profileImage</string>
 </resources>

@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/rounded_btn"
+        android:background="@android:color/holo_green_light"
         android:text="@android:string/yes"
         android:textColor="@color/white"
         android:textSize="18sp" />
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/rounded_btn"
-        android:backgroundTint="#E91E63"
+        android:backgroundTint="@color/LightSkyBlue"
         android:text="@android:string/no"
         android:textColor="@color/white" />
 </LinearLayout>
