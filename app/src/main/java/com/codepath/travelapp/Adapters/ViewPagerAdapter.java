@@ -20,9 +20,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         switch (position)
         {
             case 0:
-                return new EventExploreFragment(); //ChildFragment1 at position 0
+                return new UserExploreFragment(); //ChildFragment1 at position 0
             case 1:
-                return new UserExploreFragment(); //ChildFragment2 at position 1
+                return new EventExploreFragment(); //ChildFragment2 at position 1
         }
         return null; //does not happen
     }

@@ -7,7 +7,8 @@
         android:id="@+id/svEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white" />
+        android:background="@color/white"
+        android:queryHint="Search for Events" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEvents"

@@ -7,7 +7,8 @@ android:layout_height="match_parent">
         android:id="@+id/svUsers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white" />
+        android:background="@color/white"
+        android:queryHint="Search for Users" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvUsers"

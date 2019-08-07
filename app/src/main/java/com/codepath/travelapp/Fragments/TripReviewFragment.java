@@ -105,6 +105,7 @@ public class TripReviewFragment extends Fragment implements
         RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
         btnAccept = view.findViewById(R.id.btnAccept);
         btnEdit = view.findViewById(R.id.btnEdit);
+        String travelWindow;
 
         SnapHelper snapHelper = new GravitySnapHelper(Gravity.END);
         snapHelper.attachToRecyclerView(rvTags);
@@ -131,8 +132,15 @@ public class TripReviewFragment extends Fragment implements
         dayPlans = bundle.getParcelableArrayList("dayPlans");
         availableEvents = bundle.getParcelableArrayList("available_events");
 
+        if (numDays != 1) {
+            travelWindow = startDate.substring(0, 10) + " - " +
+                    endDate.substring(0, 10);
+        } else {
+            travelWindow = startDate.substring(0, 10);
+        }
+
         tvTripName.setText(tripName);
-        tvTravelDates.setText(String.format("%s - %s", startDate, endDate));
+        tvTravelDates.setText(String.format("%s", travelWindow));
         tvDays.setText(String.valueOf(numDays));
         tvBudget.setText(String.format("$%s", String.valueOf(budget)));
         tvTripCost.setText(String.format("$%s", String.valueOf(tripCost)));

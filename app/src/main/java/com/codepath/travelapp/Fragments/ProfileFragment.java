@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,6 +65,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvFollowingCount;
     private TextView tvFollowers;
     private TextView tvFollowing;
+    private ImageButton btnSidebar;
 
     private int pageSize = 10;
 
@@ -289,6 +291,7 @@ public class ProfileFragment extends Fragment {
         tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
         tvFollowers = view.findViewById(R.id.tvFollowers);
         tvFollowing = view.findViewById(R.id.tvFollowing);
+        btnSidebar = view.findViewById(R.id.btnSidebar);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvFullName = view.findViewById(R.id.tvFullName);
         TextView tvHometown = view.findViewById(R.id.tvHometown);
@@ -299,9 +302,11 @@ public class ProfileFragment extends Fragment {
         if (userProfile.getObjectId().equals(userCurrent.getObjectId())) {
             MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
             btnFollowingStatus.setVisibility(View.GONE);
+            btnSidebar.setVisibility(View.VISIBLE);
         } else {
             MainActivity.bottomNavigationView.setVisibility(View.GONE);
             btnFollowingStatus.setVisibility(View.VISIBLE);
+            btnSidebar.setVisibility(View.GONE);
             if (followers.containsKey(userCurrent)) {
                 btnFollowingStatus.setBackgroundColor(Color.GRAY);
                 btnFollowingStatus.setText(getString(R.string.following));
