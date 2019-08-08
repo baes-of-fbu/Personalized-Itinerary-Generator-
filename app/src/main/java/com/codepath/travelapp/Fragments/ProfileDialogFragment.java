@@ -87,6 +87,13 @@ public class ProfileDialogFragment extends DialogFragment {
         spHomeState = view.findViewById(R.id.spHomeState);
         Button applyBtn = view.findViewById(R.id.applyBtn);
 
+        ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onLaunchGallery();
+            }
+        });
+
         imageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,6 +141,11 @@ public class ProfileDialogFragment extends DialogFragment {
                 final Uri imageUri = data.getData();
                 if (imageUri != null) {
                     Bitmap rotatedImage = rotateBitmapOrientation(imageUri.getPath());
+                    try {
+                        rotatedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Glide.with(this)
                             .load(rotatedImage)
                             .apply(RequestOptions.circleCropTransform())
