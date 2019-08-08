@@ -34,6 +34,7 @@ public class OpeningActivity extends AppCompatActivity {
             Intent intent = new Intent(OpeningActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
+            //ParseUser.logOut();
         }
 
         imageSwitcher = findViewById(R.id.imageSwitcher);
