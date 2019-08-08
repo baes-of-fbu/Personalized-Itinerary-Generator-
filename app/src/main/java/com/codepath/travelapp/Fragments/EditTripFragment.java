@@ -26,6 +26,7 @@ import com.codepath.travelapp.Models.DayPlan;
 import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.R;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -41,6 +42,7 @@ public class EditTripFragment extends Fragment {
     private androidx.appcompat.widget.Toolbar toolbar;
     private TextView etEditTripName;
     private Button saveBtn;
+    private Button deleteBtn;
 
     private String tripName;
     private City city;
@@ -78,11 +80,19 @@ public class EditTripFragment extends Fragment {
         TextView tvRemainingBudget = view.findViewById(R.id.tvRemainingBudgetEditFragment);
         TextView tvCityState = view.findViewById(R.id.tvCityStateEditFragment);
         saveBtn = view.findViewById(R.id.saveBtn);
+        deleteBtn = view.findViewById(R.id.deleteBtn);
         RecyclerView rvSchedule = view.findViewById(R.id.rvEditableSchedule);
 
         bundle = getArguments();
         if (bundle == null) {
             Log.d("EditTrip Fragment", "No bundle");
+            showAlertDialog("Error loading page");
+        }
+
+        if (bundle.getString("return_screen").contentEquals("review")) {
+            deleteBtn.setVisibility(View.GONE);
+        } else if (bundle.getString("return_screen").contentEquals("details")) {
+            deleteBtn.setVisibility(View.VISIBLE);
         }
 
         tripName = bundle.getString("trip_name");
@@ -281,6 +291,24 @@ public class EditTripFragment extends Fragment {
                 }
             }
         });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog dialog = new AlertDialog.Builder(getContext())
+                        .setTitle("Are you sure you want to delete this trip?")
+                        .setMessage("This process is irreversible.")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                deleteTrip();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+                dialog.show();
+            }
+        });
     }
 
     private int getTripCost(ArrayList<DayPlan> dayPlansList) {
@@ -298,6 +326,44 @@ public class EditTripFragment extends Fragment {
             }
         }
         return runningCost;
+    }
+
+    private void deleteTrip() {
+        // Deletes each dayPlan
+        for (int day = 0; day < numDays; day++) {
+            if (day != numDays - 1) {
+                DayPlan dayPlan = originalDayPlans.get(day);
+                dayPlan.deleteInBackground();
+            } else {
+                DayPlan dayPlan = originalDayPlans.get(day);
+                dayPlan.deleteInBackground(new DeleteCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Trip trip = bundle.getParcelable("Trip");
+                            trip.deleteInBackground(new DeleteCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);
+                                        Fragment fragment = new TimelineFragment();
+                                        MainActivity.fragmentManager.beginTransaction()
+                                                .replace(R.id.flContainer, fragment)
+                                                .commit();
+                                    } else {
+                                        e.printStackTrace();
+                                        showAlertDialog("Error deleting trip.");
+                                    }
+                                }
+                            });
+                        } else {
+                            e.printStackTrace();
+                            showAlertDialog("Error deleting trip.");
+                        }
+                    }
+                });
+            }
+        }
     }
 
     private void showAlertDialog(String message) {
