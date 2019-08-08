@@ -25,24 +25,51 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/etTripName"
+            <!--<EditText-->
+                <!--android:id="@+id/etTripName"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="4dp"-->
+                <!--android:layout_marginEnd="8dp"-->
+                <!--android:ems="8"-->
+                <!--android:hint="@string/trip_name"-->
+                <!--android:importantForAutofill="no"-->
+                <!--android:inputType="textPersonName"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent" />-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout4"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:ems="8"
-                android:hint="@string/trip_name"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName"
+                android:layout_marginTop="8dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:hintTextColor="@color/LightSkyBlue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTripName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="150"
+                    android:enabled="true"
+                    android:hint="@string/compose_trip"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/LightSkyBlue"
+                    app:layout_constraintBottom_toTopOf="@+id/etStartDate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <EditText
                 android:id="@+id/etStartDate"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
@@ -52,30 +79,30 @@
                 android:importantForAutofill="no"
                 android:inputType="date"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etTripName" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
 
             <EditText
                 android:id="@+id/etEndDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="8"
                 android:focusable="false"
                 android:hint="@string/end_date"
                 android:importantForAutofill="no"
                 android:inputType="date"
+                app:layout_constraintBottom_toBottomOf="@+id/etStartDate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/etStartDate"
-                app:layout_constraintTop_toBottomOf="@+id/etTripName" />
+                app:layout_constraintTop_toTopOf="@+id/etStartDate" />
 
             <EditText
                 android:id="@+id/etBudget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="44dp"
                 android:ems="8"
                 android:hint="@string/budget"
                 android:importantForAutofill="no"
@@ -92,16 +119,19 @@
                 android:entries="@array/cities"
                 app:layout_constraintBottom_toBottomOf="@+id/etBudget"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/etBudget"
-                app:layout_constraintTop_toTopOf="@+id/etBudget" />
+                app:layout_constraintTop_toTopOf="@+id/etBudget"
+                app:layout_constraintVertical_bias="1.0" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spCity">
 
