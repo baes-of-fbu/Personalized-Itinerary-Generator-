@@ -72,9 +72,9 @@ public class LogoutDialogFragment extends DialogFragment {
                         fragmentManager.popBackStack(MainActivity.BACK_STACK_ROOT_TAG,
                                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     }
-                        Intent intent = new Intent(getContext(), OpeningActivity.class);
-                        startActivity(intent);
-                        Objects.requireNonNull(getActivity()).finish();
+                    Intent intent = new Intent(getContext(), OpeningActivity.class);
+                    startActivity(intent);
+                    Objects.requireNonNull(getActivity()).finish();
                 } else {
                     showAlertDialog();
                 }
