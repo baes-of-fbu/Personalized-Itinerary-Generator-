@@ -2,6 +2,7 @@ package com.codepath.travelapp.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,6 +39,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -181,7 +184,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void queryUpcomingPosts(ParseUser user) {
+    private void queryUpcomingPosts(ParseUser user, final View view) {
         upcomingTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
@@ -195,6 +198,13 @@ public class ProfileFragment extends Fragment {
             public void done(List<Trip> trips, ParseException e) {
                 if (e == null) {
                     upcomingTripAdapter.addAll(trips);
+                    TextView tvNoUpcoming = view.findViewById(R.id.tvNoUpcoming);
+
+                    if (upcomingTripAdapter.getItemCount() == 0) {
+                        tvNoUpcoming.setVisibility(View.VISIBLE);
+                    }else {
+                        tvNoUpcoming.setVisibility(View.GONE);
+                    }
                 } else {
                     e.printStackTrace();
                     showAlertDialog();
@@ -203,7 +213,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void queryPreviousPosts(final User user) {
+    private void queryPreviousPosts(final User user, final View view) {
         previousTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
@@ -218,6 +228,13 @@ public class ProfileFragment extends Fragment {
                 if (e == null) {
                     previousTripAdapter.addAll(trips);
                     queryNewAchievements(trips, userProfile);
+                    TextView tvNoPrevious = view.findViewById(R.id.tvNoPrevious);
+
+                    if (previousTripAdapter.getItemCount() == 0) {
+                        tvNoPrevious.setVisibility(View.VISIBLE);
+                    }else {
+                        tvNoPrevious.setVisibility(View.GONE);
+                    }
                 } else {
                     e.printStackTrace();
                     showAlertDialog();
@@ -226,7 +243,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void queryCurrentPosts(ParseUser user) {
+    private void queryCurrentPosts(ParseUser user, final View view) {
         currentTripAdapter.clear();
 
         ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
@@ -241,6 +258,13 @@ public class ProfileFragment extends Fragment {
             public void done(List<Trip> trips, ParseException e) {
                 if (e == null) {
                     currentTripAdapter.addAll(trips);
+                    TextView tvNoCurrent = view.findViewById(R.id.tvNoCurrent);
+
+                    if (currentTripAdapter.getItemCount() == 0) {
+                        tvNoCurrent.setVisibility(View.VISIBLE);
+                    }else {
+                        tvNoCurrent.setVisibility(View.GONE);
+                    }
                 } else {
                     e.printStackTrace();
                     showAlertDialog();
@@ -249,7 +273,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void querySaved(final ParseUser user) {
+    private void querySaved(final ParseUser user, final View view) {
         savedTripAdapter.clear();
         final List<Trip> mTrips = new ArrayList<>();
 
@@ -266,6 +290,13 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                     savedTripAdapter.addAll(mTrips);
+                    TextView tvNoSaved = view.findViewById(R.id.tvNoSaved);
+
+                    if (savedTripAdapter.getItemCount() == 0) {
+                        tvNoSaved.setVisibility(View.VISIBLE);
+                    }else {
+                        tvNoSaved.setVisibility(View.GONE);
+                    }
                 } else {
                     e.printStackTrace();
                     showAlertDialog();
@@ -298,6 +329,7 @@ public class ProfileFragment extends Fragment {
         TextView tvBio = view.findViewById(R.id.tvBio);
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
 
+
         // Only shows the bottom navigation bar if the current user is on his own profile page
         if (userProfile.getObjectId().equals(userCurrent.getObjectId())) {
             MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
@@ -327,11 +359,14 @@ public class ProfileFragment extends Fragment {
         }
 
         updateFollowCnt();
-        populateTripRecyclerViews();
+        populateTripRecyclerViews(view);
+
+
+
         addOnClickListeners();
     }
 
-    private void populateTripRecyclerViews() {
+    private void populateTripRecyclerViews(View view) {
         // Create the upcomingTripAdapter
         ArrayList<Trip> upcomingTrips = new ArrayList<>();
         ArrayList<Trip> previousTrips = new ArrayList<>();
@@ -366,11 +401,13 @@ public class ProfileFragment extends Fragment {
         rvCurrent.setAdapter(currentTripAdapter);
         rvSaved.setAdapter(savedTripAdapter);
 
+
+
         // Query posts for each view
-        queryUpcomingPosts(userProfile);
-        queryPreviousPosts(userProfile);
-        queryCurrentPosts(userProfile);
-        querySaved(userProfile);
+        queryUpcomingPosts(userProfile, view);
+        queryPreviousPosts(userProfile, view);
+        queryCurrentPosts(userProfile, view);
+        querySaved(userProfile, view);
     }
 
     private void addOnClickListeners() {

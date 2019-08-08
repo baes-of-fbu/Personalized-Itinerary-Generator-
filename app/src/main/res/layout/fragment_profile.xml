@@ -35,6 +35,7 @@
             android:layout_marginEnd="8dp"
             android:text="Full Name"
             android:textColor="@android:color/black"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -174,17 +175,17 @@
 
         <ImageButton
             android:id="@+id/btnSidebar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="5dp"
+            android:layout_height="30dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
-            android:visibility="invisible"
             android:background="@android:color/transparent"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/btnFollowingStatus"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_three_dots" />
+            app:srcCompat="@drawable/ic_action_profile" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -218,6 +219,14 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tvNoCurrent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text=" No Current Trips to display"
+                android:visibility="gone" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCurrent"
                 android:layout_width="wrap_content"
@@ -243,6 +252,14 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tvNoUpcoming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="No Upcoming Trips to display"
+                android:visibility="gone" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvUpcoming"
                 android:layout_width="wrap_content"
@@ -265,6 +282,14 @@
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNoPrevious"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="No Previous Trips to display"
+                tools:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPrevious"
@@ -290,6 +315,14 @@
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNoSaved"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="No Saved Trips to Display"
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSaved"

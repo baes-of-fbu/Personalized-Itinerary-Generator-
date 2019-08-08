@@ -50,6 +50,7 @@ public class TripDetailsFragment extends Fragment {
     private Trip trip;
     private ImageView ivPin;
     private ImageView ivShare;
+    private ImageView ivBackButton;
     private TextView tvUsername;
     private TextView tvCityState;
 
@@ -78,6 +79,7 @@ public class TripDetailsFragment extends Fragment {
         tvUsername = view.findViewById(R.id.tvFullName);
         ivPin = view.findViewById(R.id.ivPin);
         ivShare = view.findViewById(R.id.ivShare);
+        ivBackButton = view.findViewById(R.id.ivBackButton);
 
         mDayPlans = new ArrayList<>();
         adapter = new DayPlanAdapter(mDayPlans);
@@ -342,6 +344,21 @@ public class TripDetailsFragment extends Fragment {
                 shareIntent.putExtra(Intent.EXTRA_TEXT, text);
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, "Share Trip"));
+            }
+        });
+
+        ivBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getArguments() == null) {
+                    Objects.requireNonNull(getActivity()).onBackPressed();
+                } else {
+                    Fragment fragment = new TimelineFragment();
+                    fragment.setArguments(getArguments()); // getArguments contains the adapter position to scroll to
+                    MainActivity.fragmentManager.beginTransaction()
+                            .replace(R.id.flContainer, fragment)
+                            .commit();
+                }
             }
         });
     }
