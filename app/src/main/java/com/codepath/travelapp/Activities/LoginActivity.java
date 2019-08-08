@@ -8,17 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codepath.travelapp.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.facebook.ParseFacebookUtils;
-
-import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         // Allows user to continue to be signed in across sessions
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
@@ -93,26 +89,12 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Log.d(APP_TAG, "Login failure.");
+                    Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
-                    showAlertDialog("Invalid login credentials");
                 }
             }
         });
     }
 
-    // TODO remove if Facebook login is removed
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void showAlertDialog(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getApplicationContext()))
-                .setTitle(message)
-                .setPositiveButton("OK", null)
-                .create();
-        dialog.show();
-    }
 }
 

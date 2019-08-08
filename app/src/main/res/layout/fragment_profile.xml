@@ -176,17 +176,17 @@
 
         <ImageButton
             android:id="@+id/btnSidebar"
-            android:layout_width="5dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/btnFollowingStatus"
+            android:padding="8dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/tvUsername"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_action_profile" />
+            app:layout_constraintTop_toTopOf="@+id/tvFullName"
+            app:srcCompat="@drawable/ic_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
