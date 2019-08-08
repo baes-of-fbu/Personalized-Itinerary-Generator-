@@ -6,23 +6,27 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="4dp"
+        android:background="@color/LightSkyBlue"
+        android:paddingTop="4dp"
         android:text="Achievements"
         android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="4dp"
+        android:background="@color/LightSkyBlue"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="4dp"
         android:text="Check out all of the achievements you have earned through your travels!"
         android:textAlignment="center"
-        android:textSize="18sp" />
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <ScrollView
         android:layout_width="match_parent"

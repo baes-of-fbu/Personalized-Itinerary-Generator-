@@ -69,6 +69,7 @@ public class SidebarFragment extends Fragment {
                 fragment.setArguments(userBundle);
 
                 MainActivity.fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.right_in, R.anim.right_out)
                         .replace(R.id.flContainer, fragment)
                         .addToBackStack(null)
                         .commit();

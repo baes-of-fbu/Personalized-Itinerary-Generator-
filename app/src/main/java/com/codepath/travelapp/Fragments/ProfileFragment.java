@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -343,6 +344,7 @@ public class ProfileFragment extends Fragment {
         ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
 
 
+
         // Only shows the bottom navigation bar if the current user is on his own profile page
         if (userProfile.getObjectId().equals(userCurrent.getObjectId())) {
             MainActivity.bottomNavigationView.setVisibility(View.VISIBLE);
@@ -489,6 +491,20 @@ public class ProfileFragment extends Fragment {
         };
         tvFollowing.setOnClickListener(followingListener);
         tvFollowingCount.setOnClickListener(followingListener);
+        btnSidebar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SidebarFragment fragment = new SidebarFragment();
+                Bundle userBundle = new Bundle();
+                userBundle.putParcelable("User", getCurrentUser());
+                fragment.setArguments(userBundle);
+                MainActivity.fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out)
+                        .replace(R.id.flContainer, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -509,6 +525,7 @@ public class ProfileFragment extends Fragment {
                     userBundle.putParcelable("User", getCurrentUser());
                     fragment.setArguments(userBundle);
                     MainActivity.fragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out)
                             .replace(R.id.flContainer, fragment)
                             .addToBackStack(null)
                             .commit();
@@ -516,6 +533,8 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+
 
     private ArrayList<User> getFromList() {
         return new ArrayList<>(followers.keySet());

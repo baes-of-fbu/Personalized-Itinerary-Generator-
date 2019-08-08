@@ -58,7 +58,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
                     .into(holder.ivAchievement);
         }
         if (isNotEarnedAchievement(achievement)) {
-            holder.ivAchievement.setColorFilter(Color.argb(250, 200, 200, 200));
+            holder.ivAchievement.setColorFilter(Color.argb(240, 200, 200, 200));
         }
         else {
             holder.ivAchievement.setColorFilter(Color.argb(0,0,0,0));
