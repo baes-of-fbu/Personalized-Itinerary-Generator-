@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.travelapp.Adapters.CommentAdapter;
+import com.codepath.travelapp.Adapters.TimelineAdapter;
 import com.codepath.travelapp.Models.Comment;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
@@ -45,13 +46,15 @@ public class CommentDialogFragment extends DialogFragment {
 
     private CommentAdapter adapter;
     private Trip trip;
+    private int num;
 
     public CommentDialogFragment() {
     }
 
-    public static CommentDialogFragment newInstance(Trip trip) {
+    public static CommentDialogFragment newInstance(Trip trip, int num) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("trip", trip);
+        bundle.putInt("num", num);
         CommentDialogFragment fragment = new CommentDialogFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -64,6 +67,7 @@ public class CommentDialogFragment extends DialogFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             trip = bundle.getParcelable("trip");
+            num = bundle.getInt("num");
         }
         return inflater.inflate(R.layout.fragment_comment_dialog, container, false);
     }
@@ -130,6 +134,8 @@ public class CommentDialogFragment extends DialogFragment {
                                     @Override
                                     public void done(ParseException e) {
                                         populateComments();
+                                        num++;
+                                        TimelineAdapter.updateTextView(Integer.toString(num));
                                     }
                                 });
                             } else {
