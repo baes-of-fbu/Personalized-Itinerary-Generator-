@@ -58,8 +58,10 @@ public class EventDetailsFragment extends Fragment {
         }
 
         if (event != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
             toolbar.setTitle(event.getName());
+            toolbar.setTitleTextColor(getContext().getResources().getColor(R.color.white));
+            toolbar.setBackgroundColor(getContext().getResources().getColor(R.color.LightSkyBlue));
 
             String cost = "$" + event.getCost().toString();
             tvCost.setText(cost);

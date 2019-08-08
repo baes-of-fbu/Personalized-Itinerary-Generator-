@@ -243,7 +243,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         });
 
         // Sends a bundle to ProfileFragment when username is clicked
-        holder.tvUsername.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener profileListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 username = (String) holder.tvUsername.getText();
@@ -261,7 +261,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                         .addToBackStack(null)
                         .commit();
             }
-        });
+        };
+        holder.tvUsername.setOnClickListener(profileListener);
+        holder.ivProfileImage.setOnClickListener(profileListener);
 
         // Opens city location in Maps application
         holder.tvCityName.setOnClickListener(new View.OnClickListener() {

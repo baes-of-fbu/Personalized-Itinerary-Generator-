@@ -78,7 +78,7 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
     public void onBindViewHolder(@NonNull DayPlanEditableAdapter.ViewHolder holder, int position) {
         // Get the current day
         final DayPlan dayPlan = dayPlans.get(position);
-        holder.tvDayTitle.setText(dayPlan.getDate().toString()); // TODO CHANGE THIS TO LOOK BETTER
+        holder.tvDayTitle.setText(dayPlan.getDate().toString().substring(0,10));
 
         if (dayPlan.getMorningEvent() == null) {
             // Fills morning card view with empty event and removes onClickListener
@@ -256,7 +256,6 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
             updateTripCost();
         } else if (action.contentEquals(reGenerateEvent)) {
             // Removes event and regenerates schedule
-            removeEvent();
             generateEvent();
             updateTripCost();
         }
@@ -296,18 +295,33 @@ public class DayPlanEditableAdapter extends RecyclerView.Adapter<DayPlanEditable
         // shuffleEvents() clears the allAvailableEvents array
         // and returns a new shuffled list of events
         allAvailableEvents.addAll(shuffleEvents());
-
         Event event = getEvent();
         if (event != null) {
             allAvailableEvents.remove(event);
+            remainingMoney = Math.subtractExact(remainingMoney, (int) event.getCost());
             if (timeOfDay.contentEquals(morningEvent)) {
+                if (currDayPlan.getMorningEvent() != null) {
+                    allAvailableEvents.add(currDayPlan.getMorningEvent());
+                    remainingMoney = Math.addExact(remainingMoney, (int) currDayPlan.getMorningEvent().getCost());
+                    currDayPlan.removeMorningEvent();
+                }
                 currDayPlan.setMorningEvent(event);
-                remainingMoney = Math.subtractExact(remainingMoney, (int) event.getCost());
+
                 notifyDataSetChanged();
             } else if (timeOfDay.contentEquals(afternoonEvent)) {
+                if (currDayPlan.getAfternoonEvent() != null) {
+                    allAvailableEvents.add(currDayPlan.getAfternoonEvent());
+                    remainingMoney = Math.addExact(remainingMoney, (int) currDayPlan.getAfternoonEvent().getCost());
+                    currDayPlan.removeAfternoonEvent();
+                }
                 currDayPlan.setAfternoonEvent(event);
                 notifyDataSetChanged();
             } else if (timeOfDay.contentEquals(eveningEvent)) {
+                if (currDayPlan.getEveningEvent() != null) {
+                    allAvailableEvents.add(currDayPlan.getEveningEvent());
+                    remainingMoney = Math.addExact(remainingMoney, (int) currDayPlan.getEveningEvent().getCost());
+                    currDayPlan.removeEveningEvent();
+                }
                 currDayPlan.setEveningEvent(event);
                 notifyDataSetChanged();
             }

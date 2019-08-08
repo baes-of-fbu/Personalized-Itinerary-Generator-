@@ -2,8 +2,6 @@ package com.codepath.travelapp.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -39,8 +38,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +72,7 @@ public class ProfileFragment extends Fragment {
     private User userProfile;
     private Map<User, ParseObject> following;
     private Map<User, ParseObject> followers;
-
+    private Toolbar tbProfile;
     private User userCurrent;
 
     @Nullable
@@ -89,13 +86,29 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        tbProfile = view.findViewById(R.id.tbProfile);
         following = new HashMap<>();
         followers = new HashMap<>();
 
         Bundle userBundle = getArguments();
         if (userBundle != null) {
             String username = userBundle.getString("username");
+
+            if (username.equals(ParseUser.getCurrentUser().getUsername())) {
+                tbProfile.setVisibility(View.GONE);
+            } else {
+                tbProfile.setNavigationIcon(R.drawable.ic_arrow_back);
+                tbProfile.setTitle("Profile");
+                tbProfile.setTitleTextColor(getContext().getResources().getColor(R.color.white));
+                tbProfile.setBackgroundColor(getContext().getResources().getColor(R.color.LightSkyBlue));
+                tbProfile.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Objects.requireNonNull(getActivity()).onBackPressed();
+                    }
+                });
+            }
+
             ParseQuery<ParseUser> userQuery = new ParseQuery<>(ParseUser.class);
             userQuery.whereEqualTo("username", username);
             userQuery.findInBackground(new FindCallback<ParseUser>() {
@@ -144,13 +157,13 @@ public class ProfileFragment extends Fragment {
                                     SideSwipe(view);
                                 } else {
                                     e.printStackTrace();
-                                    showAlertDialog();
+                                    showAlertDialog("Error loading profile.");
                                 }
                             }
                         });
                     } else {
                         e.printStackTrace();
-                        showAlertDialog();
+                        showAlertDialog("Error loading profile.");
                     }
                 }
             });
@@ -207,7 +220,7 @@ public class ProfileFragment extends Fragment {
                     }
                 } else {
                     e.printStackTrace();
-                    showAlertDialog();
+                    showAlertDialog("Error loading profile.");
                 }
             }
         });
@@ -237,7 +250,7 @@ public class ProfileFragment extends Fragment {
                     }
                 } else {
                     e.printStackTrace();
-                    showAlertDialog();
+                    showAlertDialog("Error loading profile.");
                 }
             }
         });
@@ -267,7 +280,7 @@ public class ProfileFragment extends Fragment {
                     }
                 } else {
                     e.printStackTrace();
-                    showAlertDialog();
+                    showAlertDialog("Error loading profile.");
                 }
             }
         });
@@ -299,7 +312,7 @@ public class ProfileFragment extends Fragment {
                     }
                 } else {
                     e.printStackTrace();
-                    showAlertDialog();
+                    showAlertDialog("Error loading profile.");
                 }
             }
         });
@@ -340,8 +353,13 @@ public class ProfileFragment extends Fragment {
             btnFollowingStatus.setVisibility(View.VISIBLE);
             btnSidebar.setVisibility(View.GONE);
             if (followers.containsKey(userCurrent)) {
-                btnFollowingStatus.setBackgroundColor(Color.GRAY);
+                btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.white));
                 btnFollowingStatus.setText(getString(R.string.following));
+                btnFollowingStatus.setTextColor(getResources().getColor(R.color.LightSkyBlue));
+            } else {
+                btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
+                btnFollowingStatus.setText(getString(R.string.follow));
+                btnFollowingStatus.setTextColor(getResources().getColor(R.color.white));
             }
         }
 
@@ -360,8 +378,6 @@ public class ProfileFragment extends Fragment {
 
         updateFollowCnt();
         populateTripRecyclerViews(view);
-
-
 
         addOnClickListeners();
     }
@@ -420,9 +436,9 @@ public class ProfileFragment extends Fragment {
                     followers.get(userCurrent).deleteInBackground();
                     followers.remove(userCurrent);
 
-                    btnFollowingStatus.setBackgroundColor(getResources()
-                            .getColor(R.color.LightSkyBlue));
+                    btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.LightSkyBlue));
                     btnFollowingStatus.setText(getString(R.string.follow));
+                    btnFollowingStatus.setTextColor(getResources().getColor(R.color.white));
                 } else {
                     final ParseObject follow = new ParseObject("Follow");
                     follow.put("from", userCurrent);
@@ -434,10 +450,12 @@ public class ProfileFragment extends Fragment {
                             if (e == null) {
                                 followers.put(userCurrent, follow);
 
-                                btnFollowingStatus.setBackgroundColor(Color.LTGRAY);
+                                btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.white));
                                 btnFollowingStatus.setText(getString(R.string.following));
+                                btnFollowingStatus.setTextColor(getResources().getColor(R.color.LightSkyBlue));
                             } else {
                                 e.printStackTrace();
+                                showAlertDialog("Unable to follow user");
                             }
                         }
                     });
@@ -447,7 +465,7 @@ public class ProfileFragment extends Fragment {
         });
 
         // User can see a list of the profile user's followers
-        tvFollowers.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener followersListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
@@ -455,10 +473,12 @@ public class ProfileFragment extends Fragment {
                         "Followers");
                 listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
-        });
+        };
+        tvFollowers.setOnClickListener(followersListener);
+        tvFollowersCount.setOnClickListener(followersListener);
 
         // User can see a list of who the profile user is following
-        tvFollowing.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener followingListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
@@ -466,7 +486,9 @@ public class ProfileFragment extends Fragment {
                         "Following");
                 listDialogFragment.show(fragmentManager, "fragment_list_dialog");
             }
-        });
+        };
+        tvFollowing.setOnClickListener(followingListener);
+        tvFollowingCount.setOnClickListener(followingListener);
     }
 
     @SuppressLint("SetTextI18n")
@@ -503,9 +525,9 @@ public class ProfileFragment extends Fragment {
         return new ArrayList<>(following.keySet());
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog(String message) {
         AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle("Error loading profile.")
+                .setTitle(message)
                 .setPositiveButton("OK", null)
                 .create();
         dialog.show();

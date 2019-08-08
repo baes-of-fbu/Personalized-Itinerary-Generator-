@@ -51,6 +51,7 @@ public class TripDetailsFragment extends Fragment {
     private ImageView ivPin;
     private ImageView ivShare;
     private ImageView ivBackButton;
+    private ImageView ivProfileImage;
     private TextView tvUsername;
     private TextView tvCityState;
 
@@ -67,7 +68,6 @@ public class TripDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
-        ImageView ivProfileImage = view.findViewById(R.id.ivProfileImage);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
         TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
@@ -77,6 +77,7 @@ public class TripDetailsFragment extends Fragment {
         final RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
         tvCityState = view.findViewById(R.id.tvCityState);
         tvUsername = view.findViewById(R.id.tvFullName);
+        ivProfileImage = view.findViewById(R.id.ivProfileImage);
         ivPin = view.findViewById(R.id.ivPin);
         ivShare = view.findViewById(R.id.ivShare);
         ivBackButton = view.findViewById(R.id.ivBackButton);
@@ -213,6 +214,7 @@ public class TripDetailsFragment extends Fragment {
                 newBundle.putString("return_screen", "details");
                 ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
                 eventQuery.include(Event.KEY_CITY);
+                eventQuery.whereEqualTo("city", trip.getCity());
                 // Queries for available events
                 eventQuery.findInBackground(new FindCallback<Event>() {
                     @Override
@@ -306,7 +308,7 @@ public class TripDetailsFragment extends Fragment {
         });
 
         // Allows the User to view another User's profile
-        tvUsername.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener profileListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String username = (String) tvUsername.getText();
@@ -324,8 +326,9 @@ public class TripDetailsFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
             }
-        });
-
+        };
+        tvUsername.setOnClickListener(profileListener);
+        ivProfileImage.setOnClickListener(profileListener);
         // Allows User to share a text message containing the City, start date,
         // and end date of their trip
         ivShare.setOnClickListener(new View.OnClickListener() {

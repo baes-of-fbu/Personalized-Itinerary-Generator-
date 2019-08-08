@@ -58,19 +58,6 @@
                 app:layout_constraintTop_toBottomOf="@id/etEditTripName">
 
                 <TextView
-                    android:id="@+id/tvTravelDatesEditFragment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:inputType="textMultiLine"
-                    android:text="@string/place_holder"
-                    app:layout_constraintEnd_toStartOf="@+id/tvCityStateEditFragment"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
                     android:id="@+id/tvDaysEditFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,14 +97,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="@string/days"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@+id/divider2EditTripFragment"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravelDatesEditFragment" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tvCityStateEditFragment"
@@ -136,7 +123,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvRemainingBudgetEditFragment"
                     app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
                 <TextView
@@ -231,8 +218,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_btn"
                 android:backgroundTint="#0CCA17"
                 android:text="Save"
@@ -248,7 +235,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -263,6 +249,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rvEditableSchedule" />
+
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/white"
+                android:text="@string/delete"
+                android:textColor="@color/LightSkyBlue"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/indicatorEdit" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

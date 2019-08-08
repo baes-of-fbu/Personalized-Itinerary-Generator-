@@ -71,7 +71,7 @@ public class EditTripFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         etEditTripName = view.findViewById(R.id.etEditTripName);
-        TextView tvTravelDates = view.findViewById(R.id.tvTravelDatesEditFragment);
+        //TextView tvTravelDates = view.findViewById(R.id.tvTravelDatesEditFragment);
         TextView tvDays = view.findViewById(R.id.tvDaysEditFragment);
         TextView tvBudget = view.findViewById(R.id.tvBudgetEditFragment);
         TextView tvTripCost = view.findViewById(R.id.tvCostEditFragment);
@@ -131,7 +131,16 @@ public class EditTripFragment extends Fragment {
         toolbar.setTitle("Edit Trip");
 
         etEditTripName.setText(tripName);
-        tvTravelDates.setText(String.format("%s - %s", startDate, endDate));
+
+//        String travelWindow;
+//        if (numDays != 1) {
+//            travelWindow = startDate.substring(0, 10) + " - " +
+//                    endDate.substring(0, 10);
+//        } else {
+//            travelWindow = startDate.substring(0, 10);
+//        }
+//
+//        tvTravelDates.setText(travelWindow);
         tvDays.setText(String.valueOf(numDays));
         tvBudget.setText(String.format("$%s", String.valueOf(budget)));
         tvTripCost.setText(String.format("$%s", String.valueOf(tripCost)));

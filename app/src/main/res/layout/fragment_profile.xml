@@ -9,18 +9,30 @@
     android:orientation="vertical">
 
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/infoHolder"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/tbProfile">
 
         <ImageView
             android:id="@+id/ivProfileImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +41,7 @@
 
         <TextView
             android:id="@+id/tvFullName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
@@ -38,43 +50,41 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toStartOf="@+id/btnFollowingStatus"
             app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvHometown"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@string/place_holder"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvUsername"
             app:layout_constraintTop_toBottomOf="@+id/tvFullName" />
 
         <TextView
             android:id="@+id/tvBio"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:text="@string/place_holder"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-            app:layout_constraintTop_toBottomOf="@+id/tvHometown" />
+            app:layout_constraintTop_toBottomOf="@+id/tvUsername"
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivProfileImage">
@@ -83,87 +93,126 @@
                 android:id="@+id/tvFollowersCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:paddingLeft="40dp"
+                android:paddingTop="4dp"
+                android:paddingRight="40dp"
+                android:paddingBottom="8dp"
                 android:text="@string/num_zero"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textColor="@color/LightSkyBlue"
+                app:layout_constraintEnd_toEndOf="@+id/tvFollowers"
+                app:layout_constraintStart_toStartOf="@+id/tvFollowers"
+                app:layout_constraintTop_toBottomOf="@+id/tvFollowers" />
 
             <TextView
                 android:id="@+id/tvFollowers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="8dp"
+                android:paddingRight="14dp"
                 android:text="@string/followers"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvFollowersCount"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintEnd_toStartOf="@+id/tvFollowing"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvFollowing" />
 
             <TextView
                 android:id="@+id/tvFollowingCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:paddingLeft="40dp"
+                android:paddingTop="4dp"
+                android:paddingRight="40dp"
+                android:paddingBottom="8dp"
                 android:text="@string/num_zero"
+                android:textColor="@color/LightSkyBlue"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvFollowers"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintEnd_toEndOf="@+id/tvFollowing"
+                app:layout_constraintStart_toStartOf="@+id/tvFollowing"
+                app:layout_constraintTop_toBottomOf="@+id/tvFollowing" />
 
             <TextView
                 android:id="@+id/tvFollowing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="8dp"
+                android:paddingRight="14dp"
                 android:text="@string/following"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvFollowingCount"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvFavoriteCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:paddingLeft="40dp"
+                android:paddingTop="4dp"
+                android:paddingRight="40dp"
+                android:paddingBottom="8dp"
                 android:text="@string/num_zero"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvFollowing"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                android:textColor="@color/LightSkyBlue"
+                app:layout_constraintEnd_toEndOf="@+id/tvFavorite"
+                app:layout_constraintStart_toStartOf="@+id/tvFavorite"
+                app:layout_constraintTop_toBottomOf="@+id/tvFavorite" />
 
             <TextView
                 android:id="@+id/tvFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="8dp"
+                android:paddingRight="14dp"
                 android:text="@string/favorites"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvFollowing"
+                app:layout_constraintTop_toTopOf="@+id/tvFollowing" />
+
+            <View
+                android:id="@+id/divider6"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="@+id/tvFollowingCount"
+                app:layout_constraintEnd_toStartOf="@+id/tvFollowing"
+                app:layout_constraintStart_toEndOf="@+id/tvFollowers"
+                app:layout_constraintTop_toTopOf="@+id/tvFollowing" />
+
+            <View
+                android:id="@+id/divider7"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="@+id/tvFollowingCount"
+                app:layout_constraintEnd_toStartOf="@+id/tvFavorite"
+                app:layout_constraintStart_toEndOf="@+id/tvFollowing"
+                app:layout_constraintTop_toTopOf="@+id/tvFollowing" />
+
+            <View
+                android:id="@+id/divider8"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.053"
-                app:layout_constraintStart_toEndOf="@+id/tvFavoriteCount"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/btnFollowingStatus"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
             android:background="@color/LightSkyBlue"
             android:text="@string/follow"
             android:textSize="12sp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/tvFullName"
             app:layout_constraintEnd_toStartOf="@+id/btnSidebar"
-            app:layout_constraintStart_toEndOf="@+id/tvFullName"
-            app:layout_constraintTop_toTopOf="@+id/tvFullName"
-            app:layout_constraintVertical_bias="0.205" />
+            app:layout_constraintTop_toTopOf="@+id/tvFullName" />
 
         <TextView
             android:id="@+id/tvUsername"
@@ -179,6 +228,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
             android:padding="8dp"
@@ -194,14 +244,11 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoHolder"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/infoHolder">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -232,8 +279,6 @@
                 android:id="@+id/rvCurrent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -265,8 +310,6 @@
                 android:id="@+id/rvUpcoming"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -296,8 +339,6 @@
                 android:id="@+id/rvPrevious"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -329,8 +370,6 @@
                 android:id="@+id/rvSaved"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

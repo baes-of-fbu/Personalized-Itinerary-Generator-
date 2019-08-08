@@ -81,7 +81,9 @@ public class TimelineFragment extends Fragment {
                 new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                queryFollowingPosts(page); // Loads the next set of posts
+                if (timelineAdapter.getItemCount() >= page_size) {
+                    queryFollowingPosts(page); // Loads the next set of posts
+                }
             }
         };
         rvTrips.addOnScrollListener(scrollListener);
@@ -138,6 +140,10 @@ public class TimelineFragment extends Fragment {
                         public void done(List<Trip> trips, ParseException e) {
                             swipeContainer.setRefreshing(false);
                             if (e == null) {
+                                progressDialog.hide();
+                                if (trips.size() == 0) {
+                                    showAlertDialog("No posts to load.");
+                                }
                                 timelineAdapter.addAll(trips);
                                 // Scrolls to position left off at
                                 if (getArguments() != null) {
@@ -145,26 +151,26 @@ public class TimelineFragment extends Fragment {
                                     int scrollPosition = bundle.getInt("indexToScrollTo");
                                     linearLayoutManager.scrollToPositionWithOffset(scrollPosition, PIXEL_OFFSET);
                                 }
-                                progressDialog.hide();
+
                             } else {
                                 progressDialog.hide();
                                 e.printStackTrace();
-                                showAlertDialog();
+                                showAlertDialog("Error loading timeline.");
                             }
                         }
                     });
                 } else {
                     progressDialog.hide();
                     e.printStackTrace();
-                    showAlertDialog();
+                    showAlertDialog("Error loading timeline.");
                 }
             }
         });
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog(String message) {
         AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
-                .setTitle("Error loading timeline.")
+                .setTitle(message)
                 .setPositiveButton("OK", null)
                 .create();
         dialog.show();

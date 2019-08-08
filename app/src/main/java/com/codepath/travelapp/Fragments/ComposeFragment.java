@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,6 +61,7 @@ public class ComposeFragment extends Fragment {
     private EditText etBudget;
     private Spinner spCity;
     private Button btnGenerate;
+    private Toolbar tbCompose;
 
     private int numDays;
     private String tripName;
@@ -88,13 +90,17 @@ public class ComposeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        tbCompose = view.findViewById(R.id.tbCompose);
         etTripName = view.findViewById(R.id.etTripName);
         etStartDate = view.findViewById(R.id.etStartDate);
         etEndDate = view.findViewById(R.id.etEndDate);
         etBudget = view.findViewById(R.id.etBudget);
         spCity = view.findViewById(R.id.spCity);
         btnGenerate = view.findViewById(R.id.btnGenerate);
+
+        tbCompose.setBackgroundColor(getContext().getResources().getColor(R.color.LightSkyBlue));
+        tbCompose.setTitle(getContext().getString(R.string.compose_trip));
+        tbCompose.setTitleTextColor(getContext().getResources().getColor(R.color.white));
 
         populateGridView(view);
         addOnClickListeners();
