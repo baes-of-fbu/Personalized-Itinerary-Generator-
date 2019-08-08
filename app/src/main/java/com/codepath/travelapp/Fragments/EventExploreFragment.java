@@ -46,21 +46,17 @@ public class EventExploreFragment extends Fragment {
         rvEvents.setLayoutManager(linearLayoutManager);
         rvEvents.setAdapter(eventsAdapter);
 
-        queryEvents(null);
+
         svEvents.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String name) {
-                if (name.length() > 0) {
                     queryEvents(name);
-                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String name) {
-                if(name.length() > 0){
                     queryEvents(name);
-                }
                 return true;
             }
         });
