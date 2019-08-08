@@ -1,5 +1,6 @@
 package com.codepath.travelapp.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -26,10 +28,12 @@ import com.parse.SignUpCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
     public final String APP_TAG = "SignUpActivity";
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
 
     private String username;
     private String password;
@@ -49,8 +53,9 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText etBio;
     private Button signUpProfileImageBtn;
     private ImageView ivProfileImage;
-    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    private ProgressDialog progressDialog;
     private Bitmap selectedImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +133,11 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please enter your fullName", Toast.LENGTH_SHORT).show();
                 } else {
                     image = convertBitmapToParseFile(selectedImage);
+                    progressDialog = new ProgressDialog(SignUpActivity.this);
+                    progressDialog.setMessage("Logging in...");
+                    progressDialog.setTitle("Please wait");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
                     signUp();
                 }
             }
@@ -144,7 +154,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp() {
         User user = new User();
-
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
@@ -154,6 +163,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
+                progressDialog.hide();
                 if (e == null) {
                     Log.d(APP_TAG, "SignUp successful!");
                     User newUser = (User) User.getCurrentUser();
@@ -167,8 +177,8 @@ public class SignUpActivity extends AppCompatActivity {
                     });
                 } else {
                     Log.d(APP_TAG, "SignUp failure");
-                    Toast.makeText(SignUpActivity.this, e.toString(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
+                    showAlertDialog("Error signing up");
                 }
             }
         });
@@ -211,6 +221,14 @@ public class SignUpActivity extends AppCompatActivity {
         imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
         byte[] imageByte = byteArrayOutputStream.toByteArray();
         return new ParseFile("image_file.png",imageByte);
+    }
+
+    private void showAlertDialog(String message) {
+        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getApplicationContext()))
+                .setTitle(message)
+                .setPositiveButton("OK", null)
+                .create();
+        dialog.show();
     }
 }
 

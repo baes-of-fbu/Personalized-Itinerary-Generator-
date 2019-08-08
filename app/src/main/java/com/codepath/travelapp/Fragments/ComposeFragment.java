@@ -5,15 +5,17 @@ import android.app.DatePickerDialog;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -116,14 +118,14 @@ public class ComposeFragment extends Fragment {
                     rvTags.setLayoutManager(gridLayoutManager);
                 } else {
                     e.printStackTrace();
-                    showAlertDialog();
+                    showAlertDialog("Unable to display tags.");
                 }
             }
         });
     }
 
     // Adds onClickListeners for etStartDate, etEndDate, and btnGenerate
-    private void addOnClickListeners(){
+    private void addOnClickListeners() {
 
         etStartDate.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -153,35 +155,26 @@ public class ComposeFragment extends Fragment {
 
                 // Checks input fields to prevent incorrect user input
                 if (tripName.length() == 0) {
-                    Toast.makeText(getContext(), "Specify trip name", Toast.LENGTH_LONG)
-                            .show();
+                    showAlertDialog("Specify trip name");
                 } else if (startDate.length() == 0) {
-                    Toast.makeText(getContext(), "Specify start date", Toast.LENGTH_LONG)
-                            .show();
+                    showAlertDialog("Specify start date");
                 } else if (endDate.length() == 0) {
-                    Toast.makeText(getContext(), "Specify end date", Toast.LENGTH_LONG)
-                            .show();
+                    showAlertDialog("Specify end date");
                 } else {
                     numDays = (int) getDifferenceBetweenDays(TripReviewFragment
                             .getParseDate(startDate), TripReviewFragment.getParseDate(endDate));
                     if (numDays < 1) {
-                        Toast.makeText(getContext(),
-                                "Invalid dates. Please fix your start and/or end date",
-                                Toast.LENGTH_LONG).show();
+                        showAlertDialog("Invalid dates. Please fix your start and/or end date");
                     } else if (dateHasPassed(TripReviewFragment.getParseDate(startDate))) {
-                        Toast.makeText(getContext(), "Start date has already passed",
-                                Toast.LENGTH_SHORT).show();
+                        showAlertDialog("Start date has already passed");
                     } else if (etBudget.getText().toString().length() == 0) {
-                        Toast.makeText(getContext(), "Specify budget",
-                                Toast.LENGTH_LONG).show();
+                        showAlertDialog("Specify budget");
                     } else {
                         budget = Integer.parseInt(etBudget.getText().toString());
                         if (budget <= 0) {
-                            Toast.makeText(getContext(), "Minimum budget is $0.",
-                                    Toast.LENGTH_LONG).show();
+                            showAlertDialog("Minimum budget is $0.");
                         } else if (cityName.contains("Select city")) {
-                            Toast.makeText(getContext(), "Select city",
-                                    Toast.LENGTH_LONG).show();
+                            showAlertDialog("Select city");
                         } else {
                             selectedTags = adapter.getSelectedTags();
                             generateSchedule(cityName);
@@ -190,6 +183,118 @@ public class ComposeFragment extends Fragment {
                 }
             }
         });
+
+        etTripName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (userInputComplete()) {
+                    btnGenerate.setBackground(getContext().getDrawable(R.drawable.rounded_btn));
+                }
+            }
+        });
+
+        etStartDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (userInputComplete()) {
+                    btnGenerate.setBackground(getContext().getDrawable(R.drawable.rounded_btn));
+                }
+            }
+        });
+
+        etEndDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (userInputComplete()) {
+                    btnGenerate.setBackground(getContext().getDrawable(R.drawable.rounded_btn));
+                }
+            }
+        });
+
+        etBudget.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (userInputComplete()) {
+                    btnGenerate.setBackground(getContext().getDrawable(R.drawable.rounded_btn));
+                }
+            }
+        });
+        spCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (userInputComplete()) {
+                    btnGenerate.setBackground(getContext().getDrawable(R.drawable.rounded_btn));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Boolean userInputComplete() {
+        // Checks if all the inputs are correct
+        if (etTripName.getText().toString().length() > 0
+        && etStartDate.getText().toString().length() > 0
+        && etEndDate.getText().toString().length() > 0
+        && etBudget.getText().toString().length() > 0) {
+            numDays = (int) getDifferenceBetweenDays(TripReviewFragment.getParseDate(etStartDate.getText().toString()),
+                    TripReviewFragment.getParseDate(etEndDate.getText().toString()));
+            if (numDays >= 1) {
+                if (!dateHasPassed(TripReviewFragment.getParseDate(etStartDate.getText().toString()))) {
+                    if (Integer.parseInt(etBudget.getText().toString()) >= 0) {
+                        return (!spCity.getSelectedItem().toString().contains("Select city"));
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     // Generates schedule and opens review fragment
@@ -227,13 +332,13 @@ public class ComposeFragment extends Fragment {
                                 sendBundle();
                             } else {
                                 e.printStackTrace();
-                                showAlertDialog();
+                                showAlertDialog("Error with compose.");
                             }
                         }
                     });
                 } else {
                     e.printStackTrace();
-                    showAlertDialog();
+                    showAlertDialog("Error with compose.");
                 }
             }
         });
@@ -407,9 +512,9 @@ public class ComposeFragment extends Fragment {
         return (numDays < 1);
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog(String message) {
         AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
-                .setTitle("Error with compose.")
+                .setTitle(message)
                 .setPositiveButton("OK", null)
                 .create();
         dialog.show();

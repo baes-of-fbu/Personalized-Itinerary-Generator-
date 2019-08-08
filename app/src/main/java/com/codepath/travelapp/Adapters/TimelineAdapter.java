@@ -375,8 +375,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Trip", trip);
+                bundle.putInt("indexToScrollTo", getAdapterPosition());
                 fragment.setArguments(bundle);
-
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)
                         .addToBackStack(null)
