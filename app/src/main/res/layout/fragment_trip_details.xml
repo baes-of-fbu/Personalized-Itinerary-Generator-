@@ -8,21 +8,26 @@
 
     <TextView
         android:id="@+id/tvTripName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingBottom="4dp"
         android:text="@string/trip_name"
+        android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintEnd_toStartOf="@+id/ivShare"
+        app:layout_constraintStart_toEndOf="@+id/ivBackButton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivShare"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="16dp"
         android:tint="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/scrollView3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,11 +39,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTripName">
+        app:layout_constraintTop_toBottomOf="@+id/ivBackButton">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -58,10 +64,9 @@
             <ImageView
                 android:id="@+id/ivProfileImage"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toBottomOf="@id/tvFullName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ivCoverPhoto"
                 tools:srcCompat="@tools:sample/avatars" />
@@ -71,11 +76,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/username"
+                android:textAlignment="textStart"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tvCityState"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
                 app:layout_constraintTop_toTopOf="@+id/ivProfileImage" />
@@ -257,9 +264,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_btn"
-                android:backgroundTint="#FFEB3B"
                 android:elevation="4dp"
                 android:text="@string/edit"
                 android:textColor="@color/white"
@@ -270,5 +276,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/indicator" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <ImageView
+        android:id="@+id/ivBackButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

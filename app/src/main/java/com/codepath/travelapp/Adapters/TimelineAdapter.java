@@ -55,6 +55,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     private ArrayList<Trip> trips;
     private String username;
     private City city;
+    private static TextView tvGlobal;
 
     public TimelineAdapter(ArrayList<Trip> trips) {
         this.trips = trips;
@@ -234,8 +235,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.ibComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                tvGlobal = holder.tvNumComments;
                 FragmentManager fragmentManager = MainActivity.fragmentManager;
-                CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance(trip);
+                CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance(trip, numComments[0]);
                 commentDialogFragment.show(fragmentManager, "fragment_comment_dialog");
             }
         });
@@ -274,6 +276,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 openMaps();
             }
         });
+    }
+
+    public static void updateTextView(String comment) {
+        tvGlobal.setText(comment);
     }
 
     private void openMaps() {
@@ -329,6 +335,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTripCost;
         private TextView tvTripDates;
@@ -375,8 +382,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Trip", trip);
+                bundle.putInt("indexToScrollTo", getAdapterPosition());
                 fragment.setArguments(bundle);
-
                 MainActivity.fragmentManager.beginTransaction()
                         .replace(R.id.flContainer, fragment)
                         .addToBackStack(null)

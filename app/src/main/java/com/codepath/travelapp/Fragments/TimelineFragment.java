@@ -32,8 +32,11 @@ import java.util.Objects;
 public class TimelineFragment extends Fragment {
 
     private final int page_size = 10;
+    private static int PIXEL_OFFSET = 200;
+
     private TimelineAdapter timelineAdapter;
     private SwipeRefreshLayout swipeContainer;
+    private LinearLayoutManager linearLayoutManager;
     private RecyclerView rvTrips;
     private ProgressDialog progressDialog;
 
@@ -61,7 +64,7 @@ public class TimelineFragment extends Fragment {
         swipeContainer = view.findViewById(R.id.swipeContainer);
 
         // Connects adapter with recycler view
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager = new LinearLayoutManager(getContext());
         rvTrips.setLayoutManager(linearLayoutManager);
         rvTrips.setAdapter(timelineAdapter);
 
@@ -134,10 +137,17 @@ public class TimelineFragment extends Fragment {
                         @Override
                         public void done(List<Trip> trips, ParseException e) {
                             swipeContainer.setRefreshing(false);
-                            progressDialog.hide();
                             if (e == null) {
                                 timelineAdapter.addAll(trips);
+                                // Scrolls to position left off at
+                                if (getArguments() != null) {
+                                    Bundle bundle = getArguments();
+                                    int scrollPosition = bundle.getInt("indexToScrollTo");
+                                    linearLayoutManager.scrollToPositionWithOffset(scrollPosition, PIXEL_OFFSET);
+                                }
+                                progressDialog.hide();
                             } else {
+                                progressDialog.hide();
                                 e.printStackTrace();
                                 showAlertDialog();
                             }
