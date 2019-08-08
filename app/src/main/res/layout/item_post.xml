@@ -225,6 +225,7 @@
             android:layout_height="wrap_content"
             android:text="@string/place_holder"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/ibComment"
             app:layout_constraintEnd_toEndOf="@+id/ibComment"
             app:layout_constraintStart_toStartOf="@+id/ibComment"
