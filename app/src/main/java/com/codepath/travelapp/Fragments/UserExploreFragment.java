@@ -25,7 +25,7 @@ import java.util.List;
 
 public class UserExploreFragment extends Fragment {
 
-    protected UserAdapter adapter;
+    private UserAdapter adapter;
 
     @Nullable
     @Override
@@ -40,6 +40,7 @@ public class UserExploreFragment extends Fragment {
         SearchView svUsers = view.findViewById(R.id.svUsers);
         ArrayList<User> mUsers = new ArrayList<>();
         adapter = new UserAdapter(mUsers);
+        adapter.clear();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvUsers.setLayoutManager(linearLayoutManager);
         rvUsers.setAdapter(adapter);
@@ -49,13 +50,17 @@ public class UserExploreFragment extends Fragment {
         svUsers.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String keyword) {
-                queryUsers(keyword);
+                if (keyword.length() > 0) {
+                    queryUsers(keyword);
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String keyword) {
-                queryUsers(keyword);
+                if (keyword.length() > 0) {
+                    queryUsers(keyword);
+                }
                 return true;
             }
         });

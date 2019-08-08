@@ -7,14 +7,29 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/tvExplore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/LightSkyBlue"
+        android:padding="8dp"
+        android:text="Explore"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="395dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/tvExplore">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabEvents"

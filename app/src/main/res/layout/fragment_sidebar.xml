@@ -4,7 +4,7 @@
     android:id="@+id/llSidebar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue_gradient"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <TextView
@@ -14,7 +14,7 @@
         android:layout_margin="16dp"
         android:text="Username"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@color/white"
+        android:outlineProvider="bounds"
         android:text="Edit Profile"
         android:textColor="@color/LightSkyBlue"
         android:textSize="18sp"

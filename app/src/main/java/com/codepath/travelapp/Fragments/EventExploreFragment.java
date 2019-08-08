@@ -41,6 +41,7 @@ public class EventExploreFragment extends Fragment {
 
         ArrayList<Event> mEvents = new ArrayList<>();
         eventsAdapter = new EventAdapter(mEvents);
+        eventsAdapter.clear();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvEvents.setLayoutManager(linearLayoutManager);
         rvEvents.setAdapter(eventsAdapter);
@@ -49,13 +50,17 @@ public class EventExploreFragment extends Fragment {
         svEvents.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String name) {
-                queryEvents(name);
+                if (name.length() > 0) {
+                    queryEvents(name);
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String name) {
-                queryEvents(name);
+                if(name.length() > 0){
+                    queryEvents(name);
+                }
                 return true;
             }
         });
@@ -78,6 +83,7 @@ public class EventExploreFragment extends Fragment {
                 }
             }
         });
+        eventsAdapter.clear();
     }
     private void showAlertDialog() {
         AlertDialog dialog = new AlertDialog.Builder(getContext())
