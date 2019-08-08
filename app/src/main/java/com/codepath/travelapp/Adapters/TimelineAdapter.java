@@ -277,7 +277,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             }
         });
     }
-    
+
     public static void updateTextView(String comment) {
         tvGlobal.setText(comment);
     }
