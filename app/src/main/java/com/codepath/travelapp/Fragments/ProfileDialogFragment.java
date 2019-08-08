@@ -104,13 +104,13 @@ public class ProfileDialogFragment extends DialogFragment {
                 if (newBio.length() == 0) {
                     Toast.makeText(getContext(), "Please enter a bio", Toast.LENGTH_SHORT)
                             .show();
-                }else if(newState.length() > 2) {
+                } else if(newState.length() > 2) {
                     Toast.makeText(getContext(), "Please select a State", Toast.LENGTH_SHORT)
                             .show();
-                }else if(newImage == null) {
+                } else if(newImage == null) {
                     Toast.makeText(getContext(), "Please select a Profile picture",
                             Toast.LENGTH_SHORT).show();
-                }else{
+                } else{
                     applyChanges(newBio, newState, newImage);
                 }
             }
