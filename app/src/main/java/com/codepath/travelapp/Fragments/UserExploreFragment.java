@@ -46,21 +46,18 @@ public class UserExploreFragment extends Fragment {
         rvUsers.setAdapter(adapter);
 
         // Sends a query for username as user enters or submits new text
-        queryUsers(null);
         svUsers.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String keyword) {
-                if (keyword.length() > 0) {
-                    queryUsers(keyword);
-                }
+                queryUsers(keyword);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String keyword) {
-                if (keyword.length() > 0) {
-                    queryUsers(keyword);
-                }
+                queryUsers(keyword);
+
                 return true;
             }
         });
@@ -69,9 +66,9 @@ public class UserExploreFragment extends Fragment {
     private void queryUsers(String keyword) {
         adapter.clear();
         ParseQuery<User> userQuery = new ParseQuery<>(User.class);
-        if (keyword != null) {
-            userQuery.whereContains("username", keyword);
-        }
+
+        userQuery.whereContains("username", keyword);
+
         userQuery.findInBackground(new FindCallback<User>() {
             @Override
             public void done(List<User> users, ParseException e) {
