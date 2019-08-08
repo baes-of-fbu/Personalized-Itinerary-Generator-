@@ -46,7 +46,7 @@
 
                 <TextView
                     android:id="@+id/tvMorningName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:inputType="textNoSuggestions"
@@ -113,11 +113,11 @@
 
                 <TextView
                     android:id="@+id/tvAfternoonName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:padding="5dp"
                     android:inputType="textNoSuggestions"
+                    android:padding="5dp"
                     android:text="@string/event_name"
                     android:textColor="@color/black"
                     android:textStyle="bold"
@@ -180,7 +180,7 @@
 
                 <TextView
                     android:id="@+id/tvEveningName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:inputType="textNoSuggestions"
