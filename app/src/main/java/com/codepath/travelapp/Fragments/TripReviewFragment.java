@@ -32,7 +32,6 @@ import com.codepath.travelapp.GravitySnapHelper;
 import com.codepath.travelapp.Models.City;
 import com.codepath.travelapp.Models.CityImages;
 import com.codepath.travelapp.Models.DayPlan;
-import com.codepath.travelapp.Models.Event;
 import com.codepath.travelapp.Models.Tag;
 import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
@@ -67,7 +66,6 @@ public class TripReviewFragment extends Fragment implements
     private int tripCost;
     private int numDays;
     private ArrayList<DayPlan> dayPlans;
-    private ArrayList<Event> availableEvents;
     private ParseFile image;
     private Bundle bundle;
     private DayPlanAdapter dayPlanAdapter;
@@ -95,7 +93,6 @@ public class TripReviewFragment extends Fragment implements
 
         final ImageView ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto);
         TextView tvTripName = view.findViewById(R.id.tvTripName);
-        TextView tvTravelDates = view.findViewById(R.id.tvTravelDates);
         TextView tvDays = view.findViewById(R.id.tvDays);
         TextView tvBudget = view.findViewById(R.id.tvBudget);
         TextView tvTripCost = view.findViewById(R.id.tvCost);
@@ -105,7 +102,6 @@ public class TripReviewFragment extends Fragment implements
         RecyclerView rvSchedule = view.findViewById(R.id.rvSchedule);
         btnAccept = view.findViewById(R.id.btnAccept);
         btnEdit = view.findViewById(R.id.btnEdit);
-        String travelWindow;
 
         SnapHelper snapHelper = new GravitySnapHelper(Gravity.END);
         snapHelper.attachToRecyclerView(rvTags);
@@ -130,17 +126,8 @@ public class TripReviewFragment extends Fragment implements
         tripCost = bundle.getInt("trip_cost");
         ArrayList<Tag> tags = bundle.getParcelableArrayList("selected_tags");
         dayPlans = bundle.getParcelableArrayList("dayPlans");
-        availableEvents = bundle.getParcelableArrayList("available_events");
-
-        if (numDays != 1) {
-            travelWindow = startDate.substring(0, 10) + " - " +
-                    endDate.substring(0, 10);
-        } else {
-            travelWindow = startDate.substring(0, 10);
-        }
 
         tvTripName.setText(tripName);
-        tvTravelDates.setText(String.format("%s", travelWindow));
         tvDays.setText(String.valueOf(numDays));
         tvBudget.setText(String.format("$%s", String.valueOf(budget)));
         tvTripCost.setText(String.format("$%s", String.valueOf(tripCost)));

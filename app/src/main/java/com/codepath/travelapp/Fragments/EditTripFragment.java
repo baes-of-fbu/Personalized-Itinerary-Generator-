@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -231,7 +230,6 @@ public class EditTripFragment extends Fragment {
                     MainActivity.fragmentManager.beginTransaction()
                             .replace(R.id.flContainer, fragment)
                             .commit();
-                    Toast.makeText(getContext(), "Your trip has been updated", Toast.LENGTH_LONG).show();
                 } else if (bundle.getString("return_screen").contentEquals("details")) {
                     // Return to details fragment
                     final Fragment fragment = new TripDetailsFragment();

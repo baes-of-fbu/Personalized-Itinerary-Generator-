@@ -38,6 +38,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -350,6 +351,19 @@ public class ComposeFragment extends Fragment {
         });
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    static LocalDate getParseDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return LocalDate.parse(date, formatter);
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static Date convertToDate(LocalDate d1) {
+        return java.sql.Date.valueOf(d1.toString());
+    }
+
     // Adds events to day plans
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -362,7 +376,18 @@ public class ComposeFragment extends Fragment {
             // Create a DayPlan for each day in the Trip and assign it the appropriate calendar Date
             DayPlan tempDay = new DayPlan();
             Date date = changeToDate(TripReviewFragment.getParseDate(startDate), day);
-            tempDay.setDate(date);
+
+            // Converts date to include day of the week
+            String tempDate = date.toString();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-M-dd");
+            Date newDate = null;
+            try {
+                newDate = simpleDateFormat.parse(tempDate);
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }
+
+            tempDay.setDate(newDate);
 
             // Picks morning event and updates budget
             Event morningEvent = getEvent(KEY_MORNING, runningBudget);
