@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -28,7 +27,6 @@ import com.parse.SignUpCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -63,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         signUpBtn = findViewById(R.id.signUpBtn);
-        etUsername =  findViewById(R.id.etSignUpUsername);
+        etUsername = findViewById(R.id.etSignUpUsername);
         etPassword = findViewById(R.id.etSignUpPassword);
         etFullName = findViewById(R.id.etSignUpFullName);
         etEmail = findViewById(R.id.etSignUpEmail);
@@ -83,7 +81,7 @@ public class SignUpActivity extends AppCompatActivity {
         etPassword.setText(password);
         if (selectedImage == null) {
             ivProfileImage.setVisibility(View.GONE);
-        }else {
+        } else {
             ivProfileImage.setVisibility(View.VISIBLE);
         }
         addOnClickListeners();
@@ -126,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity {
                     Log.e(APP_TAG, "no profile picture");
                     Toast.makeText(getApplicationContext(), "Please select a profile picture", Toast.LENGTH_SHORT).show();
                 } else if (bio.length() == 0) {
-                   Log.e(APP_TAG, "No bio");
+                    Log.e(APP_TAG, "No bio");
                     Toast.makeText(getApplicationContext(), "Please enter a bio", Toast.LENGTH_SHORT).show();
                 } else if (fullName.length() == 0) {
                     Log.e(APP_TAG, "no fullName");
@@ -160,7 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
         user.setBio(bio);
         user.setHomeState(state);
         user.setFullName(fullName);
-
+        Toast.makeText(SignUpActivity.this, "Signing up. Please wait.", Toast.LENGTH_SHORT).show();
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 progressDialog.hide();
@@ -178,7 +176,7 @@ public class SignUpActivity extends AppCompatActivity {
                 } else {
                     Log.d(APP_TAG, "SignUp failure");
                     e.printStackTrace();
-                    showAlertDialog("Error signing up");
+                    Toast.makeText(SignUpActivity.this, "Error signing up", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -211,24 +209,16 @@ public class SignUpActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             } else {
-                Toast.makeText(this, "You haven't picked Image",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    public static ParseFile convertBitmapToParseFile(Bitmap imageBitmap){
+    public static ParseFile convertBitmapToParseFile(Bitmap imageBitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] imageByte = byteArrayOutputStream.toByteArray();
-        return new ParseFile("image_file.png",imageByte);
-    }
-
-    private void showAlertDialog(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getApplicationContext()))
-                .setTitle(message)
-                .setPositiveButton("OK", null)
-                .create();
-        dialog.show();
+        return new ParseFile("image_file.png", imageByte);
     }
 }
 
