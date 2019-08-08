@@ -45,7 +45,7 @@ public class EditEventDialogFragment extends DialogFragment {
         if (window != null) {
             Display display = window.getWindowManager().getDefaultDisplay();
             display.getSize(size);
-            // Set the width of the dialog proportional to 75% of the screen width
+            // Set the width of the dialog proportional to 90% of the screen width
             window.setLayout((int) (size.x * 0.9), WindowManager.LayoutParams.WRAP_CONTENT);
             window.setGravity(Gravity.CENTER);
             super.onResume();
