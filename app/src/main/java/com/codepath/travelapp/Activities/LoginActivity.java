@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
-                progressDialog.hide();
+                progressDialog.dismiss();
                 if (e == null) {
                     Log.d(APP_TAG, "Login successful!");
                     final Intent intent = new Intent(LoginActivity.this, MainActivity.class);

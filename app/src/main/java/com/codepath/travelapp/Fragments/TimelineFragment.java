@@ -140,7 +140,7 @@ public class TimelineFragment extends Fragment {
                         public void done(List<Trip> trips, ParseException e) {
                             swipeContainer.setRefreshing(false);
                             if (e == null) {
-                                progressDialog.hide();
+                                progressDialog.dismiss();
                                 if (trips.size() == 0) {
                                     showAlertDialog("No posts to load.");
                                 }
@@ -153,14 +153,14 @@ public class TimelineFragment extends Fragment {
                                 }
 
                             } else {
-                                progressDialog.hide();
+                                progressDialog.dismiss();
                                 e.printStackTrace();
                                 showAlertDialog("Error loading timeline.");
                             }
                         }
                     });
                 } else {
-                    progressDialog.hide();
+                    progressDialog.dismiss();
                     e.printStackTrace();
                     showAlertDialog("Error loading timeline.");
                 }

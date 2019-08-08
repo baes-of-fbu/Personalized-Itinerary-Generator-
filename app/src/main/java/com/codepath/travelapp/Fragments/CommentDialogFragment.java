@@ -166,7 +166,7 @@ public class CommentDialogFragment extends DialogFragment {
                 if (e == null) {
                     adapter.clear();
                     adapter.addAll(objects);
-                    progressDialog.hide();
+                    progressDialog.dismiss();
                 } else {
                     e.printStackTrace();
                 }
