@@ -1,6 +1,5 @@
 package com.codepath.travelapp.Fragments;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +37,6 @@ public class TimelineFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView rvTrips;
-    private ProgressDialog progressDialog;
 
     @Nullable
     @Override
@@ -50,11 +48,6 @@ public class TimelineFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading your timeline...");
-        progressDialog.setTitle("Please wait");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
 
         // Creates a timeline timelineAdapter with an empty array list of trips
         ArrayList<Trip> mTrips = new ArrayList<>();
@@ -140,7 +133,6 @@ public class TimelineFragment extends Fragment {
                         public void done(List<Trip> trips, ParseException e) {
                             swipeContainer.setRefreshing(false);
                             if (e == null) {
-                                progressDialog.dismiss();
                                 if (trips.size() == 0) {
                                     showAlertDialog("No posts to load.");
                                 }
@@ -153,14 +145,12 @@ public class TimelineFragment extends Fragment {
                                 }
 
                             } else {
-                                progressDialog.dismiss();
                                 e.printStackTrace();
                                 showAlertDialog("Error loading timeline.");
                             }
                         }
                     });
                 } else {
-                    progressDialog.dismiss();
                     e.printStackTrace();
                     showAlertDialog("Error loading timeline.");
                 }

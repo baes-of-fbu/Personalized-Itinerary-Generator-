@@ -170,154 +170,6 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void queryNewAchievements(List<Trip> trips, final User user) {
-        ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
-        if (trips.size() > 0) {
-            if (trips.size() > 25){
-                achievementQuery.whereEqualTo("name", "Nomad");
-            }
-            if (trips.size() > 10) {
-                achievementQuery.whereEqualTo("name", "Adventurer");
-            }
-            if (trips.size() >= 1) {
-                achievementQuery.whereEqualTo("name", "Backpacker");
-            }
-
-            achievementQuery.findInBackground(new FindCallback<Achievement>() {
-                @Override
-                public void done(final List<Achievement> objects, ParseException e) {
-                    if (e == null) {
-                        for (int i = 0; i < objects.size(); i++) {
-                            user.getAchievementRelation().add(objects.get(i));
-                        }
-                        user.saveInBackground();
-                    }
-                }
-            });
-        }
-    }
-
-    private void queryUpcomingPosts(ParseUser user, final View view) {
-        upcomingTripAdapter.clear();
-
-        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-        tripQuery.setLimit(pageSize);
-        tripQuery.include(Trip.KEY_OWNER);
-        tripQuery.whereGreaterThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime());
-        tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addAscendingOrder(Trip.KEY_STARTDATE);
-        tripQuery.findInBackground(new FindCallback<Trip>() {
-            @Override
-            public void done(List<Trip> trips, ParseException e) {
-                if (e == null) {
-                    upcomingTripAdapter.addAll(trips);
-                    TextView tvNoUpcoming = view.findViewById(R.id.tvNoUpcoming);
-
-                    if (upcomingTripAdapter.getItemCount() == 0) {
-                        tvNoUpcoming.setVisibility(View.VISIBLE);
-                    }else {
-                        tvNoUpcoming.setVisibility(View.GONE);
-                    }
-                } else {
-                    e.printStackTrace();
-                    showAlertDialog("Error loading profile.");
-                }
-            }
-        });
-    }
-
-    private void queryPreviousPosts(final User user, final View view) {
-        previousTripAdapter.clear();
-
-        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-        tripQuery.setLimit(pageSize);
-        tripQuery.include(Trip.KEY_OWNER);
-        tripQuery.whereLessThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
-        tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addDescendingOrder(Trip.KEY_ENDDATE);
-        tripQuery.findInBackground(new FindCallback<Trip>() {
-            @Override
-            public void done(List<Trip> trips, ParseException e) {
-                if (e == null) {
-                    previousTripAdapter.addAll(trips);
-                    queryNewAchievements(trips, userProfile);
-                    TextView tvNoPrevious = view.findViewById(R.id.tvNoPrevious);
-
-                    if (previousTripAdapter.getItemCount() == 0) {
-                        tvNoPrevious.setVisibility(View.VISIBLE);
-                    }else {
-                        tvNoPrevious.setVisibility(View.GONE);
-                    }
-                } else {
-                    e.printStackTrace();
-                    showAlertDialog("Error loading profile.");
-                }
-            }
-        });
-    }
-
-    private void queryCurrentPosts(ParseUser user, final View view) {
-        currentTripAdapter.clear();
-
-        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
-        tripQuery.setLimit(pageSize);
-        tripQuery.include(Trip.KEY_OWNER);
-        tripQuery.whereLessThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime());
-        tripQuery.whereGreaterThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
-        tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
-        tripQuery.addAscendingOrder(Trip.KEY_STARTDATE);
-        tripQuery.findInBackground(new FindCallback<Trip>() {
-            @Override
-            public void done(List<Trip> trips, ParseException e) {
-                if (e == null) {
-                    currentTripAdapter.addAll(trips);
-                    TextView tvNoCurrent = view.findViewById(R.id.tvNoCurrent);
-
-                    if (currentTripAdapter.getItemCount() == 0) {
-                        tvNoCurrent.setVisibility(View.VISIBLE);
-                    }else {
-                        tvNoCurrent.setVisibility(View.GONE);
-                    }
-                } else {
-                    e.printStackTrace();
-                    showAlertDialog("Error loading profile.");
-                }
-            }
-        });
-    }
-
-    private void querySaved(final ParseUser user, final View view) {
-        savedTripAdapter.clear();
-        final List<Trip> mTrips = new ArrayList<>();
-
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("SavedTrip");
-        query.include("user");
-        query.include("trip");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> savedList, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < savedList.size(); i++) {
-                        if (((User) Objects.requireNonNull(savedList.get(i).get("user")))
-                                .getObjectId().equals(user.getObjectId())) {
-                            mTrips.add((Trip) savedList.get(i).get("trip"));
-                        }
-                    }
-                    savedTripAdapter.addAll(mTrips);
-                    TextView tvNoSaved = view.findViewById(R.id.tvNoSaved);
-
-                    if (savedTripAdapter.getItemCount() == 0) {
-                        tvNoSaved.setVisibility(View.VISIBLE);
-                    }else {
-                        tvNoSaved.setVisibility(View.GONE);
-                    }
-                } else {
-                    e.printStackTrace();
-                    showAlertDialog("Error loading profile.");
-                }
-            }
-        });
-    }
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile, menu);
@@ -417,13 +269,161 @@ public class ProfileFragment extends Fragment {
         rvCurrent.setAdapter(currentTripAdapter);
         rvSaved.setAdapter(savedTripAdapter);
 
-
-
         // Query posts for each view
         queryUpcomingPosts(userProfile, view);
         queryPreviousPosts(userProfile, view);
         queryCurrentPosts(userProfile, view);
         querySaved(userProfile, view);
+    }
+
+    private void queryUpcomingPosts(ParseUser user, final View view) {
+        upcomingTripAdapter.clear();
+
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
+        tripQuery.setLimit(pageSize);
+        tripQuery.include(Trip.KEY_OWNER);
+        tripQuery.whereGreaterThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime());
+        tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
+        tripQuery.addAscendingOrder(Trip.KEY_STARTDATE);
+        tripQuery.findInBackground(new FindCallback<Trip>() {
+            @Override
+            public void done(List<Trip> trips, ParseException e) {
+                if (e == null) {
+                    upcomingTripAdapter.addAll(trips);
+                    TextView tvNoUpcoming = view.findViewById(R.id.tvNoUpcoming);
+
+                    if (upcomingTripAdapter.getItemCount() == 0) {
+                        tvNoUpcoming.setVisibility(View.VISIBLE);
+                    } else {
+                        tvNoUpcoming.setVisibility(View.GONE);
+                    }
+                } else {
+                    e.printStackTrace();
+                    showAlertDialog("Error loading profile.");
+                }
+            }
+        });
+    }
+
+    private void queryPreviousPosts(final User user, final View view) {
+        previousTripAdapter.clear();
+
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
+        tripQuery.setLimit(pageSize);
+        tripQuery.include(Trip.KEY_OWNER);
+        tripQuery.whereLessThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
+        tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
+        tripQuery.addDescendingOrder(Trip.KEY_ENDDATE);
+        tripQuery.findInBackground(new FindCallback<Trip>() {
+            @Override
+            public void done(List<Trip> trips, ParseException e) {
+                if (e == null) {
+                    previousTripAdapter.addAll(trips);
+
+                    if (ParseUser.getCurrentUser().getUsername().contentEquals(userProfile.getUsername())) {
+                        queryNewAchievements(trips, userProfile);
+                    }
+                    TextView tvNoPrevious = view.findViewById(R.id.tvNoPrevious);
+                    if (previousTripAdapter.getItemCount() == 0) {
+                        tvNoPrevious.setVisibility(View.VISIBLE);
+                    } else {
+                        tvNoPrevious.setVisibility(View.GONE);
+                    }
+                } else {
+                    e.printStackTrace();
+                    showAlertDialog("Error loading profile.");
+                }
+            }
+        });
+    }
+
+    private void queryNewAchievements(List<Trip> trips, final User user) {
+        ParseQuery<Achievement> achievementQuery = new ParseQuery<>(Achievement.class);
+        if (trips.size() > 0) {
+            if (trips.size() > 25){
+                achievementQuery.whereEqualTo("name", "Nomad");
+            }
+            if (trips.size() > 10) {
+                achievementQuery.whereEqualTo("name", "Adventurer");
+            }
+            if (trips.size() >= 1) {
+                achievementQuery.whereEqualTo("name", "Backpacker");
+            }
+
+            achievementQuery.findInBackground(new FindCallback<Achievement>() {
+                @Override
+                public void done(final List<Achievement> objects, ParseException e) {
+                    if (e == null) {
+                        for (int i = 0; i < objects.size(); i++) {
+                            user.getAchievementRelation().add(objects.get(i));
+                        }
+                        user.saveInBackground();
+                    }
+                }
+            });
+        }
+    }
+
+    private void queryCurrentPosts(ParseUser user, final View view) {
+        currentTripAdapter.clear();
+
+        ParseQuery<Trip> tripQuery = new ParseQuery<>(Trip.class);
+        tripQuery.setLimit(pageSize);
+        tripQuery.include(Trip.KEY_OWNER);
+        tripQuery.whereLessThan(Trip.KEY_STARTDATE, Calendar.getInstance().getTime());
+        tripQuery.whereGreaterThan(Trip.KEY_ENDDATE, Calendar.getInstance().getTime());
+        tripQuery.whereEqualTo(Trip.KEY_OWNER, user);
+        tripQuery.addAscendingOrder(Trip.KEY_STARTDATE);
+        tripQuery.findInBackground(new FindCallback<Trip>() {
+            @Override
+            public void done(List<Trip> trips, ParseException e) {
+                if (e == null) {
+                    currentTripAdapter.addAll(trips);
+                    TextView tvNoCurrent = view.findViewById(R.id.tvNoCurrent);
+
+                    if (currentTripAdapter.getItemCount() == 0) {
+                        tvNoCurrent.setVisibility(View.VISIBLE);
+                    } else {
+                        tvNoCurrent.setVisibility(View.GONE);
+                    }
+                } else {
+                    e.printStackTrace();
+                    showAlertDialog("Error loading profile.");
+                }
+            }
+        });
+    }
+
+    private void querySaved(final ParseUser user, final View view) {
+        savedTripAdapter.clear();
+        final List<Trip> mTrips = new ArrayList<>();
+
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("SavedTrip");
+        query.include("user");
+        query.include("trip");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> savedList, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < savedList.size(); i++) {
+                        if (((User) Objects.requireNonNull(savedList.get(i).get("user")))
+                                .getObjectId().equals(user.getObjectId())) {
+                            mTrips.add((Trip) savedList.get(i).get("trip"));
+                        }
+                    }
+                    savedTripAdapter.addAll(mTrips);
+                    TextView tvNoSaved = view.findViewById(R.id.tvNoSaved);
+
+                    if (savedTripAdapter.getItemCount() == 0) {
+                        tvNoSaved.setVisibility(View.VISIBLE);
+                    } else {
+                        tvNoSaved.setVisibility(View.GONE);
+                    }
+                } else {
+                    e.printStackTrace();
+                    showAlertDialog("Error loading profile.");
+                }
+            }
+        });
     }
 
     private void addOnClickListeners() {
@@ -453,6 +453,7 @@ public class ProfileFragment extends Fragment {
                                 btnFollowingStatus.setBackgroundColor(getResources().getColor(R.color.white));
                                 btnFollowingStatus.setText(getString(R.string.following));
                                 btnFollowingStatus.setTextColor(getResources().getColor(R.color.LightSkyBlue));
+                                updateFollowCnt();
                             } else {
                                 e.printStackTrace();
                                 showAlertDialog("Unable to follow user");

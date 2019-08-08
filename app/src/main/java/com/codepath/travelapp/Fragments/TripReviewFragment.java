@@ -1,7 +1,6 @@
 package com.codepath.travelapp.Fragments;
 
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -106,12 +105,6 @@ public class TripReviewFragment extends Fragment implements
         SnapHelper snapHelper = new GravitySnapHelper(Gravity.END);
         snapHelper.attachToRecyclerView(rvTags);
 
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Creating your schedule...");
-        progressDialog.setTitle("Please wait");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
         bundle = getArguments();
         if (bundle == null) {
             showAlertDialog();
@@ -164,7 +157,6 @@ public class TripReviewFragment extends Fragment implements
                                 .load(image.getUrl())
                                 .into(ivCoverPhoto);
                     }
-                    progressDialog.hide();
                 } else {
                     showAlertDialog();
                 }

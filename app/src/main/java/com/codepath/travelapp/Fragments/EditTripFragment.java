@@ -45,8 +45,6 @@ public class EditTripFragment extends Fragment {
 
     private String tripName;
     private City city;
-    private String startDate;
-    private String endDate;
     private int budget;
     private int numDays;
 
@@ -96,8 +94,6 @@ public class EditTripFragment extends Fragment {
 
         tripName = bundle.getString("trip_name");
         city = bundle.getParcelable("city");
-        startDate = bundle.getString("start_date");
-        endDate = bundle.getString("end_date");
         numDays = bundle.getInt("number_days");
         budget = bundle.getInt("budget");
         tripCost = bundle.getInt("trip_cost");
