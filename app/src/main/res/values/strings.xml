@@ -65,6 +65,7 @@
     <string-array name="cities">
         <item>Select city</item>
         <item>Seattle</item>
+        <item>Menlo Park</item>
     </string-array>
     <string name="back_btn_content_desc">Back Button</string>
     <string name="generate">Generate</string>
@@ -116,4 +117,5 @@
     <string name="free">FREE</string>
     <string name="compose_trip">Compose Trip</string>
     <string name="profile_image_keyword">profileImage</string>
+    <string name="achievements">Achievements</string>
 </resources>

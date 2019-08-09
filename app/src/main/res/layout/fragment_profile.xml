@@ -139,7 +139,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvFavoriteCount"
+                android:id="@+id/tvAchievementCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="40dp"
@@ -148,18 +148,18 @@
                 android:paddingBottom="8dp"
                 android:text="@string/num_zero"
                 android:textColor="@color/LightSkyBlue"
-                app:layout_constraintEnd_toEndOf="@+id/tvFavorite"
-                app:layout_constraintStart_toStartOf="@+id/tvFavorite"
-                app:layout_constraintTop_toBottomOf="@+id/tvFavorite" />
+                app:layout_constraintEnd_toEndOf="@+id/tvAchievements"
+                app:layout_constraintStart_toStartOf="@+id/tvAchievements"
+                app:layout_constraintTop_toBottomOf="@+id/tvAchievements" />
 
             <TextView
-                android:id="@+id/tvFavorite"
+                android:id="@+id/tvAchievements"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="14dp"
                 android:paddingTop="8dp"
                 android:paddingRight="14dp"
-                android:text="@string/favorites"
+                android:text="@string/achievements"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvFollowing"
                 app:layout_constraintTop_toTopOf="@+id/tvFollowing" />
@@ -184,7 +184,7 @@
                 android:layout_marginBottom="12dp"
                 android:background="?android:attr/listDivider"
                 app:layout_constraintBottom_toBottomOf="@+id/tvFollowingCount"
-                app:layout_constraintEnd_toStartOf="@+id/tvFavorite"
+                app:layout_constraintEnd_toStartOf="@+id/tvAchievements"
                 app:layout_constraintStart_toEndOf="@+id/tvFollowing"
                 app:layout_constraintTop_toTopOf="@+id/tvFollowing" />
 
