@@ -93,6 +93,6 @@ public class OpeningActivity extends AppCompatActivity {
                 });
             }
 
-        }, 0, 5000);
+        }, 0, 3000);
     }
 }

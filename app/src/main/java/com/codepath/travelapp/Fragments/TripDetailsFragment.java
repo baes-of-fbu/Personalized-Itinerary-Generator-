@@ -353,7 +353,7 @@ public class TripDetailsFragment extends Fragment {
         ivBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (getArguments() == null) {
+                if (getArguments().size() == 1) {
                     Objects.requireNonNull(getActivity()).onBackPressed();
                 } else {
                     Fragment fragment = new TimelineFragment();
