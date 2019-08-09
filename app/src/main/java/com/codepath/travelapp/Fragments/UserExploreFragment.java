@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.travelapp.Adapters.UserAdapter;
+import com.codepath.travelapp.Models.Trip;
 import com.codepath.travelapp.Models.User;
 import com.codepath.travelapp.R;
 import com.parse.FindCallback;
@@ -69,11 +70,18 @@ public class UserExploreFragment extends Fragment {
     }
 
     private void queryUsers(String keyword) {
+
+        List<ParseQuery<User>> queries = new ArrayList<>();
         ParseQuery<User> userQuery = new ParseQuery<>(User.class);
+        ParseQuery<User> fullNameQuery = new ParseQuery<>(User.class);
         if (keyword != null) {
             userQuery.whereContains("username", keyword);
+            fullNameQuery.whereContains("fullName", keyword);
         }
-        userQuery.findInBackground(new FindCallback<User>() {
+        queries.add(userQuery);
+        queries.add(fullNameQuery);
+        ParseQuery<User> compoundQuery = ParseQuery.or(queries);
+        compoundQuery.findInBackground(new FindCallback<User>() {
             @Override
             public void done(List<User> users, ParseException e) {
                 if (e == null) {
