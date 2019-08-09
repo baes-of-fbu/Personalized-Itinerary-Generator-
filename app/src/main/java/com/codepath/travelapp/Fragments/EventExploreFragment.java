@@ -26,6 +26,7 @@ import java.util.List;
 public class EventExploreFragment extends Fragment {
 
     private EventAdapter eventsAdapter;
+    private Boolean sent;
 
     @Nullable
     @Override
@@ -46,24 +47,27 @@ public class EventExploreFragment extends Fragment {
         rvEvents.setLayoutManager(linearLayoutManager);
         rvEvents.setAdapter(eventsAdapter);
 
-
+        if (sent == null) {
+            queryEvents(null);
+        }
         svEvents.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String name) {
-                    queryEvents(name);
+                sent = true;
+                queryEvents(name);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String name) {
-                    queryEvents(name);
+                sent = true;
+                queryEvents(name);
                 return true;
             }
         });
     }
 
     private void queryEvents(String name) {
-        eventsAdapter.clear();
         ParseQuery<Event> eventQuery = new ParseQuery<>(Event.class);
         if (name != null) {
             eventQuery.whereContains("name", name);
@@ -72,6 +76,7 @@ public class EventExploreFragment extends Fragment {
             @Override
             public void done(List<Event> events, ParseException e) {
                 if (e == null) {
+                    eventsAdapter.clear();
                     eventsAdapter.addAll(events);
                 } else{
                     e.printStackTrace();

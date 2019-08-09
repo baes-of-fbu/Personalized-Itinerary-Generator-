@@ -1,6 +1,5 @@
 package com.codepath.travelapp.Fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.codepath.travelapp.Activities.MainActivity;
@@ -35,11 +33,5 @@ public class ExploreFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         viewPager.setAdapter((new ViewPagerAdapter(getChildFragmentManager())));
         tabLayout.setupWithViewPager(viewPager);
-    }
-
-    @Override
-    public void onAttach(@NonNull Activity activity) {
-        FragmentActivity myContext = (FragmentActivity) activity;
-        super.onAttach(activity);
     }
 }
