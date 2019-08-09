@@ -26,6 +26,7 @@ import java.util.List;
 public class UserExploreFragment extends Fragment {
 
     private UserAdapter adapter;
+    private Boolean sent;
 
     @Nullable
     @Override
@@ -45,34 +46,38 @@ public class UserExploreFragment extends Fragment {
         rvUsers.setLayoutManager(linearLayoutManager);
         rvUsers.setAdapter(adapter);
 
+        if (sent == null) {
+            queryUsers(null);
+        }
         // Sends a query for username as user enters or submits new text
         svUsers.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String keyword) {
+                sent = true;
                 queryUsers(keyword);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String keyword) {
+                sent = true;
                 queryUsers(keyword);
-
                 return true;
             }
         });
     }
 
     private void queryUsers(String keyword) {
-        adapter.clear();
         ParseQuery<User> userQuery = new ParseQuery<>(User.class);
-
-        userQuery.whereContains("username", keyword);
-
+        if (keyword != null) {
+            userQuery.whereContains("username", keyword);
+        }
         userQuery.findInBackground(new FindCallback<User>() {
             @Override
             public void done(List<User> users, ParseException e) {
                 if (e == null) {
+                    adapter.clear();
                     adapter.addAll(users);
                 } else {
                     e.printStackTrace();
@@ -80,6 +85,7 @@ public class UserExploreFragment extends Fragment {
                 }
             }
         });
+        adapter.clear();
     }
     private void showAlertDialog() {
         AlertDialog dialog = new AlertDialog.Builder(getContext())

@@ -78,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_explore:
                         fragment = new ExploreFragment();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("from", "navBar");
+                        fragment.setArguments(bundle);
                         break;
                     case R.id.action_achievements:
                         fragment = new AchievementFragment();
