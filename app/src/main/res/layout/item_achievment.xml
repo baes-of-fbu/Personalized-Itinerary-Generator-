@@ -16,8 +16,8 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="100dp"
-        android:layout_height="100dp">
+        android:layout_width="115dp"
+        android:layout_height="115dp">
 
         <ImageView
             android:id="@+id/ivAchievement"
