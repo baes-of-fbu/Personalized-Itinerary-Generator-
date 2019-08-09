@@ -19,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,6 +65,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvFollowingCount;
     private TextView tvFollowers;
     private TextView tvFollowing;
+    private TextView tvAchievementCount;
     private ImageButton btnSidebar;
 
     private int pageSize = 10;
@@ -188,6 +188,7 @@ public class ProfileFragment extends Fragment {
         tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
         tvFollowers = view.findViewById(R.id.tvFollowers);
         tvFollowing = view.findViewById(R.id.tvFollowing);
+        tvAchievementCount = view.findViewById(R.id.tvAchievementCount);
         btnSidebar = view.findViewById(R.id.btnSidebar);
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvFullName = view.findViewById(R.id.tvFullName);
@@ -228,6 +229,18 @@ public class ProfileFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivProfileImage);
         }
+
+        userProfile.getAchievementRelation().getQuery().findInBackground(new FindCallback<Achievement>() {
+            @Override
+            public void done(List<Achievement> objects, ParseException e) {
+                if (e == null) {
+                    tvAchievementCount.setText(Integer.toString(objects.size()));
+                } else {
+                    e.printStackTrace();
+                    showAlertDialog("Error loading achievements");
+                }
+            }
+        });
 
         updateFollowCnt();
         populateTripRecyclerViews(view);
